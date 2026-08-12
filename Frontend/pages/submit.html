@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Submit Photo | PhotoJudge</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/submit.css">
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+
+    <header>
+
+        <nav class="navbar">
+
+            <div class="logo">
+                PhotoJudge
+            </div>
+
+            <ul class="nav-links">
+
+                <li>
+                    <a href="../index.html">Home</a>
+                </li>
+
+                <li>
+                    <a href="contests.html">Contests</a>
+                </li>
+
+                <li>
+                    <a href="leaderboard.html">Leaderboard</a>
+                </li>
+
+                <li>
+                    <a href="login.html">Login</a>
+                </li>
+
+            </ul>
+
+        </nav>
+
+    </header>
+
+
+    <!-- Submission Form -->
+
+    <main>
+
+        <section class="submission-section">
+
+            <div class="submission-container">
+
+                <p class="small-heading">
+                    PHOTO CONTEST 2026
+                </p>
+
+                <h1>
+                    Submit Your Photograph
+                </h1>
+
+                <p class="submission-description">
+                    Submit your best photograph for
+                    "Nature Through My Lens".
+                </p>
+
+
+                <form id="submissionForm">
+
+                    <!-- Participant Name -->
+
+                    <div class="form-group">
+
+                        <label for="participantName">
+                            Participant Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="participantName"
+                            placeholder="Enter your name"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Photo Title -->
+
+                    <div class="form-group">
+
+                        <label for="photoTitle">
+                            Photo Title
+                        </label>
+
+                        <input
+                            type="text"
+                            id="photoTitle"
+                            placeholder="Give your photo a title"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Description -->
+
+                    <div class="form-group">
+
+                        <label for="photoDescription">
+                            Description
+                        </label>
+
+                        <textarea
+                            id="photoDescription"
+                            rows="5"
+                            placeholder="Tell us about your photograph"
+                            required
+                        ></textarea>
+
+                    </div>
+
+
+                    <!-- Image -->
+
+                    <div class="form-group">
+
+                        <label for="photo">
+                            Select Photograph
+                        </label>
+
+                        <input
+                            type="file"
+                            id="photo"
+                            accept="image/*"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Image Preview -->
+
+                    <div
+                        id="previewContainer"
+                        class="preview-container"
+                    >
+
+                        <p>
+                            Image preview will appear here
+                        </p>
+
+                    </div>
+
+
+                    <!-- Submit -->
+
+                    <button
+                        type="submit"
+                        class="submit-btn"
+                    >
+                        Submit Photograph
+                    </button>
+
+                </form>
+
+
+                <!-- Message -->
+
+                <p
+                    id="formMessage"
+                    class="form-message"
+                ></p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+
+        <p>
+            © 2026 PhotoJudge
+        </p>
+
+    </footer>
+
+
+    <script src="../js/entries.js"></script>
+
+</body>
+
+</html>

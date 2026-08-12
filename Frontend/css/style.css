@@ -1,0 +1,143 @@
+/* =========================
+   COMMON / RESET
+========================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f8f7f4;
+    color: #1d1d1d;
+    line-height: 1.6;
+}
+
+
+/* =========================
+   NAVBAR
+========================= */
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 20px 8%;
+
+    background: #ffffff;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.nav-links {
+    display: flex;
+    gap: 30px;
+
+    list-style: none;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #1d1d1d;
+    font-size: 15px;
+}
+
+.nav-links a:hover {
+    opacity: 0.6;
+}
+
+
+/* =========================
+   COMMON BUTTON
+========================= */
+
+.btn {
+    display: inline-block;
+
+    padding: 13px 25px;
+
+    text-decoration: none;
+
+    font-weight: bold;
+
+    border-radius: 4px;
+}
+
+.primary-btn {
+    background: #ffffff;
+    color: #1d1d1d;
+}
+
+.secondary-btn {
+    border: 1px solid white;
+    color: white;
+}
+
+.primary-btn:hover,
+.secondary-btn:hover {
+    opacity: 0.75;
+}
+
+
+/* =========================
+   COMMON SMALL HEADING
+========================= */
+
+.small-heading {
+    font-size: 13px;
+    letter-spacing: 3px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+    padding: 30px 8%;
+
+    background: #1d1d1d;
+
+    color: white;
+
+    text-align: center;
+}
+
+
+/* =========================
+   RESPONSIVE NAVBAR
+========================= */
+
+@media (max-width: 800px) {
+
+    .nav-links {
+        gap: 12px;
+    }
+}
+
+
+@media (max-width: 500px) {
+
+    .navbar {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}

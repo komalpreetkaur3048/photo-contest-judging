@@ -1,0 +1,138 @@
+/* =========================
+   SUBMISSION SECTION
+========================= */
+
+.submission-section {
+    padding: 80px 8%;
+
+    background: #f8f7f4;
+}
+
+.submission-container {
+    max-width: 750px;
+
+    margin: auto;
+}
+
+.submission-container h1 {
+    font-size: 48px;
+
+    margin-bottom: 15px;
+}
+
+.submission-description {
+    margin-bottom: 40px;
+}
+
+
+/* =========================
+   FORM
+========================= */
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+
+    font-weight: bold;
+
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+
+    padding: 14px;
+
+    border: 1px solid #ccc;
+
+    border-radius: 4px;
+
+    font-size: 16px;
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+
+/* =========================
+   IMAGE PREVIEW
+========================= */
+
+.preview-container {
+    min-height: 250px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin: 25px 0;
+
+    border: 2px dashed #bbb;
+
+    background: white;
+}
+
+.image-preview {
+    max-width: 100%;
+
+    max-height: 450px;
+
+    display: block;
+}
+
+
+/* =========================
+   SUBMIT BUTTON
+========================= */
+
+.submit-btn {
+    padding: 14px 28px;
+
+    border: none;
+
+    border-radius: 4px;
+
+    background: #1d1d1d;
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.submit-btn:hover {
+    opacity: 0.8;
+}
+
+
+/* =========================
+   FORM MESSAGE
+========================= */
+
+.form-message {
+    margin-top: 20px;
+
+    font-weight: bold;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 600px) {
+
+    .submission-container h1 {
+        font-size: 38px;
+    }
+}
