@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Entry | PhotoJudge</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/submit.css">
+
+</head>
+
+<body>
+
+    <!-- =========================
+         NAVBAR
+    ========================== -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+            PhotoJudge
+        </div>
+
+        <ul class="nav-links">
+
+            <li>
+                <a href="../index.html">Home</a>
+            </li>
+
+            <li>
+                <a href="contests.html">Contests</a>
+            </li>
+
+            <li>
+                <a href="submit.html">Submit Photo</a>
+            </li>
+
+            <li>
+                <a href="my-entries.html">My Entries</a>
+            </li>
+
+            <li>
+                <a href="leaderboard.html">Leaderboard</a>
+            </li>
+
+        </ul>
+
+    </nav>
+
+
+    <!-- =========================
+         EDIT FORM
+    ========================== -->
+
+    <main class="submission-section">
+
+        <div class="submission-container">
+
+            <p class="small-heading">
+                UPDATE SUBMISSION
+            </p>
+
+            <h1>
+                Edit Your Photograph
+            </h1>
+
+            <p class="submission-description">
+                Update the details of your submitted photograph.
+            </p>
+
+
+            <form id="editForm">
+
+                <!-- Participant Name -->
+
+                <div class="form-group">
+
+                    <label for="editParticipantName">
+                        Participant Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="editParticipantName"
+                        readonly
+                    >
+
+                </div>
+
+
+                <!-- Photo Title -->
+
+                <div class="form-group">
+
+                    <label for="editPhotoTitle">
+                        Photo Title
+                    </label>
+
+                    <input
+                        type="text"
+                        id="editPhotoTitle"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Description -->
+
+                <div class="form-group">
+
+                    <label for="editPhotoDescription">
+                        Description
+                    </label>
+
+                    <textarea
+                        id="editPhotoDescription"
+                        rows="5"
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <!-- Existing Image -->
+
+                <div class="form-group">
+
+                    <label>
+                        Current Photograph
+                    </label>
+
+                    <div
+                        id="editImagePreview"
+                        class="preview-container"
+                    >
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="submit-btn"
+                >
+                    Save Changes
+                </button>
+
+
+                <p
+                    id="editMessage"
+                    class="form-message"
+                ></p>
+
+            </form>
+
+        </div>
+
+    </main>
+
+
+    <footer>
+
+        <p>
+            © 2026 PhotoJudge. All rights reserved.
+        </p>
+
+    </footer>
+
+
+    <script src="../js/entries.js"></script>
+
+</body>
+
+</html>

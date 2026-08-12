@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Entries | PhotoJudge</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/my-entries.css">
+</head>
+
+<body>
+
+    <!-- =========================
+         NAVBAR
+    ========================== -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+            PhotoJudge
+        </div>
+
+        <ul class="nav-links">
+
+            <li>
+                <a href="../index.html">Home</a>
+            </li>
+
+            <li>
+                <a href="contests.html">Contests</a>
+            </li>
+
+            <li>
+                <a href="submit.html">Submit Photo</a>
+            </li>
+
+            <li>
+                <a href="my-entries.html">My Entries</a>
+            </li>
+
+        </ul>
+
+    </nav>
+
+
+    <!-- =========================
+         MY ENTRIES
+    ========================== -->
+
+    <main class="entries-section">
+
+        <div class="entries-header">
+
+            <p class="small-heading">
+                PARTICIPANT DASHBOARD
+            </p>
+
+            <h1>My Entries</h1>
+
+            <p>
+                View and manage the photographs you have
+                submitted to the contest.
+            </p>
+
+        </div>
+
+
+        <!-- Entries will be inserted here by JavaScript -->
+
+        <div id="entriesContainer" class="entries-container">
+
+        </div>
+
+
+        <!-- Message when there are no entries -->
+
+        <div id="noEntriesMessage" class="no-entries">
+
+            <h2>No entries yet</h2>
+
+            <p>
+                You haven't submitted any photographs yet.
+            </p>
+
+            <a href="submit.html" class="entry-btn">
+                Submit Your First Photo
+            </a>
+
+        </div>
+
+    </main>
+
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
+    <footer>
+
+        <p>
+            © 2026 PhotoJudge. All rights reserved.
+        </p>
+
+    </footer>
+
+
+    <script src="../js/entries.js"></script>
+
+</body>
+
+</html>
