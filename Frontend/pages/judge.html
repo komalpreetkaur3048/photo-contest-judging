@@ -19,32 +19,40 @@
 
 <body>
 
-    <!-- =========================
-         NAVBAR
-    ========================== -->
+    <!-- =====================================================
+         NAVIGATION
+    ====================================================== -->
 
     <nav class="navbar">
 
-        <div class="logo">
+        <a href="../index.html" class="logo">
             PhotoJudge
-        </div>
+        </a>
 
         <ul class="nav-links">
 
             <li>
-                <a href="../index.html">Home</a>
+                <a href="../index.html">
+                    Home
+                </a>
             </li>
 
             <li>
-                <a href="contests.html">Contests</a>
+                <a href="contests.html">
+                    Contests
+                </a>
             </li>
 
             <li>
-                <a href="judge.html">Judge</a>
+                <a href="judge.html" class="active">
+                    Judge
+                </a>
             </li>
 
             <li>
-                <a href="leaderboard.html">Leaderboard</a>
+                <a href="leaderboard.html">
+                    Leaderboard
+                </a>
             </li>
 
         </ul>
@@ -52,61 +60,171 @@
     </nav>
 
 
-    <!-- =========================
-         JUDGE DASHBOARD
-    ========================== -->
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
 
     <main class="judge-section">
 
+        <!-- =================================================
+             HEADER
+        ================================================== -->
+
         <div class="judge-header">
 
-            <p class="small-heading">
-                JUDGE DASHBOARD
-            </p>
+            <div>
 
-            <h1>
-                Review Submitted Photographs
-            </h1>
+                <p class="small-heading">
+                    JUDGE DASHBOARD
+                </p>
 
-            <p>
-                Evaluate each photograph using the three
-                contest criteria.
-            </p>
+                <h1>
+                    Review Submitted Photographs
+                </h1>
+
+                <p class="judge-intro">
+                    Evaluate each photograph based on creativity,
+                    technical quality, and theme fit.
+                </p>
+
+            </div>
+
+
+            <!-- Current Judge -->
+
+            <div class="judge-identity">
+
+                <span class="judge-identity-label">
+                    CURRENT JUDGE
+                </span>
+
+                <strong id="currentJudgeName">
+                    Judge 1
+                </strong>
+
+                <select id="judgeSelector">
+
+                    <option value="judge1">
+                        Judge 1
+                    </option>
+
+                    <option value="judge2">
+                        Judge 2
+                    </option>
+
+                    <option value="judge3">
+                        Judge 3
+                    </option>
+
+                </select>
+
+            </div>
 
         </div>
 
 
-        <!-- Entries will be displayed here -->
+        <!-- =================================================
+             CONTEST INFORMATION
+        ================================================== -->
 
-        <div
-            id="judgeEntriesContainer"
-            class="judge-entries-container"
-        >
-        </div>
+        <section class="judge-info-bar">
+
+            <div class="info-item">
+
+                <span>
+                    CONTEST
+                </span>
+
+                <strong>
+                    Nature Through My Lens
+                </strong>
+
+            </div>
 
 
-        <div
-            id="noJudgeEntries"
-            class="no-judge-entries"
-        >
+            <div class="info-item">
 
-            <h2>
-                No submissions available
-            </h2>
+                <span>
+                    JUDGES REQUIRED
+                </span>
 
-            <p>
-                Participants have not submitted any photographs yet.
-            </p>
+                <strong>
+                    3
+                </strong>
 
-        </div>
+            </div>
+
+
+            <div class="info-item">
+
+                <span>
+                    CRITERIA
+                </span>
+
+                <strong>
+                    40% · 30% · 30%
+                </strong>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             ENTRIES
+        ================================================== -->
+
+        <section>
+
+            <div
+                id="judgeEntriesContainer"
+                class="judge-entries-container"
+            >
+            </div>
+
+
+            <!-- No submissions -->
+
+            <div
+                id="noJudgeEntries"
+                class="no-judge-entries"
+            >
+
+                <div class="empty-icon">
+                    📷
+                </div>
+
+                <h2>
+                    No submissions available
+                </h2>
+
+                <p>
+                    Participants have not submitted any
+                    photographs yet.
+                </p>
+
+                <a
+                    href="submit.html"
+                    class="btn primary-btn"
+                >
+                    Submit a Photograph
+                </a>
+
+            </div>
+
+        </section>
 
     </main>
 
 
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
     <footer>
 
         <p>
-            © 2026 PhotoJudge. All rights reserved.
+            © 2026 PhotoJudge. Fair judging for better photography.
         </p>
 
     </footer>

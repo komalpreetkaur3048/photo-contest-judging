@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Leaderboard | PhotoJudge</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/leaderboard.css">
+
+</head>
+
+<body>
+
+    <!-- =====================================================
+         NAVBAR
+    ====================================================== -->
+
+    <header>
+
+        <nav class="navbar">
+
+            <a href="../index.html" class="logo">
+                PhotoJudge
+            </a>
+
+            <ul class="nav-links">
+
+                <li>
+                    <a href="../index.html">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="contests.html">
+                        Contests
+                    </a>
+                </li>
+
+                <li>
+                    <a href="submit.html">
+                        Submit Photo
+                    </a>
+                </li>
+
+                <li>
+                    <a href="judge.html">
+                        Judge
+                    </a>
+                </li>
+
+                <li>
+                    <a href="leaderboard.html" class="active">
+                        Leaderboard
+                    </a>
+                </li>
+
+            </ul>
+
+        </nav>
+
+    </header>
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="leaderboard-page">
+
+
+        <!-- =================================================
+             HEADER
+        ================================================== -->
+
+        <section class="leaderboard-hero">
+
+            <div class="leaderboard-hero-content">
+
+                <p class="small-heading">
+                    PHOTO CONTEST 2026
+                </p>
+
+                <h1>
+                    The Final
+                    <span>Leaderboard.</span>
+                </h1>
+
+                <p class="hero-description">
+                    Discover the highest-ranked photographs based
+                    on creativity, technical quality, and theme fit.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             CONTEST STATUS
+        ================================================== -->
+
+        <section class="leaderboard-summary">
+
+            <div class="summary-item">
+
+                <span class="summary-label">
+                    Contest
+                </span>
+
+                <strong>
+                    Nature Through My Lens
+                </strong>
+
+            </div>
+
+
+            <div class="summary-item">
+
+                <span class="summary-label">
+                    Criteria
+                </span>
+
+                <strong>
+                    40% · 30% · 30%
+                </strong>
+
+            </div>
+
+
+            <div class="summary-item">
+
+                <span class="summary-label">
+                    Judges
+                </span>
+
+                <strong id="judgeCount">
+                    3
+                </strong>
+
+            </div>
+
+
+            <div class="summary-item">
+
+                <span class="summary-label">
+                    Entries
+                </span>
+
+                <strong id="entryCount">
+                    0
+                </strong>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             PODIUM
+        ================================================== -->
+
+        <section
+            id="podiumSection"
+            class="podium-section"
+        >
+
+            <div class="section-heading">
+
+                <p class="small-heading">
+                    TOP PHOTOGRAPHS
+                </p>
+
+                <h2>
+                    Leading the competition
+                </h2>
+
+                <p>
+                    The top three photographs are highlighted
+                    based on their final normalized scores.
+                </p>
+
+            </div>
+
+
+            <div
+                id="podium"
+                class="podium"
+            >
+
+                <!-- JavaScript inserts top 3 -->
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             FULL LEADERBOARD
+        ================================================== -->
+
+        <section class="ranking-section">
+
+            <div class="ranking-header">
+
+                <div>
+
+                    <p class="small-heading">
+                        COMPLETE RANKINGS
+                    </p>
+
+                    <h2>
+                        All Entries
+                    </h2>
+
+                </div>
+
+
+                <div
+                    id="leaderboardStatus"
+                    class="leaderboard-status"
+                >
+                    Calculating rankings...
+                </div>
+
+            </div>
+
+
+            <div
+                id="leaderboardContainer"
+                class="leaderboard-container"
+            >
+
+                <!-- JavaScript inserts rankings -->
+
+            </div>
+
+
+            <!-- Empty state -->
+
+            <div
+                id="emptyLeaderboard"
+                class="empty-leaderboard"
+            >
+
+                <div class="empty-icon">
+                    ◇
+                </div>
+
+                <h2>
+                    No rankings yet
+                </h2>
+
+                <p>
+                    Rankings will appear once photographs have
+                    been submitted and evaluated by the judges.
+                </p>
+
+                <a
+                    href="submit.html"
+                    class="btn primary-btn"
+                >
+                    Submit a Photograph
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             FAIRNESS EXPLANATION
+        ================================================== -->
+
+        <section class="fairness-section">
+
+            <div class="fairness-content">
+
+                <p class="small-heading">
+                    FAIR JUDGING
+                </p>
+
+                <h2>
+                    Built to reduce
+                    judging bias.
+                </h2>
+
+                <p>
+                    Different judges may naturally score
+                    differently. One judge may be stricter,
+                    while another may give higher scores.
+                </p>
+
+                <p>
+                    PhotoJudge normalizes judge scores before
+                    calculating the final ranking, helping reduce
+                    the influence of individual judging styles.
+                </p>
+
+            </div>
+
+
+            <div class="fairness-steps">
+
+                <div class="fairness-step">
+
+                    <span>01</span>
+
+                    <div>
+
+                        <h3>
+                            Collect
+                        </h3>
+
+                        <p>
+                            Scores are collected independently
+                            from each judge.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="fairness-step">
+
+                    <span>02</span>
+
+                    <div>
+
+                        <h3>
+                            Normalize
+                        </h3>
+
+                        <p>
+                            Judge scoring differences are adjusted
+                            before aggregation.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="fairness-step">
+
+                    <span>03</span>
+
+                    <div>
+
+                        <h3>
+                            Rank
+                        </h3>
+
+                        <p>
+                            Normalized scores are combined to
+                            determine the final ranking.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer>
+
+        <p>
+            © 2026 PhotoJudge. Fair judging for better photography.
+        </p>
+
+    </footer>
+
+
+    <script src="../js/leaderboard.js"></script>
+
+</body>
+
+</html>

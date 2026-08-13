@@ -2,107 +2,170 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>My Entries | PhotoJudge</title>
 
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/my-entries.css">
+
 </head>
 
 <body>
 
-    <!-- =========================
-         NAVBAR
-    ========================== -->
+    <!-- NAVIGATION -->
 
-    <nav class="navbar">
+    <header>
 
-        <div class="logo">
-            PhotoJudge
-        </div>
+        <nav class="navbar">
 
-        <ul class="nav-links">
+            <div class="logo">
+                PhotoJudge<span>.</span>
+            </div>
 
-            <li>
-                <a href="../index.html">Home</a>
-            </li>
+            <ul class="nav-links">
 
-            <li>
-                <a href="contests.html">Contests</a>
-            </li>
+                <li>
+                    <a href="../index.html">
+                        Home
+                    </a>
+                </li>
 
-            <li>
-                <a href="submit.html">Submit Photo</a>
-            </li>
+                <li>
+                    <a href="contests.html">
+                        Contests
+                    </a>
+                </li>
 
-            <li>
-                <a href="my-entries.html">My Entries</a>
-            </li>
+                <li>
+                    <a href="submit.html">
+                        Submit
+                    </a>
+                </li>
 
-        </ul>
+                <li>
+                    <a href="my-entries.html" class="active">
+                        My Entries
+                    </a>
+                </li>
 
-    </nav>
+                <li>
+                    <a href="leaderboard.html">
+                        Leaderboard
+                    </a>
+                </li>
+
+            </ul>
+
+        </nav>
+
+    </header>
 
 
-    <!-- =========================
-         MY ENTRIES
-    ========================== -->
+    <!-- MAIN -->
 
-    <main class="entries-section">
+    <main class="entries-page">
 
-        <div class="entries-header">
+        <!-- HEADER -->
 
-            <p class="small-heading">
+        <section class="entries-hero">
+
+            <p class="eyebrow">
                 PARTICIPANT DASHBOARD
             </p>
 
-            <h1>My Entries</h1>
+            <div class="entries-heading-row">
 
-            <p>
-                View and manage the photographs you have
-                submitted to the contest.
-            </p>
+                <div>
 
-        </div>
+                    <h1>
+                        My
+                        <span>Entries.</span>
+                    </h1>
+
+                    <p class="entries-description">
+                        View, edit and manage the photographs
+                        you've submitted to the contest.
+                    </p>
+
+                </div>
+
+                <a
+                    href="submit.html"
+                    class="new-entry-btn"
+                >
+                    + Submit New Photo
+                </a>
+
+            </div>
+
+        </section>
 
 
-        <!-- Entries will be inserted here by JavaScript -->
+        <!-- ENTRY CONTENT -->
 
-        <div id="entriesContainer" class="entries-container">
+        <section class="entries-content">
 
-        </div>
+            <!-- Entries inserted by JavaScript -->
+
+            <div
+                id="entriesContainer"
+                class="entries-grid"
+            >
+            </div>
 
 
-        <!-- Message when there are no entries -->
+            <!-- EMPTY STATE -->
 
-        <div id="noEntriesMessage" class="no-entries">
+            <div
+                id="noEntriesMessage"
+                class="empty-state"
+            >
 
-            <h2>No entries yet</h2>
+                <div class="empty-icon">
+                    +
+                </div>
 
-            <p>
-                You haven't submitted any photographs yet.
-            </p>
+                <p class="eyebrow">
+                    NO SUBMISSIONS YET
+                </p>
 
-            <a href="submit.html" class="entry-btn">
-                Submit Your First Photo
-            </a>
+                <h2>
+                    Your gallery is waiting.
+                </h2>
 
-        </div>
+                <p>
+                    Submit your first photograph to
+                    enter Nature Through My Lens.
+                </p>
+
+                <a
+                    href="submit.html"
+                    class="empty-btn"
+                >
+                    Submit Your First Photo →
+                </a>
+
+            </div>
+
+        </section>
 
     </main>
 
 
-    <!-- =========================
-         FOOTER
-    ========================== -->
+    <!-- FOOTER -->
 
     <footer>
 
         <p>
-            © 2026 PhotoJudge. All rights reserved.
+            © 2026 PhotoJudge.
+            Fair judging for better photography.
         </p>
 
     </footer>

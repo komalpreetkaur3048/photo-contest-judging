@@ -16,15 +16,17 @@
 
 <body>
 
-    <!-- Navigation -->
+    <!-- =========================
+         NAVIGATION
+    ========================== -->
 
     <header>
 
         <nav class="navbar">
 
-            <div class="logo">
-                PhotoJudge
-            </div>
+            <a href="../index.html" class="logo">
+                PhotoJudge<span>.</span>
+            </a>
 
             <ul class="nav-links">
 
@@ -34,6 +36,14 @@
 
                 <li>
                     <a href="contests.html">Contests</a>
+                </li>
+
+                <li>
+                    <a href="submit.html" class="active">Submit</a>
+                </li>
+
+                <li>
+                    <a href="my-entries.html">My Entries</a>
                 </li>
 
                 <li>
@@ -51,146 +61,388 @@
     </header>
 
 
-    <!-- Submission Form -->
+    <!-- =========================
+         MAIN
+    ========================== -->
 
-    <main>
+    <main class="submit-page">
 
-        <section class="submission-section">
+        <section class="submit-header">
 
-            <div class="submission-container">
+            <div>
 
-                <p class="small-heading">
+                <p class="eyebrow">
                     PHOTO CONTEST 2026
                 </p>
 
                 <h1>
-                    Submit Your Photograph
+                    Submit your
+                    <em>perspective.</em>
                 </h1>
 
-                <p class="submission-description">
-                    Submit your best photograph for
-                    "Nature Through My Lens".
+                <p class="submit-intro">
+                    Share a photograph that tells a story.
+                    Your entry will be evaluated fairly across
+                    creativity, technical quality and theme fit.
                 </p>
 
+            </div>
 
-                <form id="submissionForm">
+            <div class="contest-mini-card">
 
-                    <!-- Participant Name -->
+                <span class="status-dot"></span>
+
+                <div>
+
+                    <small>
+                        CURRENT CONTEST
+                    </small>
+
+                    <strong>
+                        Nature Through My Lens
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             SUBMISSION FORM
+        ========================== -->
+
+        <section class="submission-layout">
+
+            <form id="submissionForm" class="submission-form">
+
+
+                <!-- PHOTO UPLOAD -->
+
+                <div class="form-section">
+
+                    <div class="section-label">
+
+                        <span>01</span>
+
+                        <div>
+                            <h2>Upload your photograph</h2>
+
+                            <p>
+                                Choose the image you want to submit.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <label
+                        for="photo"
+                        class="upload-zone"
+                        id="uploadZone"
+                    >
+
+                        <input
+                            type="file"
+                            id="photo"
+                            accept="image/jpeg,image/png,image/webp"
+                            required
+                        >
+
+                        <div
+                            class="upload-placeholder"
+                            id="uploadPlaceholder"
+                        >
+
+                            <div class="upload-icon">
+                                +
+                            </div>
+
+                            <h3>
+                                Drop your photograph here
+                            </h3>
+
+                            <p>
+                                or <span>browse from your device</span>
+                            </p>
+
+                            <small>
+                                JPG, PNG or WEBP · Maximum 5 MB
+                            </small>
+
+                        </div>
+
+
+                        <div
+                            class="preview-wrapper"
+                            id="previewContainer"
+                        >
+
+                            <img
+                                id="imagePreview"
+                                class="image-preview"
+                                alt="Selected photograph preview"
+                            >
+
+                            <div class="preview-overlay">
+
+                                <span>
+                                    Change photograph
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </label>
+
+                    <p
+                        id="fileError"
+                        class="field-error"
+                    ></p>
+
+                </div>
+
+
+                <!-- PHOTO DETAILS -->
+
+                <div class="form-section">
+
+                    <div class="section-label">
+
+                        <span>02</span>
+
+                        <div>
+
+                            <h2>Tell us about it</h2>
+
+                            <p>
+                                Give your photograph a title and
+                                a little context.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- PARTICIPANT -->
 
                     <div class="form-group">
 
                         <label for="participantName">
-                            Participant Name
+                            Your name
                         </label>
 
                         <input
                             type="text"
                             id="participantName"
-                            placeholder="Enter your name"
+                            placeholder="e.g. Aarav Sharma"
+                            maxlength="60"
                             required
                         >
 
                     </div>
 
 
-                    <!-- Photo Title -->
+                    <!-- TITLE -->
 
                     <div class="form-group">
 
                         <label for="photoTitle">
-                            Photo Title
+                            Photograph title
                         </label>
 
                         <input
                             type="text"
                             id="photoTitle"
-                            placeholder="Give your photo a title"
+                            placeholder="Give your photograph a meaningful title"
+                            maxlength="80"
                             required
                         >
+
+                        <div class="character-count">
+                            <span id="titleCount">0</span>/80
+                        </div>
 
                     </div>
 
 
-                    <!-- Description -->
+                    <!-- DESCRIPTION -->
 
                     <div class="form-group">
 
                         <label for="photoDescription">
-                            Description
+                            Story behind the photograph
                         </label>
 
                         <textarea
                             id="photoDescription"
-                            rows="5"
-                            placeholder="Tell us about your photograph"
+                            rows="6"
+                            maxlength="500"
+                            placeholder="What inspired this photograph? What should the judges notice?"
                             required
                         ></textarea>
 
-                    </div>
-
-
-                    <!-- Image -->
-
-                    <div class="form-group">
-
-                        <label for="photo">
-                            Select Photograph
-                        </label>
-
-                        <input
-                            type="file"
-                            id="photo"
-                            accept="image/*"
-                            required
-                        >
+                        <div class="character-count">
+                            <span id="descriptionCount">0</span>/500
+                        </div>
 
                     </div>
 
+                </div>
 
-                    <!-- Image Preview -->
 
-                    <div
-                        id="previewContainer"
-                        class="preview-container"
-                    >
+                <!-- CRITERIA -->
 
-                        <p>
-                            Image preview will appear here
-                        </p>
+                <div class="criteria-info">
+
+                    <p class="criteria-title">
+                        YOUR ENTRY WILL BE JUDGED ON
+                    </p>
+
+                    <div class="criteria-row">
+
+                        <div>
+                            <strong>40%</strong>
+                            <span>Creativity</span>
+                        </div>
+
+                        <div>
+                            <strong>30%</strong>
+                            <span>Technical Quality</span>
+                        </div>
+
+                        <div>
+                            <strong>30%</strong>
+                            <span>Theme Fit</span>
+                        </div>
 
                     </div>
 
+                </div>
 
-                    <!-- Submit -->
+
+                <!-- SUBMIT -->
+
+                <div class="submit-actions">
 
                     <button
                         type="submit"
                         class="submit-btn"
+                        id="submitButton"
                     >
-                        Submit Photograph
+
+                        <span>
+                            Submit Photograph
+                        </span>
+
+                        <span class="arrow">
+                            →
+                        </span>
+
                     </button>
 
-                </form>
+                    <p class="privacy-note">
+                        Your photograph is stored locally for this
+                        Phase 1 prototype.
+                    </p>
+
+                </div>
 
 
-                <!-- Message -->
+                <!-- MESSAGE -->
 
-                <p
+                <div
                     id="formMessage"
                     class="form-message"
-                ></p>
+                    role="status"
+                ></div>
 
-            </div>
+            </form>
+
+
+            <!-- =========================
+                 SIDE INFORMATION
+            ========================== -->
+
+            <aside class="submission-sidebar">
+
+                <div class="sidebar-card">
+
+                    <p class="eyebrow">
+                        BEFORE YOU SUBMIT
+                    </p>
+
+                    <h3>
+                        Make your entry count.
+                    </h3>
+
+                    <ul>
+
+                        <li>
+                            <span>01</span>
+                            Use an original photograph.
+                        </li>
+
+                        <li>
+                            <span>02</span>
+                            Make sure your image is clear.
+                        </li>
+
+                        <li>
+                            <span>03</span>
+                            Connect your photograph to the theme.
+                        </li>
+
+                        <li>
+                            <span>04</span>
+                            Tell the story behind your image.
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <div class="fairness-card">
+
+                    <span class="fairness-icon">
+                        ✓
+                    </span>
+
+                    <p class="eyebrow">
+                        BUILT FOR FAIRNESS
+                    </p>
+
+                    <h3>
+                        Every photograph gets an equal chance.
+                    </h3>
+
+                    <p>
+                        Judges score independently across weighted
+                        criteria. Their scoring differences are
+                        normalized before the final ranking.
+                    </p>
+
+                </div>
+
+            </aside>
 
         </section>
 
     </main>
 
 
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
     <footer>
 
         <p>
-            © 2026 PhotoJudge
+            © 2026 PhotoJudge · Fair judging for better photography.
         </p>
 
     </footer>

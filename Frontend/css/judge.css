@@ -1,110 +1,644 @@
-/* =========================
-   JUDGE PAGE
-========================= */
+/* =========================================================
+   PHOTOJUDGE — JUDGE DASHBOARD
+========================================================= */
+
+
+/* =========================================================
+   MAIN SECTION
+========================================================= */
 
 .judge-section {
+
     min-height: 80vh;
 
-    padding: 80px 8%;
+    padding:
+        70px
+        max(5%, calc((100vw - 1200px) / 2));
+
 }
 
-.judge-header {
-    max-width: 750px;
 
-    margin-bottom: 50px;
+/* =========================================================
+   HEADER
+========================================================= */
+
+.judge-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-end;
+
+    gap: 40px;
+
+    margin-bottom: 45px;
+
+}
+
+.judge-header > div:first-child {
+
+    max-width: 720px;
+
 }
 
 .judge-header h1 {
-    font-size: 48px;
 
-    margin-bottom: 15px;
+    margin-bottom: 18px;
+
+    font-size: clamp(
+        2.6rem,
+        5vw,
+        4.5rem
+    );
+
+    line-height: 1.05;
+
+    letter-spacing: -2px;
+
+}
+
+.judge-intro {
+
+    max-width: 650px;
+
+    color: var(--text-muted);
+
+    font-size: 1.05rem;
+
 }
 
 
-/* =========================
-   ENTRY GRID
-========================= */
+/* =========================================================
+   JUDGE IDENTITY
+========================================================= */
 
-.judge-entries-container {
+.judge-identity {
+
+    min-width: 190px;
+
+    padding: 18px;
+
+    background: white;
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius-sm);
+
+}
+
+.judge-identity-label {
+
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: var(--text-muted);
+
+    font-size: 0.68rem;
+
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+
+}
+
+.judge-identity strong {
+
+    display: block;
+
+    margin-bottom: 10px;
+
+    font-size: 1rem;
+
+}
+
+.judge-identity select {
+
+    width: 100%;
+
+    padding: 8px 10px;
+
+    border: 1px solid var(--border);
+
+    background: #faf9f6;
+
+    color: var(--text-main);
+
+    border-radius: var(--radius-sm);
+
+}
+
+
+/* =========================================================
+   INFORMATION BAR
+========================================================= */
+
+.judge-info-bar {
+
     display: grid;
 
     grid-template-columns:
-        repeat(auto-fit, minmax(300px, 1fr));
+        repeat(3, 1fr);
 
-    gap: 30px;
+    margin-bottom: 45px;
+
+    border-top: 1px solid var(--border);
+
+    border-bottom: 1px solid var(--border);
+
+}
+
+.info-item {
+
+    padding: 20px 25px;
+
+    border-right: 1px solid var(--border);
+
+}
+
+.info-item:last-child {
+
+    border-right: none;
+
+}
+
+.info-item span {
+
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: var(--text-muted);
+
+    font-size: 0.68rem;
+
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+
+}
+
+.info-item strong {
+
+    font-size: 0.95rem;
+
 }
 
 
-/* =========================
-   ENTRY CARD
-========================= */
+/* =========================================================
+   ENTRIES GRID
+========================================================= */
+
+.judge-entries-container {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(300px, 1fr)
+        );
+
+    gap: 28px;
+
+}
+
+
+/* =========================================================
+   JUDGE CARD
+========================================================= */
 
 .judge-card {
-    background: white;
-
-    border: 1px solid #ddd;
 
     overflow: hidden;
+
+    background: white;
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius-sm);
+
+    box-shadow: var(--shadow-soft);
+
+    transition:
+        transform 180ms ease,
+        box-shadow 180ms ease;
+
+}
+
+.judge-card:hover {
+
+    transform: translateY(-4px);
+
+    box-shadow:
+        0 16px 40px rgba(0, 0, 0, 0.09);
+
+}
+
+
+/* =========================================================
+   IMAGE
+========================================================= */
+
+.judge-image-wrapper {
+
+    position: relative;
+
+    height: 290px;
+
+    background: #eee;
+
+    overflow: hidden;
+
 }
 
 .judge-card img {
+
     width: 100%;
 
-    height: 280px;
+    height: 100%;
 
     object-fit: cover;
+
+    transition:
+        transform 300ms ease;
+
 }
 
+.judge-card:hover img {
+
+    transform: scale(1.025);
+
+}
+
+
+/* =========================================================
+   CARD CONTENT
+========================================================= */
+
 .judge-card-content {
-    padding: 25px;
+
+    padding: 24px;
+
+}
+
+.judge-card-top {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 12px;
+
 }
 
 .judge-card-content h2 {
-    margin-bottom: 10px;
+
+    font-size: 1.4rem;
+
+    line-height: 1.2;
+
 }
 
-.judge-card-content p {
-    margin-bottom: 10px;
+.participant-name {
+
+    margin-bottom: 12px;
+
+    color: var(--text-muted);
+
+    font-size: 0.85rem;
+
+}
+
+.judge-description {
+
+    margin-bottom: 20px;
+
+    color: #555;
+
+    font-size: 0.9rem;
+
+    line-height: 1.6;
+
 }
 
 
-/* =========================
+/* =========================================================
+   JUDGING PROGRESS
+========================================================= */
+
+.judging-progress {
+
+    margin-bottom: 20px;
+
+    padding-top: 18px;
+
+    border-top: 1px solid var(--border);
+
+}
+
+.progress-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 8px;
+
+}
+
+.progress-label {
+
+    color: var(--text-muted);
+
+    font-size: 0.72rem;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+
+}
+
+.progress-count {
+
+    font-size: 0.8rem;
+
+    font-weight: 800;
+
+}
+
+.progress-track {
+
+    width: 100%;
+
+    height: 6px;
+
+    overflow: hidden;
+
+    background: #e8e5de;
+
+    border-radius: 999px;
+
+}
+
+.progress-bar {
+
+    height: 100%;
+
+    background: #181818;
+
+    border-radius: 999px;
+
+    transition:
+        width 250ms ease;
+
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.judging-status {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 6px 10px;
+
+    border-radius: 999px;
+
+    font-size: 0.68rem;
+
+    font-weight: 800;
+
+    letter-spacing: 0.7px;
+
+    text-transform: uppercase;
+
+}
+
+.judging-status::before {
+
+    content: "";
+
+    width: 6px;
+
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: currentColor;
+
+}
+
+.status-pending {
+
+    color: var(--warning);
+
+    background: #f5eddc;
+
+}
+
+.status-complete {
+
+    color: var(--success);
+
+    background: #e7f0ea;
+
+}
+
+
+/* =========================================================
    SCORE BUTTON
-========================= */
+========================================================= */
 
 .score-btn {
-    display: inline-block;
 
-    margin-top: 15px;
+    display: flex;
 
-    padding: 12px 20px;
+    align-items: center;
 
-    background: #1d1d1d;
+    justify-content: center;
+
+    width: 100%;
+
+    min-height: 46px;
+
+    padding: 0 18px;
+
+    background: var(--bg-dark);
 
     color: white;
 
-    border: none;
-
-    cursor: pointer;
+    border-radius: var(--radius-sm);
 
     text-decoration: none;
+
+    font-size: 0.85rem;
+
+    font-weight: 800;
+
+    transition:
+        background 180ms ease,
+        transform 180ms ease;
+
 }
 
 .score-btn:hover {
-    opacity: 0.75;
+
+    background: #333;
+
+    transform: translateY(-2px);
+
 }
 
 
-/* =========================
+/* =========================================================
+   COMPLETED MESSAGE
+========================================================= */
+
+.completed-message {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 100%;
+
+    min-height: 46px;
+
+    padding: 0 18px;
+
+    background: #e7f0ea;
+
+    color: var(--success);
+
+    border-radius: var(--radius-sm);
+
+    font-size: 0.85rem;
+
+    font-weight: 800;
+
+}
+
+
+/* =========================================================
    NO ENTRIES
-========================= */
+========================================================= */
 
 .no-judge-entries {
-    padding: 70px 20px;
+
+    display: none;
+
+    padding: 80px 20px;
 
     text-align: center;
 
     background: white;
 
-    border: 1px dashed #bbb;
+    border: 1px dashed var(--border);
+
+}
+
+.empty-icon {
+
+    margin-bottom: 15px;
+
+    font-size: 2rem;
+
+}
+
+.no-judge-entries h2 {
+
+    margin-bottom: 8px;
+
+}
+
+.no-judge-entries p {
+
+    margin-bottom: 25px;
+
+    color: var(--text-muted);
+
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 800px) {
+
+    .judge-header {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+    }
+
+    .judge-identity {
+
+        max-width: 300px;
+
+    }
+
+    .judge-info-bar {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .info-item {
+
+        border-right: none;
+
+        border-bottom: 1px solid var(--border);
+
+    }
+
+    .info-item:last-child {
+
+        border-bottom: none;
+
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    .judge-section {
+
+        padding: 50px 20px;
+
+    }
+
+    .judge-header h1 {
+
+        letter-spacing: -1px;
+
+    }
+
+    .judge-image-wrapper {
+
+        height: 240px;
+
+    }
+
 }

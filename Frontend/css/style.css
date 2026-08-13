@@ -1,5 +1,9 @@
+/* =========================================================
+   PHOTOJUDGE — GLOBAL DESIGN SYSTEM
+========================================================= */
+
 /* =========================
-   COMMON / RESET
+   RESET
 ========================= */
 
 * {
@@ -13,118 +17,532 @@ html {
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background: #f8f7f4;
-    color: #1d1d1d;
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    background: #f7f6f2;
+    color: #181818;
+
     line-height: 1.6;
+
+    -webkit-font-smoothing: antialiased;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+button,
+input,
+textarea,
+select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+a {
+    color: inherit;
+}
+
+
+/* =========================================================
+   DESIGN TOKENS
+========================================================= */
+
+:root {
+
+    /* Colors */
+
+    --bg-main: #f7f6f2;
+    --bg-white: #ffffff;
+    --bg-dark: #181818;
+    --bg-soft: #ebe8e0;
+
+    --text-main: #181818;
+    --text-muted: #6d6b66;
+    --text-light: #ffffff;
+
+    --border: #dedbd3;
+    --border-dark: #2b2b2b;
+
+    --success: #2f6b4f;
+    --warning: #9a6b20;
+    --danger: #8b3030;
+
+
+    /* Typography */
+
+    --heading-xl: clamp(3.5rem, 7vw, 6.8rem);
+    --heading-lg: clamp(2.7rem, 5vw, 4.5rem);
+    --heading-md: clamp(2rem, 3.5vw, 3rem);
+
+    --text-lg: 1.125rem;
+    --text-md: 1rem;
+    --text-sm: 0.875rem;
+
+
+    /* Layout */
+
+    --container: 1200px;
+
+    --space-xs: 8px;
+    --space-sm: 16px;
+    --space-md: 24px;
+    --space-lg: 40px;
+    --space-xl: 64px;
+    --space-2xl: 100px;
+
+
+    /* Effects */
+
+    --radius-sm: 4px;
+    --radius-md: 8px;
+
+    --shadow-soft:
+        0 10px 30px rgba(0, 0, 0, 0.06);
+
+    --transition:
+        180ms ease;
+}
+
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.container {
+    width: min(
+        calc(100% - 40px),
+        var(--container)
+    );
+
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+.navbar {
+    position: relative;
+
+    z-index: 100;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 30px;
+
+    padding: 20px max(5%, calc((100vw - var(--container)) / 2));
+
+    background: rgba(255, 255, 255, 0.96);
+
+    border-bottom: 1px solid var(--border);
 }
 
 
 /* =========================
-   NAVBAR
+   LOGO
 ========================= */
 
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    padding: 20px 8%;
-
-    background: #ffffff;
-    border-bottom: 1px solid #e5e5e5;
-}
-
 .logo {
-    font-size: 24px;
-    font-weight: bold;
+    font-size: 1.35rem;
+
+    font-weight: 800;
+
+    letter-spacing: -0.5px;
+
+    white-space: nowrap;
 }
+
+.logo::after {
+    content: ".";
+
+    font-size: 1.5rem;
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
 
 .nav-links {
     display: flex;
-    gap: 30px;
+
+    align-items: center;
+
+    gap: 28px;
 
     list-style: none;
 }
 
 .nav-links a {
-    text-decoration: none;
-    color: #1d1d1d;
-    font-size: 15px;
-}
+    position: relative;
 
-.nav-links a:hover {
-    opacity: 0.6;
-}
-
-
-/* =========================
-   COMMON BUTTON
-========================= */
-
-.btn {
     display: inline-block;
 
-    padding: 13px 25px;
+    padding: 5px 0;
+
+    color: var(--text-main);
 
     text-decoration: none;
 
-    font-weight: bold;
+    font-size: 0.9rem;
 
-    border-radius: 4px;
+    font-weight: 500;
+
+    transition: color var(--transition);
 }
+
+.nav-links a::after {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+
+    bottom: 0;
+
+    width: 0;
+
+    height: 1px;
+
+    background: var(--text-main);
+
+    transition: width var(--transition);
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+
+/* =========================================================
+   BUTTON SYSTEM
+========================================================= */
+
+.btn {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    min-height: 48px;
+
+    padding: 0 22px;
+
+    border: 1px solid transparent;
+
+    border-radius: var(--radius-sm);
+
+    text-decoration: none;
+
+    font-size: 0.9rem;
+
+    font-weight: 700;
+
+    transition:
+        transform var(--transition),
+        background var(--transition),
+        color var(--transition),
+        border-color var(--transition);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+
+/* =========================
+   PRIMARY BUTTON
+========================= */
 
 .primary-btn {
-    background: #ffffff;
-    color: #1d1d1d;
+    background: var(--bg-dark);
+
+    color: var(--text-light);
 }
+
+.primary-btn:hover {
+    background: #333333;
+}
+
+
+/* =========================
+   SECONDARY BUTTON
+========================= */
 
 .secondary-btn {
-    border: 1px solid white;
-    color: white;
+    background: transparent;
+
+    color: var(--text-main);
+
+    border-color: var(--border-dark);
 }
 
-.primary-btn:hover,
 .secondary-btn:hover {
-    opacity: 0.75;
+    background: var(--bg-dark);
+
+    color: white;
 }
 
 
 /* =========================
-   COMMON SMALL HEADING
+   LIGHT BUTTON
 ========================= */
+
+.light-btn {
+    background: white;
+
+    color: var(--text-main);
+
+    border-color: white;
+}
+
+
+/* =========================================================
+   SMALL SECTION LABEL
+========================================================= */
 
 .small-heading {
-    font-size: 13px;
+    display: inline-block;
+
+    margin-bottom: 14px;
+
+    color: var(--text-muted);
+
+    font-size: 0.72rem;
+
+    font-weight: 800;
+
     letter-spacing: 3px;
-    font-weight: bold;
-    margin-bottom: 15px;
+
+    text-transform: uppercase;
 }
 
 
-/* =========================
+/* =========================================================
+   SECTION HEADINGS
+========================================================= */
+
+.section-heading {
+    max-width: 700px;
+
+    margin-bottom: var(--space-xl);
+}
+
+.section-heading h2 {
+    margin-bottom: 18px;
+
+    font-size: var(--heading-md);
+
+    line-height: 1.1;
+
+    letter-spacing: -1.5px;
+}
+
+.section-heading p {
+    max-width: 620px;
+
+    color: var(--text-muted);
+
+    font-size: var(--text-lg);
+}
+
+
+/* =========================================================
+   STATUS BADGES
+========================================================= */
+
+.status {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 6px 10px;
+
+    border-radius: 999px;
+
+    font-size: 0.72rem;
+
+    font-weight: 800;
+
+    letter-spacing: 0.5px;
+
+    text-transform: uppercase;
+}
+
+.status::before {
+    content: "";
+
+    width: 6px;
+
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: currentColor;
+}
+
+.status-open {
+    color: var(--success);
+
+    background: #e7f0ea;
+}
+
+.status-review {
+    color: var(--warning);
+
+    background: #f5eddc;
+}
+
+.status-complete {
+    color: #4d5964;
+
+    background: #e9edf0;
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.card {
+    background: var(--bg-white);
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius-sm);
+
+    box-shadow: var(--shadow-soft);
+}
+
+
+/* =========================================================
+   IMAGE
+========================================================= */
+
+.image-cover {
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+}
+
+
+/* =========================================================
+   FORM ELEMENTS
+========================================================= */
+
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-group label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: var(--text-main);
+
+    font-size: 0.88rem;
+
+    font-weight: 700;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+
+    padding: 14px 15px;
+
+    background: white;
+
+    color: var(--text-main);
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius-sm);
+
+    outline: none;
+
+    transition:
+        border-color var(--transition),
+        box-shadow var(--transition);
+}
+
+.form-group textarea {
+    resize: vertical;
+
+    min-height: 130px;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    border-color: #555;
+
+    box-shadow:
+        0 0 0 3px rgba(0, 0, 0, 0.06);
+}
+
+
+/* =========================================================
    FOOTER
-========================= */
+========================================================= */
 
 footer {
-    padding: 30px 8%;
+    padding: 35px 5%;
 
-    background: #1d1d1d;
+    background: var(--bg-dark);
 
-    color: white;
+    color: #d7d7d7;
 
     text-align: center;
+
+    font-size: 0.85rem;
 }
 
 
-/* =========================
-   RESPONSIVE NAVBAR
-========================= */
+/* =========================================================
+   RESPONSIVE NAVIGATION
+========================================================= */
 
-@media (max-width: 800px) {
+@media (max-width: 850px) {
+
+    .navbar {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 15px;
+    }
 
     .nav-links {
-        gap: 12px;
+        width: 100%;
+
+        flex-wrap: wrap;
+
+        gap: 12px 20px;
     }
 }
 
@@ -132,12 +550,34 @@ footer {
 @media (max-width: 500px) {
 
     .navbar {
-        flex-direction: column;
-        gap: 20px;
+        padding: 18px 20px;
     }
 
     .nav-links {
-        flex-wrap: wrap;
-        justify-content: center;
+        gap: 10px 16px;
     }
+
+    .nav-links a {
+        font-size: 0.82rem;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 800;
+    color: #1d1d1d;
+    text-decoration: none;
+    letter-spacing: -1px;
+}
+
+.logo span {
+    color: #77736b;
+}
+
+.nav-links a.active {
+    font-weight: 700;
 }

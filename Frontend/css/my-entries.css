@@ -1,102 +1,318 @@
-/* =========================
+/* =========================================
    MY ENTRIES PAGE
-========================= */
+========================================= */
 
-.entries-section {
+.entries-page {
     min-height: 80vh;
-
-    padding: 80px 8%;
+    background: #f8f7f4;
 }
 
 
-/* =========================
-   HEADER
-========================= */
+/* =========================================
+   HERO
+========================================= */
 
-.entries-header {
-    max-width: 700px;
-
-    margin-bottom: 50px;
+.entries-hero {
+    padding: 90px 8% 70px;
+    border-bottom: 1px solid #ddd;
 }
 
-.entries-header h1 {
-    font-size: 52px;
+.eyebrow {
+    font-size: 12px;
+    letter-spacing: 3px;
+    font-weight: 700;
+    color: #77736b;
+    margin-bottom: 18px;
+}
 
-    margin-bottom: 15px;
+.entries-heading-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 40px;
+}
+
+.entries-hero h1 {
+    font-size: clamp(52px, 7vw, 90px);
+    line-height: 0.95;
+    letter-spacing: -4px;
+    margin-bottom: 25px;
+}
+
+.entries-hero h1 span {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    color: #77736b;
+}
+
+.entries-description {
+    max-width: 600px;
+    font-size: 18px;
+    color: #666;
 }
 
 
-/* =========================
+/* =========================================
+   NEW ENTRY BUTTON
+========================================= */
+
+.new-entry-btn {
+    display: inline-block;
+
+    padding: 15px 22px;
+
+    background: #1d1d1d;
+    color: white;
+
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    white-space: nowrap;
+
+    transition: 0.2s ease;
+}
+
+.new-entry-btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.85;
+}
+
+
+/* =========================================
+   CONTENT
+========================================= */
+
+.entries-content {
+    padding: 70px 8% 100px;
+}
+
+
+/* =========================================
    ENTRIES GRID
-========================= */
+========================================= */
 
-.entries-container {
+.entries-grid {
     display: grid;
 
     grid-template-columns:
-        repeat(auto-fit, minmax(280px, 1fr));
+        repeat(auto-fill, minmax(300px, 1fr));
 
-    gap: 30px;
+    gap: 35px;
 }
 
 
-/* =========================
+/* =========================================
    ENTRY CARD
-========================= */
+========================================= */
 
 .entry-card {
-    background: white;
+    background: #ffffff;
 
     border: 1px solid #ddd;
 
     overflow: hidden;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
 }
 
-.entry-card img {
-    width: 100%;
+.entry-card:hover {
+    transform: translateY(-5px);
 
-    height: 250px;
+    box-shadow:
+        0 18px 40px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================================
+   IMAGE
+========================================= */
+
+.entry-image-wrapper {
+    width: 100%;
+    height: 280px;
+
+    overflow: hidden;
+
+    background: #e9e5dd;
+}
+
+.entry-image-wrapper img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
 
     object-fit: cover;
+
+    transition: transform 0.4s ease;
 }
+
+.entry-card:hover
+.entry-image-wrapper img {
+    transform: scale(1.04);
+}
+
+
+/* =========================================
+   ENTRY BODY
+========================================= */
 
 .entry-content {
     padding: 25px;
 }
 
-.entry-content h2 {
-    margin-bottom: 10px;
+.entry-label {
+    font-size: 11px;
+
+    letter-spacing: 2px;
+
+    font-weight: 700;
+
+    color: #888;
+
+    margin-bottom: 12px;
 }
 
-.entry-content p {
-    margin-bottom: 10px;
+.entry-content h2 {
+    font-size: 25px;
+
+    line-height: 1.2;
+
+    margin-bottom: 12px;
 }
+
+.entry-description {
+    color: #666;
+
+    font-size: 15px;
+
+    margin-bottom: 18px;
+}
+
+
+/* =========================================
+   DATE
+========================================= */
 
 .entry-date {
     font-size: 13px;
 
-    color: #777;
+    color: #888;
+
+    padding-top: 15px;
+
+    border-top: 1px solid #eee;
 }
 
 
-/* =========================
-   BUTTONS
-========================= */
+/* =========================================
+   ACTIONS
+========================================= */
 
 .entry-actions {
     display: flex;
 
     gap: 10px;
 
-    margin-top: 20px;
+    margin-top: 22px;
 }
 
 .entry-btn {
     display: inline-block;
 
-    padding: 10px 18px;
+    padding: 11px 18px;
 
-    border: none;
+    text-decoration: none;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    border: 1px solid #1d1d1d;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.edit-btn {
+    background: #1d1d1d;
+    color: white;
+}
+
+.edit-btn:hover {
+    opacity: 0.8;
+}
+
+.delete-btn {
+    background: white;
+    color: #8b0000;
+
+    border-color: #ddd;
+}
+
+.delete-btn:hover {
+    background: #8b0000;
+    color: white;
+    border-color: #8b0000;
+}
+
+
+/* =========================================
+   EMPTY STATE
+========================================= */
+
+.empty-state {
+    text-align: center;
+
+    max-width: 650px;
+
+    margin: 20px auto 0;
+
+    padding: 80px 30px;
+
+    background: white;
+
+    border: 1px dashed #bbb;
+}
+
+.empty-icon {
+    width: 55px;
+    height: 55px;
+
+    border: 1px solid #aaa;
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 auto 25px;
+
+    font-size: 28px;
+}
+
+.empty-state h2 {
+    font-size: 32px;
+
+    margin-bottom: 12px;
+}
+
+.empty-state > p:not(.eyebrow) {
+    color: #666;
+
+    margin-bottom: 25px;
+}
+
+.empty-btn {
+    display: inline-block;
+
+    padding: 13px 22px;
 
     background: #1d1d1d;
 
@@ -104,51 +320,60 @@
 
     text-decoration: none;
 
-    cursor: pointer;
+    font-weight: 700;
 
     font-size: 14px;
 }
 
-.entry-btn:hover {
-    opacity: 0.75;
-}
 
-.delete-btn {
-    background: #8b0000;
-}
-
-
-/* =========================
-   NO ENTRIES
-========================= */
-
-.no-entries {
-    text-align: center;
-
-    padding: 70px 20px;
-
-    background: white;
-
-    border: 1px dashed #bbb;
-}
-
-.no-entries h2 {
-    margin-bottom: 10px;
-}
-
-.no-entries p {
-    margin-bottom: 25px;
-}
-
-
-/* =========================
+/* =========================================
    RESPONSIVE
-========================= */
+========================================= */
 
-@media (max-width: 600px) {
+@media (max-width: 800px) {
 
-    .entries-header h1 {
-        font-size: 40px;
+    .entries-heading-row {
+        flex-direction: column;
+        align-items: flex-start;
     }
 
+    .entries-hero {
+        padding: 70px 6%;
+    }
+
+    .entries-content {
+        padding: 50px 6% 80px;
+    }
+
+    .entries-hero h1 {
+        letter-spacing: -2px;
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    .entries-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .entry-image-wrapper {
+        height: 240px;
+    }
+
+}
+
+.entry-image-wrapper {
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    background: #e9e5dd;
+}
+
+.entry-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
