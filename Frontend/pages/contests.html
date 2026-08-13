@@ -16,15 +16,17 @@
 
 <body>
 
-    <!-- Navigation -->
+    <!-- =========================
+         NAVIGATION
+    ========================== -->
 
     <header>
 
         <nav class="navbar">
 
-            <div class="logo">
-                PhotoJudge
-            </div>
+            <a href="../index.html" class="logo">
+                PhotoJudge<span>.</span>
+            </a>
 
             <ul class="nav-links">
 
@@ -33,15 +35,33 @@
                 </li>
 
                 <li>
-                    <a href="contests.html">Contests</a>
+                    <a href="contests.html" class="active">
+                        Contests
+                    </a>
                 </li>
 
                 <li>
-                    <a href="leaderboard.html">Leaderboard</a>
+                    <a href="submit.html">
+                        Submit
+                    </a>
                 </li>
 
                 <li>
-                    <a href="login.html">Login</a>
+                    <a href="my-entries.html">
+                        My Entries
+                    </a>
+                </li>
+
+                <li>
+                    <a href="leaderboard.html">
+                        Leaderboard
+                    </a>
+                </li>
+
+                <li>
+                    <a href="login.html">
+                        Login
+                    </a>
                 </li>
 
             </ul>
@@ -51,88 +71,324 @@
     </header>
 
 
-    <!-- Contest Details -->
+    <!-- =========================
+         PAGE HEADER
+    ========================== -->
 
     <main>
 
-        <section class="contest-details">
+        <section class="contests-hero">
 
-            <p class="small-heading">
-                PHOTO CONTEST 2026
-            </p>
+            <div class="contests-heading">
 
-            <h1>
-                Nature Through My Lens
-            </h1>
+                <p class="eyebrow">
+                    PHOTO CONTEST 2026
+                </p>
 
-            <p>
-                Capture the beauty of nature through your own
-                perspective. Show landscapes, wildlife, plants,
-                or moments that connect people with nature.
-            </p>
+                <h1>
+                    Find your next
+                    <em>frame.</em>
+                </h1>
+
+                <p>
+                    Explore active photography contests,
+                    understand the judging criteria, and
+                    submit your best work.
+                </p>
+
+            </div>
+
+        </section>
 
 
-            <div class="contest-info">
+        <!-- =========================
+             ACTIVE CONTEST
+        ========================== -->
 
-                <div>
-                    <strong>Submission Deadline</strong>
-                    <p>30 August 2026</p>
-                </div>
+        <section class="active-contest">
 
-                <div>
-                    <strong>Maximum Entries</strong>
-                    <p>3 Photos / Participant</p>
-                </div>
+            <div class="contest-image">
 
-                <div>
-                    <strong>Judges</strong>
-                    <p>3 Professional Judges</p>
+                <img
+                    src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80"
+                    alt="Nature photography"
+                >
+
+                <div class="image-label">
+                    ACCEPTING SUBMISSIONS
                 </div>
 
             </div>
 
 
-            <h2>
-                Judging Criteria
-            </h2>
+            <div class="contest-content">
+
+                <p class="eyebrow">
+                    CURRENT CONTEST
+                </p>
+
+                <h2>
+                    Nature Through
+                    <em>My Lens.</em>
+                </h2>
+
+                <p class="contest-description">
+                    Capture the beauty of nature through your
+                    own perspective. Show landscapes, wildlife,
+                    plants, or moments that connect people
+                    with nature.
+                </p>
 
 
-            <div class="criteria">
+                <!-- Contest Meta -->
 
-                <div>
-                    <strong>40%</strong>
-                    <span>Creativity</span>
+                <div class="contest-meta">
+
+                    <div class="meta-item">
+
+                        <span>
+                            DEADLINE
+                        </span>
+
+                        <strong>
+                            30 Aug 2026
+                        </strong>
+
+                    </div>
+
+                    <div class="meta-item">
+
+                        <span>
+                            MAX ENTRIES
+                        </span>
+
+                        <strong>
+                            3 Photos
+                        </strong>
+
+                    </div>
+
+                    <div class="meta-item">
+
+                        <span>
+                            JUDGES
+                        </span>
+
+                        <strong>
+                            3 Judges
+                        </strong>
+
+                    </div>
+
                 </div>
 
-                <div>
-                    <strong>30%</strong>
-                    <span>Technical Quality</span>
+
+                <!-- Judging -->
+
+                <div class="judging-section">
+
+                    <div class="judging-header">
+
+                        <h3>
+                            How your photo is judged
+                        </h3>
+
+                        <p>
+                            Every photograph is evaluated
+                            independently across three criteria.
+                        </p>
+
+                    </div>
+
+
+                    <div class="criteria-list">
+
+                        <div class="criteria-item">
+
+                            <div class="criteria-top">
+
+                                <strong>
+                                    Creativity
+                                </strong>
+
+                                <span>
+                                    40%
+                                </span>
+
+                            </div>
+
+                            <div class="criteria-bar">
+                                <div
+                                    class="criteria-fill creativity"
+                                ></div>
+                            </div>
+
+                            <p>
+                                Originality, perspective and
+                                artistic expression.
+                            </p>
+
+                        </div>
+
+
+                        <div class="criteria-item">
+
+                            <div class="criteria-top">
+
+                                <strong>
+                                    Technical Quality
+                                </strong>
+
+                                <span>
+                                    30%
+                                </span>
+
+                            </div>
+
+                            <div class="criteria-bar">
+                                <div
+                                    class="criteria-fill technical"
+                                ></div>
+                            </div>
+
+                            <p>
+                                Composition, lighting,
+                                focus and image quality.
+                            </p>
+
+                        </div>
+
+
+                        <div class="criteria-item">
+
+                            <div class="criteria-top">
+
+                                <strong>
+                                    Theme Fit
+                                </strong>
+
+                                <span>
+                                    30%
+                                </span>
+
+                            </div>
+
+                            <div class="criteria-bar">
+                                <div
+                                    class="criteria-fill theme"
+                                ></div>
+                            </div>
+
+                            <p>
+                                How effectively the photograph
+                                represents the contest theme.
+                            </p>
+
+                        </div>
+
+                    </div>
+
                 </div>
 
-                <div>
-                    <strong>30%</strong>
-                    <span>Theme Fit</span>
-                </div>
+
+                <a
+                    href="submit.html"
+                    class="contest-submit-btn"
+                >
+                    Submit Your Photo
+                    <span>→</span>
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             FAIR JUDGING
+        ========================== -->
+
+        <section class="fairness-section">
+
+            <div class="fairness-content">
+
+                <p class="eyebrow">
+                    WHY PHOTOJUDGE?
+                </p>
+
+                <h2>
+                    Your score isn't
+                    <em>just a number.</em>
+                </h2>
+
+                <p>
+                    Different judges naturally score differently.
+                    Some are generous, while others are more
+                    critical. PhotoJudge normalizes scores before
+                    calculating the final ranking.
+                </p>
 
             </div>
 
 
-            <a
-                href="submit.html"
-                class="btn primary-btn"
-            >
-                Submit Your Photo
-            </a>
+            <div class="fairness-card">
+
+                <div class="judge-score">
+
+                    <div>
+                        <strong>Judge A</strong>
+                        <span>Lenient</span>
+                    </div>
+
+                    <b>8.8</b>
+
+                </div>
+
+
+                <div class="judge-score">
+
+                    <div>
+                        <strong>Judge B</strong>
+                        <span>Strict</span>
+                    </div>
+
+                    <b>6.4</b>
+
+                </div>
+
+
+                <div class="normalization-arrow">
+                    ↓
+                </div>
+
+
+                <div class="normalized-result">
+
+                    <span>
+                        NORMALIZED
+                    </span>
+
+                    <strong>
+                        Comparable scoring
+                    </strong>
+
+                </div>
+
+            </div>
 
         </section>
 
     </main>
 
 
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
     <footer>
 
         <p>
-            © 2026 PhotoJudge
+            © 2026 PhotoJudge · Fair judging for better photography.
         </p>
 
     </footer>

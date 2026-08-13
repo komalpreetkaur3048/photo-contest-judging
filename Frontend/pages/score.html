@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Score Photograph | PhotoJudge</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/score.css">
+
+</head>
+
+<body>
+
+    <!-- =====================================================
+         NAVIGATION
+    ====================================================== -->
+
+    <header>
+
+        <nav class="navbar">
+
+            <a href="../index.html" class="logo">
+                PhotoJudge
+            </a>
+
+            <ul class="nav-links">
+
+                <li>
+                    <a href="../index.html">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="contests.html">
+                        Contests
+                    </a>
+                </li>
+
+                <li>
+                    <a href="judge.html" class="active">
+                        Judge
+                    </a>
+                </li>
+
+                <li>
+                    <a href="leaderboard.html">
+                        Leaderboard
+                    </a>
+                </li>
+
+            </ul>
+
+        </nav>
+
+    </header>
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="score-page">
+
+        <div class="score-container">
+
+
+            <!-- =================================================
+                 PAGE HEADER
+            ================================================== -->
+
+            <section class="score-header">
+
+                <div>
+
+                    <p class="small-heading">
+                        JUDGE EVALUATION
+                    </p>
+
+                    <h1>
+                        Evaluate the Photograph
+                    </h1>
+
+                    <p>
+                        Score this photograph based on creativity,
+                        technical quality, and how well it fits the
+                        contest theme.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 JUDGE IDENTITY
+            ================================================== -->
+
+            <section class="judge-selector card">
+
+                <div class="judge-selector-text">
+
+                    <span class="eyebrow">
+                        YOUR EVALUATION
+                    </span>
+
+                    <h2>
+                        Select Judge
+                    </h2>
+
+                    <p>
+                        Each judge can evaluate a photograph only once.
+                    </p>
+
+                </div>
+
+
+                <div class="judge-select-wrapper">
+
+                    <label for="judgeSelect">
+                        Judge
+                    </label>
+
+                    <select id="judgeSelect">
+
+                        <option value="">
+                            Select your judge identity
+                        </option>
+
+                        <option value="J001">
+                            Judge 1
+                        </option>
+
+                        <option value="J002">
+                            Judge 2
+                        </option>
+
+                        <option value="J003">
+                            Judge 3
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 PHOTO + SCORING AREA
+            ================================================== -->
+
+            <section class="evaluation-layout">
+
+
+                <!-- =============================================
+                     PHOTO
+                ============================================== -->
+
+                <div class="photo-panel card">
+
+                    <div class="photo-wrapper">
+
+                        <img
+                            id="scoreImage"
+                            src=""
+                            alt="Photograph being evaluated"
+                        >
+
+                    </div>
+
+
+                    <div class="photo-information">
+
+                        <span class="eyebrow">
+                            SUBMISSION
+                        </span>
+
+                        <h2 id="scorePhotoTitle">
+                            Loading photograph...
+                        </h2>
+
+                        <p class="participant">
+
+                            <strong>
+                                Participant:
+                            </strong>
+
+                            <span id="scoreParticipant">
+                                —
+                            </span>
+
+                        </p>
+
+                        <p
+                            id="scoreDescription"
+                            class="photo-description"
+                        >
+                            Loading description...
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =============================================
+                     SCORING PANEL
+                ============================================== -->
+
+                <div class="scoring-panel card">
+
+                    <div class="scoring-header">
+
+                        <span class="eyebrow">
+                            WEIGHTED CRITERIA
+                        </span>
+
+                        <h2>
+                            Score the Photograph
+                        </h2>
+
+                        <p>
+                            Rate each criterion from 0 to 10.
+                            The final score is automatically weighted.
+                        </p>
+
+                    </div>
+
+
+                    <!-- =========================================
+                         CREATIVITY
+                    ========================================== -->
+
+                    <div class="score-criterion">
+
+                        <div class="criterion-header">
+
+                            <div>
+
+                                <h3>
+                                    Creativity
+                                </h3>
+
+                                <span>
+                                    40% weight
+                                </span>
+
+                            </div>
+
+                            <strong id="creativityValue">
+                                5
+                            </strong>
+
+                        </div>
+
+                        <input
+                            type="range"
+                            id="creativity"
+                            min="0"
+                            max="10"
+                            value="5"
+                            step="1"
+                        >
+
+                        <div class="range-labels">
+
+                            <span>
+                                0 — Poor
+                            </span>
+
+                            <span>
+                                10 — Exceptional
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =========================================
+                         TECHNICAL QUALITY
+                    ========================================== -->
+
+                    <div class="score-criterion">
+
+                        <div class="criterion-header">
+
+                            <div>
+
+                                <h3>
+                                    Technical Quality
+                                </h3>
+
+                                <span>
+                                    30% weight
+                                </span>
+
+                            </div>
+
+                            <strong id="technicalValue">
+                                5
+                            </strong>
+
+                        </div>
+
+                        <input
+                            type="range"
+                            id="technical"
+                            min="0"
+                            max="10"
+                            value="5"
+                            step="1"
+                        >
+
+                        <div class="range-labels">
+
+                            <span>
+                                0 — Poor
+                            </span>
+
+                            <span>
+                                10 — Exceptional
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =========================================
+                         THEME FIT
+                    ========================================== -->
+
+                    <div class="score-criterion">
+
+                        <div class="criterion-header">
+
+                            <div>
+
+                                <h3>
+                                    Theme Fit
+                                </h3>
+
+                                <span>
+                                    30% weight
+                                </span>
+
+                            </div>
+
+                            <strong id="themeValue">
+                                5
+                            </strong>
+
+                        </div>
+
+                        <input
+                            type="range"
+                            id="theme"
+                            min="0"
+                            max="10"
+                            value="5"
+                            step="1"
+                        >
+
+                        <div class="range-labels">
+
+                            <span>
+                                0 — Poor
+                            </span>
+
+                            <span>
+                                10 — Perfect fit
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =========================================
+                         FINAL SCORE
+                    ========================================== -->
+
+                    <div class="final-score-box">
+
+                        <div>
+
+                            <span>
+                                WEIGHTED SCORE
+                            </span>
+
+                            <p>
+                                Based on all three criteria
+                            </p>
+
+                        </div>
+
+                        <strong id="weightedScore">
+                            5.00
+                        </strong>
+
+                        <small>
+                            / 10
+                        </small>
+
+                    </div>
+
+
+                    <!-- =========================================
+                         SUBMISSION STATUS
+                    ========================================== -->
+
+                    <div
+                        id="scoreStatus"
+                        class="score-status"
+                    >
+                    </div>
+
+
+                    <!-- =========================================
+                         MESSAGE
+                    ========================================== -->
+
+                    <p
+                        id="scoreMessage"
+                        class="score-message"
+                    ></p>
+
+
+                    <!-- =========================================
+                         SUBMIT
+                    ========================================== -->
+
+                    <button
+                        type="button"
+                        id="submitScoreBtn"
+                        class="btn primary-btn submit-score-btn"
+                    >
+                        Submit Evaluation
+                    </button>
+
+
+                    <p class="score-note">
+                        Your evaluation cannot be submitted twice
+                        for the same photograph.
+                    </p>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer>
+
+        <p>
+            © 2026 PhotoJudge. Fair judging for better photography.
+        </p>
+
+    </footer>
+
+
+    <script src="../js/scoring.js"></script>
+
+</body>
+
+</html>

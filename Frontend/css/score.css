@@ -1,0 +1,517 @@
+/* =========================================================
+   PHOTOJUDGE — SCORE PAGE
+========================================================= */
+
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.score-page {
+    min-height: 85vh;
+
+    padding: 70px 5% 100px;
+
+    background: var(--bg-main);
+}
+
+.score-container {
+    width: min(1200px, 100%);
+
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.score-header {
+    max-width: 760px;
+
+    margin-bottom: 45px;
+}
+
+.score-header h1 {
+    margin-bottom: 18px;
+
+    font-size: var(--heading-lg);
+
+    line-height: 1.05;
+
+    letter-spacing: -2px;
+}
+
+.score-header p:last-child {
+    max-width: 650px;
+
+    color: var(--text-muted);
+
+    font-size: 1.05rem;
+}
+
+
+/* =========================================================
+   EYEBROW
+========================================================= */
+
+.eyebrow {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: var(--text-muted);
+
+    font-size: 0.7rem;
+
+    font-weight: 800;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   JUDGE SELECTOR
+========================================================= */
+
+.judge-selector {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 30px;
+
+    padding: 25px 28px;
+
+    margin-bottom: 30px;
+}
+
+.judge-selector-text {
+    flex: 1;
+}
+
+.judge-selector-text h2 {
+    margin-bottom: 4px;
+
+    font-size: 1.35rem;
+}
+
+.judge-selector-text p {
+    color: var(--text-muted);
+
+    font-size: 0.9rem;
+}
+
+.judge-select-wrapper {
+    width: 270px;
+}
+
+.judge-select-wrapper label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    font-size: 0.78rem;
+
+    font-weight: 700;
+}
+
+.judge-select-wrapper select {
+    width: 100%;
+
+    padding: 13px 14px;
+
+    background: white;
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius-sm);
+
+    outline: none;
+
+    cursor: pointer;
+}
+
+.judge-select-wrapper select:focus {
+    border-color: #555;
+
+    box-shadow:
+        0 0 0 3px rgba(0, 0, 0, 0.06);
+}
+
+
+/* =========================================================
+   EVALUATION LAYOUT
+========================================================= */
+
+.evaluation-layout {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(420px, 0.9fr);
+
+    gap: 30px;
+
+    align-items: start;
+}
+
+
+/* =========================================================
+   PHOTO PANEL
+========================================================= */
+
+.photo-panel {
+    overflow: hidden;
+}
+
+.photo-wrapper {
+    width: 100%;
+
+    height: 540px;
+
+    background: #e9e7e1;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+.photo-wrapper img {
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: contain;
+}
+
+.photo-information {
+    padding: 28px;
+}
+
+.photo-information h2 {
+    margin-bottom: 10px;
+
+    font-size: 1.8rem;
+
+    line-height: 1.15;
+}
+
+.participant {
+    margin-bottom: 18px;
+
+    color: var(--text-muted);
+
+    font-size: 0.9rem;
+}
+
+.photo-description {
+    color: var(--text-muted);
+
+    font-size: 0.92rem;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   SCORING PANEL
+========================================================= */
+
+.scoring-panel {
+    padding: 30px;
+
+    position: sticky;
+
+    top: 25px;
+}
+
+.scoring-header {
+    padding-bottom: 25px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.scoring-header h2 {
+    margin-bottom: 8px;
+
+    font-size: 1.7rem;
+}
+
+.scoring-header p {
+    color: var(--text-muted);
+
+    font-size: 0.9rem;
+}
+
+
+/* =========================================================
+   CRITERIA
+========================================================= */
+
+.score-criterion {
+    padding: 25px 0;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.criterion-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 15px;
+}
+
+.criterion-header h3 {
+    margin-bottom: 3px;
+
+    font-size: 1rem;
+}
+
+.criterion-header span {
+    color: var(--text-muted);
+
+    font-size: 0.75rem;
+}
+
+.criterion-header strong {
+    min-width: 42px;
+
+    text-align: right;
+
+    font-size: 1.5rem;
+}
+
+
+/* =========================================================
+   RANGE SLIDER
+========================================================= */
+
+.score-criterion input[type="range"] {
+    width: 100%;
+
+    height: 5px;
+
+    accent-color: var(--bg-dark);
+
+    cursor: pointer;
+}
+
+.range-labels {
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-top: 8px;
+
+    color: var(--text-muted);
+
+    font-size: 0.7rem;
+}
+
+
+/* =========================================================
+   FINAL SCORE
+========================================================= */
+
+.final-score-box {
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    margin-top: 25px;
+
+    padding: 22px;
+
+    background: var(--bg-soft);
+
+    border: 1px solid var(--border);
+}
+
+.final-score-box div {
+    flex: 1;
+}
+
+.final-score-box span {
+    display: block;
+
+    margin-bottom: 3px;
+
+    font-size: 0.7rem;
+
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+}
+
+.final-score-box p {
+    color: var(--text-muted);
+
+    font-size: 0.75rem;
+}
+
+.final-score-box strong {
+    font-size: 2.4rem;
+
+    line-height: 1;
+}
+
+.final-score-box small {
+    align-self: flex-end;
+
+    margin-bottom: 3px;
+
+    color: var(--text-muted);
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.score-status {
+    margin-top: 18px;
+
+    padding: 12px 15px;
+
+    background: #f5f4f0;
+
+    border: 1px solid var(--border);
+
+    color: var(--text-muted);
+
+    font-size: 0.8rem;
+}
+
+.score-status.warning {
+    background: #f5eddc;
+
+    color: var(--warning);
+}
+
+.score-status.success {
+    background: #e7f0ea;
+
+    color: var(--success);
+}
+
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+.score-message {
+    min-height: 22px;
+
+    margin: 15px 0;
+
+    font-size: 0.85rem;
+
+    font-weight: 700;
+}
+
+.score-message.success {
+    color: var(--success);
+}
+
+.score-message.error {
+    color: var(--danger);
+}
+
+
+/* =========================================================
+   SUBMIT
+========================================================= */
+
+.submit-score-btn {
+    width: 100%;
+
+    border: none;
+}
+
+.submit-score-btn:disabled {
+    opacity: 0.55;
+
+    cursor: not-allowed;
+
+    transform: none;
+}
+
+.score-note {
+    margin-top: 12px;
+
+    color: var(--text-muted);
+
+    text-align: center;
+
+    font-size: 0.72rem;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 950px) {
+
+    .evaluation-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .scoring-panel {
+        position: static;
+    }
+
+    .photo-wrapper {
+        height: 500px;
+    }
+
+}
+
+
+@media (max-width: 650px) {
+
+    .score-page {
+        padding: 50px 20px 70px;
+    }
+
+    .score-header h1 {
+        letter-spacing: -1px;
+    }
+
+    .judge-selector {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+    .judge-select-wrapper {
+        width: 100%;
+    }
+
+    .photo-wrapper {
+        height: 350px;
+    }
+
+    .scoring-panel {
+        padding: 22px;
+    }
+
+    .final-score-box {
+        padding: 18px;
+    }
+
+}

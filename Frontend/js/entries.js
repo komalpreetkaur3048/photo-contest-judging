@@ -1,20 +1,14 @@
-// ==========================================
-// PHOTO SUBMISSION + ENTRY MANAGEMENT
-// ==========================================
+// =========================================================
+// PHOTOJUDGE — PHOTO SUBMISSION & ENTRY MANAGEMENT
+// =========================================================
 
 
-// ==========================================
-// GET FORM ELEMENTS
-// ==========================================
+// =========================================================
+// SUBMISSION PAGE
+// =========================================================
 
 const submissionForm = document.querySelector("#submissionForm");
 
-
-// ==========================================
-// CREATE / SUBMISSION CODE
-// ==========================================
-
-// Only run this code if we are on submit.html
 
 if (submissionForm) {
 
@@ -33,157 +27,414 @@ if (submissionForm) {
     const previewContainer =
         document.querySelector("#previewContainer");
 
+    const imagePreview =
+        document.querySelector("#imagePreview");
+
     const formMessage =
         document.querySelector("#formMessage");
 
 
-    // ==========================================
-    // IMAGE PREVIEW
-    // ==========================================
+    // =====================================================
+// IMAGE PREVIEW
+// =====================================================
 
-    photoInput.addEventListener("change", function () {
+photoInput.addEventListener("change", function () {
 
-        const file = photoInput.files[0];
+    const file = photoInput.files[0];
 
-        if (!file) {
-            return;
+    // Nothing selected
+    if (!file) {
+        return;
+    }
+
+
+    // =====================================================
+    // CHECK FILE TYPE
+    // =====================================================
+
+    if (!file.type.startsWith("image/")) {
+
+        formMessage.textContent =
+            "Please select a valid image file.";
+
+        photoInput.value = "";
+
+        return;
+    }
+
+
+    // =====================================================
+    // CHECK FILE SIZE
+    // Maximum 5 MB
+    // =====================================================
+
+    if (file.size > 5 * 1024 * 1024) {
+
+        formMessage.textContent =
+            "Image is too large. Please choose an image below 5 MB.";
+
+        photoInput.value = "";
+
+        return;
+    }
+
+
+    // =====================================================
+    // READ IMAGE
+    // =====================================================
+
+    const reader = new FileReader();
+
+
+    reader.onload = function (event) {
+
+        // Put image into existing img element
+        imagePreview.src = event.target.result;
+
+
+        // Show the preview
+        previewContainer.classList.add("active");
+
+
+        // Hide the upload placeholder
+        const uploadPlaceholder =
+            document.querySelector("#uploadPlaceholder");
+
+        if (uploadPlaceholder) {
+            uploadPlaceholder.style.display = "none";
         }
 
-        const reader = new FileReader();
+
+        // Clear previous message
+        formMessage.textContent = "";
+
+    };
 
 
-        reader.onload = function (event) {
+    reader.onerror = function () {
 
-            previewContainer.innerHTML = `
-                <img
-                    src="${event.target.result}"
-                    class="image-preview"
-                    alt="Selected photograph"
-                >
-            `;
+        formMessage.textContent =
+            "Could not read the selected image.";
 
-        };
+    };
 
 
-        reader.readAsDataURL(file);
+    reader.readAsDataURL(file);
 
-    });
+});
 
+    
 
-    // ==========================================
-    // CREATE ENTRY
-    // ==========================================
+    // =====================================================
+    // COMPRESS IMAGE
+    // =====================================================
 
-    submissionForm.addEventListener("submit", function (event) {
+    function compressImage(file) {
 
-        // Prevent page refresh
-        event.preventDefault();
+        return new Promise(function (resolve, reject) {
 
-
-        const file = photoInput.files[0];
-
-
-        if (!file) {
-
-            formMessage.textContent =
-                "Please select a photograph.";
-
-            return;
-        }
+            const reader = new FileReader();
 
 
-        // Read image using FileReader
+            reader.onload = function (event) {
 
-        const reader = new FileReader();
-
-
-        reader.onload = function (event) {
+                const image = new Image();
 
 
-            // ==========================================
-            // CREATE ENTRY OBJECT
-            // ==========================================
+                image.onload = function () {
 
-            const entry = {
+                    const MAX_WIDTH = 1200;
+                    const MAX_HEIGHT = 1200;
 
-                id: Date.now(),
+                    let width = image.width;
+                    let height = image.height;
 
-                participantName:
-                    participantName.value.trim(),
 
-                title:
-                    photoTitle.value.trim(),
+                    // Resize large images
 
-                description:
-                    photoDescription.value.trim(),
+                    if (width > MAX_WIDTH || height > MAX_HEIGHT) {
 
-                image:
-                    event.target.result,
+                        const ratio = Math.min(
+                            MAX_WIDTH / width,
+                            MAX_HEIGHT / height
+                        );
 
-                createdAt:
-                    new Date().toISOString()
+                        width =
+                            Math.round(width * ratio);
+
+                        height =
+                            Math.round(height * ratio);
+                    }
+
+
+                    // Create canvas
+
+                    const canvas =
+                        document.createElement("canvas");
+
+
+                    canvas.width = width;
+                    canvas.height = height;
+
+
+                    const context =
+                        canvas.getContext("2d");
+
+
+                    context.drawImage(
+                        image,
+                        0,
+                        0,
+                        width,
+                        height
+                    );
+
+
+                    // Convert to compressed JPEG
+
+                    const compressedImage =
+                        canvas.toDataURL(
+                            "image/jpeg",
+                            0.75
+                        );
+
+
+                    resolve(compressedImage);
+
+                };
+
+
+                image.onerror = function () {
+
+                    reject(
+                        new Error("Could not process image.")
+                    );
+
+                };
+
+
+                image.src = event.target.result;
 
             };
 
 
-            // ==========================================
-            // GET EXISTING ENTRIES
-            // ==========================================
+            reader.onerror = function () {
 
-            let entries =
-                JSON.parse(
-                    localStorage.getItem("photoEntries")
-                ) || [];
+                reject(
+                    new Error("Could not read image.")
+                );
 
-
-            // ==========================================
-            // ADD NEW ENTRY
-            // ==========================================
-
-            entries.push(entry);
+            };
 
 
-            // ==========================================
-            // SAVE TO LOCAL STORAGE
-            // ==========================================
+            reader.readAsDataURL(file);
 
-            localStorage.setItem(
-                "photoEntries",
-                JSON.stringify(entries)
-            );
+        });
+
+    }
 
 
-            // ==========================================
-            // SUCCESS MESSAGE
-            // ==========================================
+    // =====================================================
+    // SUBMIT PHOTOGRAPH
+    // =====================================================
+
+    submissionForm.addEventListener(
+        "submit",
+        async function (event) {
+
+            event.preventDefault();
+
+
+            const file =
+                photoInput.files[0];
+
+
+            // Check image
+
+            if (!file) {
+
+                formMessage.textContent =
+                    "Please select a photograph.";
+
+                return;
+            }
+
+
+            // Get form values
+
+            const name =
+                participantName.value.trim();
+
+            const title =
+                photoTitle.value.trim();
+
+            const description =
+                photoDescription.value.trim();
+
+
+            if (!name || !title || !description) {
+
+                formMessage.textContent =
+                    "Please complete all required fields.";
+
+                return;
+            }
+
+
+            // Show processing message
 
             formMessage.textContent =
-                "Photograph submitted successfully!";
+                "Processing your photograph...";
 
 
-            // Clear form
+            try {
 
-            submissionForm.reset();
+                // Compress image
 
-
-            // Clear image preview
-
-            previewContainer.innerHTML =
-                "<p>Image preview will appear here</p>";
-
-        };
+                const compressedImage =
+                    await compressImage(file);
 
 
-        reader.readAsDataURL(file);
+                // =================================================
+                // CREATE ENTRY
+                // =================================================
 
-    });
+                const entry = {
+
+                    id: Date.now(),
+
+                    participantName: name,
+
+                    title: title,
+
+                    description: description,
+
+                    image: compressedImage,
+
+                    createdAt:
+                        new Date().toISOString(),
+
+                    status: "Submitted",
+
+                    scores: {
+                        creativity: null,
+                        technical: null,
+                        theme: null
+                    },
+
+                    finalScore: null
+
+                };
+
+
+                // =================================================
+                // GET EXISTING ENTRIES
+                // =================================================
+
+                let entries = [];
+
+                try {
+
+                    entries =
+                        JSON.parse(
+                            localStorage.getItem(
+                                "photoEntries"
+                            )
+                        ) || [];
+
+                } catch (error) {
+
+                    entries = [];
+
+                }
+
+
+                // Add new entry
+
+                entries.push(entry);
+
+
+                // =================================================
+                // SAVE ENTRY
+                // =================================================
+
+                try {
+
+                    localStorage.setItem(
+                        "photoEntries",
+                        JSON.stringify(entries)
+                    );
+
+                } catch (storageError) {
+
+                    console.error(
+                        "Storage error:",
+                        storageError
+                    );
+
+
+                    formMessage.textContent =
+                        "This photograph is still too large for browser storage. Please choose a smaller image.";
+
+                    return;
+
+                }
+
+
+                // =================================================
+                // SUCCESS
+                // =================================================
+
+                formMessage.textContent =
+                    "✓ Photograph submitted successfully!";
+
+
+                // Reset form
+
+                submissionForm.reset();
+
+
+                // Reset preview
+
+                previewContainer.innerHTML = `
+                    <p>
+                        Image preview will appear here
+                    </p>
+                `;
+
+
+                // Redirect after success
+
+                setTimeout(function () {
+
+                    window.location.href =
+                        "my-entries.html";
+
+                }, 1000);
+
+
+            } catch (error) {
+
+                console.error(
+                    "Image processing error:",
+                    error
+                );
+
+
+                formMessage.textContent =
+                    "Something went wrong while processing your photograph.";
+
+            }
+
+        }
+    );
 
 }
 
 
-// ==========================================
-// READ ENTRIES
-// ==========================================
+// =========================================================
+// MY ENTRIES PAGE
+// =========================================================
 
 function displayEntries() {
 
@@ -194,85 +445,107 @@ function displayEntries() {
         document.querySelector("#noEntriesMessage");
 
 
-    // If this is not the My Entries page,
-    // stop here.
+    // Not My Entries page
 
     if (!entriesContainer) {
         return;
     }
 
 
-    // Get entries from localStorage
-
-    const entries =
-        JSON.parse(
-            localStorage.getItem("photoEntries")
-        ) || [];
+    let entries = [];
 
 
-    // ==========================================
+    try {
+
+        entries =
+            JSON.parse(
+                localStorage.getItem("photoEntries")
+            ) || [];
+
+    } catch (error) {
+
+        entries = [];
+
+    }
+
+
+    // =====================================================
     // NO ENTRIES
-    // ==========================================
+    // =====================================================
 
     if (entries.length === 0) {
 
         entriesContainer.innerHTML = "";
 
-        noEntriesMessage.style.display = "block";
+        noEntriesMessage.style.display =
+            "block";
 
         return;
     }
 
 
-    // Hide "No entries" message
+    noEntriesMessage.style.display =
+        "none";
 
-    noEntriesMessage.style.display = "none";
-
-
-    // Clear container
 
     entriesContainer.innerHTML = "";
 
 
-    // ==========================================
-    // DISPLAY EACH ENTRY
-    // ==========================================
+    // =====================================================
+    // DISPLAY ENTRIES
+    // =====================================================
 
     entries.forEach(function (entry) {
 
         const card =
-            document.createElement("div");
+            document.createElement("article");
 
-        card.className = "entry-card";
+
+        card.className =
+            "entry-card";
 
 
         card.innerHTML = `
 
-            <img
-                src="${entry.image}"
-                alt="${entry.title}"
-            >
+            <div class="entry-image-wrapper">
+
+                <img
+                    src="${entry.image}"
+                    alt="${entry.title}"
+                    class="entry-image"
+                >
+
+                <span class="entry-status">
+                    ${entry.status || "Submitted"}
+                </span>
+
+            </div>
+
 
             <div class="entry-content">
+
+                <p class="small-heading">
+                    PHOTO ENTRY
+                </p>
 
                 <h2>
                     ${entry.title}
                 </h2>
 
-                <p>
+                <p class="entry-description">
                     ${entry.description}
                 </p>
 
-                <p>
-                    <strong>Participant:</strong>
-                    ${entry.participantName}
+                <p class="entry-participant">
+                    By ${entry.participantName}
                 </p>
 
                 <p class="entry-date">
-                    Submitted:
+                    Submitted
                     ${new Date(entry.createdAt)
                         .toLocaleDateString()}
                 </p>
+
 
                 <div class="entry-actions">
 
@@ -293,6 +566,7 @@ function displayEntries() {
                 </div>
 
             </div>
+
         `;
 
 
@@ -303,92 +577,90 @@ function displayEntries() {
 }
 
 
-// ==========================================
-// RUN READ FUNCTION
-// ==========================================
+// Run My Entries
 
 displayEntries();
 
-// ==========================================
+
+// =========================================================
 // DELETE ENTRY
-// ==========================================
+// =========================================================
 
 function deleteEntry(entryId) {
 
-    const confirmDelete = confirm(
-        "Are you sure you want to delete this entry?"
-    );
+    const confirmDelete =
+        confirm(
+            "Are you sure you want to delete this photograph?"
+        );
 
-    // Stop if user clicks Cancel
+
     if (!confirmDelete) {
         return;
     }
 
 
-    // Get existing entries
     let entries =
         JSON.parse(
             localStorage.getItem("photoEntries")
         ) || [];
 
 
-    // Remove the selected entry
-    entries = entries.filter(function (entry) {
+    entries =
+        entries.filter(function (entry) {
 
-        return entry.id !== entryId;
+            return entry.id !== entryId;
 
-    });
+        });
 
 
-    // Save updated array
     localStorage.setItem(
         "photoEntries",
         JSON.stringify(entries)
     );
 
 
-    // Refresh the page display
     displayEntries();
+
 }
 
 
-
-// ==========================================
-// OPEN EDIT PAGE
-// ==========================================
+// =========================================================
+// EDIT ENTRY
+// =========================================================
 
 function editEntry(entryId) {
 
     window.location.href =
         `edit-entry.html?id=${entryId}`;
+
 }
 
 
+// =========================================================
+// EDIT PAGE
+// =========================================================
 
-// ==========================================
-// EDIT ENTRY PAGE
-// ==========================================
+const editForm =
+    document.querySelector("#editForm");
 
-const editForm = document.querySelector("#editForm");
 
 if (editForm) {
 
     const params =
-        new URLSearchParams(window.location.search);
+        new URLSearchParams(
+            window.location.search
+        );
+
 
     const entryId =
         Number(params.get("id"));
 
 
-    // Get all entries
-
-    const entries =
+    let entries =
         JSON.parse(
             localStorage.getItem("photoEntries")
         ) || [];
 
-
-    // Find the selected entry
 
     const entry =
         entries.find(function (item) {
@@ -398,30 +670,46 @@ if (editForm) {
         });
 
 
-    // If entry doesn't exist
+    const editMessage =
+        document.querySelector("#editMessage");
+
+
+    // =====================================================
+    // ENTRY NOT FOUND
+    // =====================================================
 
     if (!entry) {
 
-        document.querySelector("#editMessage").textContent =
+        editMessage.textContent =
             "Entry not found.";
 
-    } else {
+    }
 
-        // Fill existing values
+
+    else {
+
+        // Fill participant name
 
         document.querySelector(
             "#editParticipantName"
-        ).value = entry.participantName;
+        ).value =
+            entry.participantName;
 
+
+        // Fill title
 
         document.querySelector(
             "#editPhotoTitle"
-        ).value = entry.title;
+        ).value =
+            entry.title;
 
+
+        // Fill description
 
         document.querySelector(
             "#editPhotoDescription"
-        ).value = entry.description;
+        ).value =
+            entry.description;
 
 
         // Show current image
@@ -429,17 +717,19 @@ if (editForm) {
         document.querySelector(
             "#editImagePreview"
         ).innerHTML = `
+
             <img
                 src="${entry.image}"
                 class="image-preview"
                 alt="${entry.title}"
             >
+
         `;
 
 
-        // ==========================================
+        // =================================================
         // UPDATE ENTRY
-        // ==========================================
+        // =================================================
 
         editForm.addEventListener(
             "submit",
@@ -447,8 +737,6 @@ if (editForm) {
 
                 event.preventDefault();
 
-
-                // Get updated values
 
                 const updatedTitle =
                     document.querySelector(
@@ -462,26 +750,34 @@ if (editForm) {
                     ).value.trim();
 
 
-                // Find entry index
+                if (!updatedTitle ||
+                    !updatedDescription) {
+
+                    editMessage.textContent =
+                        "Please complete all fields.";
+
+                    return;
+
+                }
+
 
                 const entryIndex =
-                    entries.findIndex(function (item) {
+                    entries.findIndex(
+                        function (item) {
 
-                        return item.id === entryId;
+                            return item.id === entryId;
 
-                    });
+                        }
+                    );
 
-
-                // Update values
 
                 entries[entryIndex].title =
                     updatedTitle;
 
+
                 entries[entryIndex].description =
                     updatedDescription;
 
-
-                // Save updated entries
 
                 localStorage.setItem(
                     "photoEntries",
@@ -489,22 +785,16 @@ if (editForm) {
                 );
 
 
-                // Success message
+                editMessage.textContent =
+                    "✓ Entry updated successfully!";
 
-                document.querySelector(
-                    "#editMessage"
-                ).textContent =
-                    "Entry updated successfully!";
-
-
-                // Return to My Entries after a short delay
 
                 setTimeout(function () {
 
                     window.location.href =
                         "my-entries.html";
 
-                }, 1000);
+                }, 800);
 
             }
         );

@@ -2,162 +2,170 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <title>PhotoJudge | Photo Contest</title>
+    <meta
+        name="description"
+        content="PhotoJudge is a fair and transparent photo contest platform using weighted and normalized judging."
+    >
+
+    <title>PhotoJudge | Fair Photo Contests</title>
 
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/home.css">
+
 </head>
+
 
 <body>
 
-    <!-- Navigation Bar -->
+    <!-- =====================================================
+         NAVIGATION
+    ====================================================== -->
+
     <header>
+
         <nav class="navbar">
 
-            <div class="logo">
+            <a
+                href="index.html"
+                class="logo"
+            >
                 PhotoJudge
-            </div>
+            </a>
+
 
             <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="pages/contests.html">Contests</a></li>
-                <li><a href="pages/submit.html">Submit Photo</a></li>
-                <li><a href="pages/my-entries.html">My Entries</a></li>
-                <li><a href="pages/leaderboard.html">Leaderboard</a></li>
-                <li><a href="pages/login.html">Login</a></li>
+
+                <li>
+                    <a href="index.html">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="pages/contests.html">
+                        Contests
+                    </a>
+                </li>
+
+                <li>
+                    <a href="pages/submit.html">
+                        Submit
+                    </a>
+                </li>
+
+                <li>
+                    <a href="pages/my-entries.html">
+                        My Entries
+                    </a>
+                </li>
+
+                <li>
+                    <a href="pages/leaderboard.html">
+                        Leaderboard
+                    </a>
+                </li>
+
+                <li>
+                    <a
+                        href="pages/login.html"
+                        class="nav-login"
+                    >
+                        Login
+                    </a>
+                </li>
+
             </ul>
 
         </nav>
+
     </header>
 
 
-    <!-- Hero Section -->
     <main>
+
+        <!-- =================================================
+             HERO
+        ================================================== -->
 
         <section class="hero">
 
             <div class="hero-content">
 
-                <p class="tagline">
+                <span class="hero-eyebrow">
                     FAIR • TRANSPARENT • SMART
-                </p>
+                </span>
+
 
                 <h1>
-                    Let Every Photo<br>
-                    <span>Tell Its Story.</span>
+                    Let every photo
+                    <em>tell its story.</em>
                 </h1>
 
+
                 <p class="hero-description">
-                    A fair photo contest platform where creativity,
-                    technical quality, and theme-fit come together
-                    through transparent weighted judging.
+                    A modern photo contest platform where
+                    creativity, technical quality, and theme-fit
+                    come together through transparent weighted
+                    judging.
                 </p>
 
-                <div class="hero-buttons">
 
-                    <a href="pages/contests.html" class="btn primary-btn">
+                <div class="hero-actions">
+
+                    <a
+                        href="pages/contests.html"
+                        class="btn light-btn"
+                    >
                         Explore Contest
                     </a>
 
-                    <a href="#how-it-works" class="btn secondary-btn">
+                    <a
+                        href="#how-it-works"
+                        class="btn hero-outline-btn"
+                    >
                         How It Works
                     </a>
 
                 </div>
 
-            </div>
 
-        </section>
+                <div class="hero-note">
 
+                    <span class="hero-dot"></span>
 
-        <!-- How It Works -->
-        <section id="how-it-works" class="how-section">
+                    Currently accepting submissions
 
-            <div class="section-heading">
-
-                <p class="small-heading">
-                    SIMPLE PROCESS
-                </p>
-
-                <h2>
-                    How It Works
-                </h2>
-
-                <p>
-                    From submitting your photograph to the final
-                    leaderboard, everything happens through a
-                    transparent judging process.
-                </p>
+                </div>
 
             </div>
 
 
-            <div class="steps">
+            <!-- Hero visual -->
 
-                <div class="step-card">
+            <div class="hero-visual">
 
-                    <div class="step-number">
-                        01
-                    </div>
+                <img
+                    src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=85"
+                    alt="Mountain landscape photographed during golden hour"
+                >
 
-                    <h3>Submit</h3>
+                <div class="hero-image-label">
 
-                    <p>
-                        Participants submit their best photograph
-                        for the contest.
-                    </p>
+                    <span>
+                        Featured Contest
+                    </span>
 
-                </div>
-
-
-                <div class="step-card">
-
-                    <div class="step-number">
-                        02
-                    </div>
-
-                    <h3>Judge</h3>
-
-                    <p>
-                        Judges evaluate photographs using multiple
-                        weighted criteria.
-                    </p>
-
-                </div>
-
-
-                <div class="step-card">
-
-                    <div class="step-number">
-                        03
-                    </div>
-
-                    <h3>Normalize</h3>
-
-                    <p>
-                        Scores are normalized to reduce differences
-                        between strict and lenient judges.
-                    </p>
-
-                </div>
-
-
-                <div class="step-card">
-
-                    <div class="step-number">
-                        04
-                    </div>
-
-                    <h3>Rank</h3>
-
-                    <p>
-                        Final scores are calculated and displayed
-                        on the leaderboard.
-                    </p>
+                    <strong>
+                        Nature Through My Lens
+                    </strong>
 
                 </div>
 
@@ -166,46 +174,474 @@
         </section>
 
 
-        <!-- Active Contest -->
-        <section class="contest-section">
+        <!-- =================================================
+             CONTEST SNAPSHOT
+        ================================================== -->
 
-            <div class="contest-content">
+        <section class="contest-snapshot">
 
-                <p class="small-heading">
-                    CURRENT CONTEST
-                </p>
+            <div class="snapshot-inner">
 
-                <h2>
-                    Nature Through My Lens
-                </h2>
+                <div class="snapshot-title">
 
-                <p>
-                    Capture the beauty of nature through your own
-                    perspective. Show us landscapes, wildlife,
-                    plants, or moments that connect people with nature.
-                </p>
+                    <span class="small-heading">
+                        CURRENT CONTEST
+                    </span>
 
-                <div class="criteria">
+                    <h2>
+                        Nature Through My Lens
+                    </h2>
 
-                    <div>
-                        <strong>40%</strong>
-                        <span>Creativity</span>
+                    <p>
+                        Show us how you see the natural world.
+                        Landscapes, wildlife, plants and
+                        unforgettable moments are all welcome.
+                    </p>
+
+                </div>
+
+
+                <div class="snapshot-details">
+
+                    <div class="snapshot-item">
+
+                        <strong>
+                            30 AUG
+                        </strong>
+
+                        <span>
+                            Submission deadline
+                        </span>
+
                     </div>
 
-                    <div>
-                        <strong>30%</strong>
-                        <span>Technical Quality</span>
+
+                    <div class="snapshot-item">
+
+                        <strong>
+                            3
+                        </strong>
+
+                        <span>
+                            Professional judges
+                        </span>
+
                     </div>
 
-                    <div>
-                        <strong>30%</strong>
-                        <span>Theme Fit</span>
+
+                    <div class="snapshot-item">
+
+                        <strong>
+                            3
+                        </strong>
+
+                        <span>
+                            Photos per participant
+                        </span>
+
                     </div>
 
                 </div>
 
-                <a href="pages/contests.html" class="btn primary-btn">
-                    View Contest
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             HOW IT WORKS
+        ================================================== -->
+
+        <section
+            id="how-it-works"
+            class="how-section"
+        >
+
+            <div class="container">
+
+                <div class="section-heading">
+
+                    <span class="small-heading">
+                        THE PROCESS
+                    </span>
+
+                    <h2>
+                        Simple for participants.
+                        Serious about fairness.
+                    </h2>
+
+                    <p>
+                        From your first upload to the final
+                        ranking, every stage is designed to make
+                        the judging process clear and consistent.
+                    </p>
+
+                </div>
+
+
+                <div class="process-grid">
+
+                    <!-- Step 01 -->
+
+                    <article class="process-card">
+
+                        <span class="process-number">
+                            01
+                        </span>
+
+                        <h3>
+                            Submit
+                        </h3>
+
+                        <p>
+                            Upload your photograph and tell the
+                            story behind it.
+                        </p>
+
+                    </article>
+
+
+                    <!-- Step 02 -->
+
+                    <article class="process-card">
+
+                        <span class="process-number">
+                            02
+                        </span>
+
+                        <h3>
+                            Judge
+                        </h3>
+
+                        <p>
+                            Judges independently evaluate every
+                            photograph across three criteria.
+                        </p>
+
+                    </article>
+
+
+                    <!-- Step 03 -->
+
+                    <article class="process-card featured-process">
+
+                        <span class="process-number">
+                            03
+                        </span>
+
+                        <h3>
+                            Normalize
+                        </h3>
+
+                        <p>
+                            Differences between strict and
+                            lenient judges are accounted for.
+                        </p>
+
+                        <span class="process-tag">
+                            OUR DIFFERENCE
+                        </span>
+
+                    </article>
+
+
+                    <!-- Step 04 -->
+
+                    <article class="process-card">
+
+                        <span class="process-number">
+                            04
+                        </span>
+
+                        <h3>
+                            Rank
+                        </h3>
+
+                        <p>
+                            Weighted scores are combined to create
+                            the final leaderboard.
+                        </p>
+
+                    </article>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             JUDGING SYSTEM
+        ================================================== -->
+
+        <section class="fairness-section">
+
+            <div class="container fairness-grid">
+
+                <div class="fairness-copy">
+
+                    <span class="small-heading">
+                        BUILT FOR FAIRNESS
+                    </span>
+
+                    <h2>
+                        Not every judge
+                        scores the same way.
+                    </h2>
+
+                    <p>
+                        Some judges naturally score generously.
+                        Others are more critical. PhotoJudge
+                        accounts for these differences before
+                        producing the final ranking.
+                    </p>
+
+                    <p>
+                        The result is a scoring system designed to
+                        compare photographs more fairly across
+                        multiple judges.
+                    </p>
+
+                </div>
+
+
+                <div class="fairness-visual">
+
+                    <div class="judge-comparison">
+
+                        <div class="judge-row">
+
+                            <div class="judge-name">
+                                Judge A
+                                <span>
+                                    Lenient
+                                </span>
+                            </div>
+
+                            <div class="score-bar">
+
+                                <span
+                                    style="width: 88%"
+                                ></span>
+
+                            </div>
+
+                            <strong>
+                                8.8
+                            </strong>
+
+                        </div>
+
+
+                        <div class="judge-row">
+
+                            <div class="judge-name">
+                                Judge B
+                                <span>
+                                    Strict
+                                </span>
+                            </div>
+
+                            <div class="score-bar">
+
+                                <span
+                                    style="width: 64%"
+                                ></span>
+
+                            </div>
+
+                            <strong>
+                                6.4
+                            </strong>
+
+                        </div>
+
+
+                        <div class="normalization-arrow">
+                            ↓
+                        </div>
+
+
+                        <div class="normalized-result">
+
+                            <span>
+                                NORMALIZED
+                            </span>
+
+                            <strong>
+                                Comparable scoring
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             WEIGHTS
+        ================================================== -->
+
+        <section class="weights-section">
+
+            <div class="container">
+
+                <div class="section-heading">
+
+                    <span class="small-heading">
+                        JUDGING CRITERIA
+                    </span>
+
+                    <h2>
+                        Every part of the photograph
+                        has a purpose.
+                    </h2>
+
+                    <p>
+                        Final scores are calculated using the
+                        contest's weighted evaluation criteria.
+                    </p>
+
+                </div>
+
+
+                <div class="weights-grid">
+
+                    <article class="weight-card">
+
+                        <div class="weight-top">
+
+                            <span>
+                                01
+                            </span>
+
+                            <strong>
+                                40%
+                            </strong>
+
+                        </div>
+
+                        <h3>
+                            Creativity
+                        </h3>
+
+                        <p>
+                            Originality, visual storytelling
+                            and creative perspective.
+                        </p>
+
+                        <div class="weight-bar">
+                            <span
+                                style="width: 40%"
+                            ></span>
+                        </div>
+
+                    </article>
+
+
+                    <article class="weight-card">
+
+                        <div class="weight-top">
+
+                            <span>
+                                02
+                            </span>
+
+                            <strong>
+                                30%
+                            </strong>
+
+                        </div>
+
+                        <h3>
+                            Technical Quality
+                        </h3>
+
+                        <p>
+                            Composition, exposure, focus and
+                            overall photographic execution.
+                        </p>
+
+                        <div class="weight-bar">
+                            <span
+                                style="width: 30%"
+                            ></span>
+                        </div>
+
+                    </article>
+
+
+                    <article class="weight-card">
+
+                        <div class="weight-top">
+
+                            <span>
+                                03
+                            </span>
+
+                            <strong>
+                                30%
+                            </strong>
+
+                        </div>
+
+                        <h3>
+                            Theme Fit
+                        </h3>
+
+                        <p>
+                            How effectively the photograph
+                            responds to the contest theme.
+                        </p>
+
+                        <div class="weight-bar">
+                            <span
+                                style="width: 30%"
+                            ></span>
+                        </div>
+
+                    </article>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             FINAL CTA
+        ================================================== -->
+
+        <section class="final-cta">
+
+            <div class="container">
+
+                <span class="small-heading">
+                    YOUR PERSPECTIVE MATTERS
+                </span>
+
+                <h2>
+                    Ready to tell
+                    your story?
+                </h2>
+
+                <p>
+                    Enter Nature Through My Lens and let your
+                    photograph speak for itself.
+                </p>
+
+                <a
+                    href="pages/submit.html"
+                    class="btn light-btn"
+                >
+                    Submit Your Photo
                 </a>
 
             </div>
@@ -215,11 +651,15 @@
     </main>
 
 
-    <!-- Footer -->
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
     <footer>
 
         <p>
-            © 2026 PhotoJudge. Fair judging for better photography.
+            © 2026 PhotoJudge.
+            Fair judging for better photography.
         </p>
 
     </footer>
