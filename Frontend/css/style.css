@@ -183,9 +183,13 @@ a {
 
     align-items: center;
 
-    gap: 28px;
+    gap: 30px;
 
     list-style: none;
+
+    margin: 0;
+
+    padding: 0;
 }
 
 .nav-links a {
@@ -580,4 +584,92 @@ footer {
 
 .nav-links a.active {
     font-weight: 700;
+}
+
+
+
+
+
+
+
+
+/* Dynamic navigation items */
+.nav-links,
+.nav-links li,
+.nav-links li::marker {
+    list-style: none !important;
+}
+
+.nav-links li {
+    margin: 0;
+    padding: 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ==========================================
+   CONTEST DROPDOWN
+========================================== */
+
+.nav-dropdown {
+    position: relative;
+}
+
+.contest-dropdown {
+    position: absolute;
+
+    top: 100%;
+    left: 0;
+
+    min-width: 190px;
+
+    display: none;
+
+    padding: 8px 0;
+
+    background: white;
+
+    border: 1px solid var(--border);
+
+    box-shadow: var(--shadow-soft);
+
+    list-style: none;
+
+    margin: 0;
+    z-index: 200;
+}
+
+.nav-dropdown:hover .contest-dropdown {
+    display: block;
+}
+
+.contest-dropdown li {
+    list-style: none;
+
+    margin: 0;
+    padding: 0;
+}
+
+.contest-dropdown a {
+    display: block;
+
+    padding: 10px 16px;
+
+    white-space: nowrap;
+
+    text-decoration: none;
+}
+
+.contest-dropdown a:hover {
+    background: var(--bg-soft);
 }

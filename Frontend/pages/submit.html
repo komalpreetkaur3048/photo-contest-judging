@@ -21,43 +21,15 @@
     ========================== -->
 
     <header>
-
         <nav class="navbar">
 
-            <a href="../index.html" class="logo">
-                PhotoJudge<span>.</span>
-            </a>
+    <a href="../index.html" class="logo">
+        PhotoJudge
+    </a>
 
-            <ul class="nav-links">
+    <ul class="nav-links" id="mainNav"></ul>
 
-                <li>
-                    <a href="../index.html">Home</a>
-                </li>
-
-                <li>
-                    <a href="contests.html">Contests</a>
-                </li>
-
-                <li>
-                    <a href="submit.html" class="active">Submit</a>
-                </li>
-
-                <li>
-                    <a href="my-entries.html">My Entries</a>
-                </li>
-
-                <li>
-                    <a href="leaderboard.html">Leaderboard</a>
-                </li>
-
-                <li>
-                    <a href="login.html">Login</a>
-                </li>
-
-            </ul>
-
-        </nav>
-
+</nav>
     </header>
 
 
@@ -90,21 +62,21 @@
 
             <div class="contest-mini-card">
 
-                <span class="status-dot"></span>
+    <span class="status-dot"></span>
 
-                <div>
+    <div>
 
-                    <small>
-                        CURRENT CONTEST
-                    </small>
+        <small>
+            SELECTED CONTEST
+        </small>
 
-                    <strong>
-                        Nature Through My Lens
-                    </strong>
+        <strong id="selectedContestName">
+            Loading contest...
+        </strong>
 
-                </div>
+    </div>
 
-            </div>
+</div>
 
         </section>
 
@@ -117,7 +89,26 @@
 
             <form id="submissionForm" class="submission-form">
 
+                <!-- contest selection -->
 
+                <div class="form-group">
+
+                    <label for="contestSelect">
+                        Select Contest
+                    </label>
+
+                <select
+                    id="contestSelect"
+                     required
+                >
+                <option value="">
+                    Select a contest
+                </option>
+                </select>
+
+                </div>
+
+                
                 <!-- PHOTO UPLOAD -->
 
                 <div class="form-section">
@@ -302,24 +293,11 @@
                         YOUR ENTRY WILL BE JUDGED ON
                     </p>
 
-                    <div class="criteria-row">
-
-                        <div>
-                            <strong>40%</strong>
-                            <span>Creativity</span>
-                        </div>
-
-                        <div>
-                            <strong>30%</strong>
-                            <span>Technical Quality</span>
-                        </div>
-
-                        <div>
-                            <strong>30%</strong>
-                            <span>Theme Fit</span>
-                        </div>
-
-                    </div>
+                <div
+                class="criteria-row"
+                id="submissionCriteria"
+                >
+                </div>
 
                 </div>
 
@@ -448,7 +426,25 @@
     </footer>
 
 
+    <script src="../js/auth.js"></script>
     <script src="../js/entries.js"></script>
+
+    <script>
+    const currentUser =
+        JSON.parse(
+            localStorage.getItem("currentUser")
+        );
+
+    if (!currentUser) {
+
+        window.location.href = "login.html";
+
+    } else if (currentUser.role !== "participant") {
+
+        window.location.href = "judge.html";
+
+    }
+</script>
 
 </body>
 

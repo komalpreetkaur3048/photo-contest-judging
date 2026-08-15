@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | PhotoJudge</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/auth.css">
+
+</head>
+
+<body>
+
+    <!-- =========================
+         NAVBAR
+    ========================== -->
+
+    <nav class="navbar">
+
+    <a href="../index.html" class="logo">
+        PhotoJudge
+    </a>
+
+    <ul class="nav-links" id="mainNav"></ul>
+
+</nav>
+
+
+    <!-- =========================
+         LOGIN SECTION
+    ========================== -->
+
+    <main class="auth-section">
+
+        <div class="auth-container">
+
+            <p class="small-heading">
+                WELCOME BACK
+            </p>
+
+            <h1>
+                Login
+            </h1>
+
+            <p class="auth-description">
+                Login to participate in contests or judge
+                submitted photographs.
+            </p>
+
+
+            <form id="loginForm">
+
+                <!-- Email -->
+
+                <div class="form-group">
+
+                    <label for="loginEmail">
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="loginEmail"
+                        placeholder="Enter your email"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Password -->
+
+                <div class="form-group">
+
+                    <label for="loginPassword">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="loginPassword"
+                        placeholder="Enter your password"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Login Button -->
+
+                <button
+                    type="submit"
+                    class="auth-btn"
+                >
+                    Login
+                </button>
+
+
+                <!-- Message -->
+
+                <p
+                    id="loginMessage"
+                    class="auth-message"
+                ></p>
+
+            </form>
+
+
+            <!-- Register Link -->
+
+            <p class="auth-switch">
+
+                Don't have an account?
+
+                <a href="register.html">
+                    Register here
+                </a>
+
+            </p>
+
+        </div>
+
+    </main>
+
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
+    <footer>
+
+        <p>
+            © 2026 PhotoJudge. All rights reserved.
+        </p>
+
+    </footer>
+
+
+    <script src="../js/auth.js"></script>
+
+</body>
+
+</html>

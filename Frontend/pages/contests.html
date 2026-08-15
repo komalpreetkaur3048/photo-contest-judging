@@ -24,49 +24,13 @@
 
         <nav class="navbar">
 
-            <a href="../index.html" class="logo">
-                PhotoJudge<span>.</span>
-            </a>
+    <a href="../index.html" class="logo">
+        PhotoJudge
+    </a>
 
-            <ul class="nav-links">
+    <ul class="nav-links" id="mainNav"></ul>
 
-                <li>
-                    <a href="../index.html">Home</a>
-                </li>
-
-                <li>
-                    <a href="contests.html" class="active">
-                        Contests
-                    </a>
-                </li>
-
-                <li>
-                    <a href="submit.html">
-                        Submit
-                    </a>
-                </li>
-
-                <li>
-                    <a href="my-entries.html">
-                        My Entries
-                    </a>
-                </li>
-
-                <li>
-                    <a href="leaderboard.html">
-                        Leaderboard
-                    </a>
-                </li>
-
-                <li>
-                    <a href="login.html">
-                        Login
-                    </a>
-                </li>
-
-            </ul>
-
-        </nav>
+</nav>
 
     </header>
 
@@ -105,204 +69,41 @@
              ACTIVE CONTEST
         ========================== -->
 
-        <section class="active-contest">
+        <!-- =========================
+     AVAILABLE CONTESTS
+========================= -->
 
-            <div class="contest-image">
+<section class="contest-list-section">
 
-                <img
-                    src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80"
-                    alt="Nature photography"
-                >
+    <div class="contests-heading">
 
-                <div class="image-label">
-                    ACCEPTING SUBMISSIONS
-                </div>
+        <p class="eyebrow">
+            AVAILABLE CONTESTS
+        </p>
 
-            </div>
+        <h2>
+            Choose your next
+            <em>frame.</em>
+        </h2>
 
+        <p>
+            Explore photography contests, review their
+            themes and judging criteria, and participate
+            in the contest that inspires you.
+        </p>
 
-            <div class="contest-content">
+    </div>
 
-                <p class="eyebrow">
-                    CURRENT CONTEST
-                </p>
 
-                <h2>
-                    Nature Through
-                    <em>My Lens.</em>
-                </h2>
+    <!-- Contests are inserted by JavaScript -->
 
-                <p class="contest-description">
-                    Capture the beauty of nature through your
-                    own perspective. Show landscapes, wildlife,
-                    plants, or moments that connect people
-                    with nature.
-                </p>
+    <div
+        id="contestsContainer"
+        class="contests-container"
+    >
+    </div>
 
-
-                <!-- Contest Meta -->
-
-                <div class="contest-meta">
-
-                    <div class="meta-item">
-
-                        <span>
-                            DEADLINE
-                        </span>
-
-                        <strong>
-                            30 Aug 2026
-                        </strong>
-
-                    </div>
-
-                    <div class="meta-item">
-
-                        <span>
-                            MAX ENTRIES
-                        </span>
-
-                        <strong>
-                            3 Photos
-                        </strong>
-
-                    </div>
-
-                    <div class="meta-item">
-
-                        <span>
-                            JUDGES
-                        </span>
-
-                        <strong>
-                            3 Judges
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                <!-- Judging -->
-
-                <div class="judging-section">
-
-                    <div class="judging-header">
-
-                        <h3>
-                            How your photo is judged
-                        </h3>
-
-                        <p>
-                            Every photograph is evaluated
-                            independently across three criteria.
-                        </p>
-
-                    </div>
-
-
-                    <div class="criteria-list">
-
-                        <div class="criteria-item">
-
-                            <div class="criteria-top">
-
-                                <strong>
-                                    Creativity
-                                </strong>
-
-                                <span>
-                                    40%
-                                </span>
-
-                            </div>
-
-                            <div class="criteria-bar">
-                                <div
-                                    class="criteria-fill creativity"
-                                ></div>
-                            </div>
-
-                            <p>
-                                Originality, perspective and
-                                artistic expression.
-                            </p>
-
-                        </div>
-
-
-                        <div class="criteria-item">
-
-                            <div class="criteria-top">
-
-                                <strong>
-                                    Technical Quality
-                                </strong>
-
-                                <span>
-                                    30%
-                                </span>
-
-                            </div>
-
-                            <div class="criteria-bar">
-                                <div
-                                    class="criteria-fill technical"
-                                ></div>
-                            </div>
-
-                            <p>
-                                Composition, lighting,
-                                focus and image quality.
-                            </p>
-
-                        </div>
-
-
-                        <div class="criteria-item">
-
-                            <div class="criteria-top">
-
-                                <strong>
-                                    Theme Fit
-                                </strong>
-
-                                <span>
-                                    30%
-                                </span>
-
-                            </div>
-
-                            <div class="criteria-bar">
-                                <div
-                                    class="criteria-fill theme"
-                                ></div>
-                            </div>
-
-                            <p>
-                                How effectively the photograph
-                                represents the contest theme.
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <a
-                    href="submit.html"
-                    class="contest-submit-btn"
-                >
-                    Submit Your Photo
-                    <span>→</span>
-                </a>
-
-            </div>
-
-        </section>
-
+</section>
 
         <!-- =========================
              FAIR JUDGING
@@ -393,6 +194,8 @@
 
     </footer>
 
+    <script src="../js/auth.js"></script>
+    <script src="../js/contests.js"></script>
 </body>
 
 </html>

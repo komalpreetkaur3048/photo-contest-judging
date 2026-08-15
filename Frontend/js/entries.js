@@ -3,6 +3,138 @@
 // =========================================================
 
 
+// ==========================================
+// GET SELECTED CONTEST
+// ==========================================
+
+const submitParams =
+    new URLSearchParams(
+        window.location.search
+    );
+
+const selectedContestId =
+    submitParams.get("contestId");
+
+
+// ==========================================
+// LOAD SELECTED CONTEST
+// ==========================================
+
+function getSelectedContest() {
+
+    const contests =
+        JSON.parse(
+            localStorage.getItem("contests")
+        ) || [];
+
+    return contests.find(function (contest) {
+
+        return contest.id === selectedContestId;
+
+    });
+}
+
+
+// ==========================================
+// DISPLAY SELECTED CONTEST
+// ==========================================
+
+function displaySelectedContest() {
+
+    const contest =
+        getSelectedContest();
+
+
+    const contestName =
+        document.querySelector(
+            "#selectedContestName"
+        );
+
+    const criteriaContainer =
+        document.querySelector(
+            "#submissionCriteria"
+        );
+
+
+    // No contest selected
+
+    if (!contest) {
+
+        if (contestName) {
+
+            contestName.textContent =
+                "No contest selected";
+
+        }
+
+        if (criteriaContainer) {
+
+            criteriaContainer.innerHTML = `
+                <p>
+                    Please select a contest before submitting.
+                </p>
+            `;
+
+        }
+
+        return;
+    }
+
+
+    // Contest name
+
+    if (contestName) {
+
+        contestName.textContent =
+            contest.title;
+
+    }
+
+
+    // Criteria
+
+    if (criteriaContainer) {
+
+        criteriaContainer.innerHTML = `
+
+            <div>
+                <strong>
+                    ${contest.criteria.creativity}%
+                </strong>
+
+                <span>
+                    Creativity
+                </span>
+            </div>
+
+
+            <div>
+                <strong>
+                    ${contest.criteria.technical}%
+                </strong>
+
+                <span>
+                    Technical Quality
+                </span>
+            </div>
+
+
+            <div>
+                <strong>
+                    ${contest.criteria.themeFit}%
+                </strong>
+
+                <span>
+                    Theme Fit
+                </span>
+            </div>
+
+        `;
+
+    }
+
+}
+
 // =========================================================
 // SUBMISSION PAGE
 // =========================================================
@@ -11,6 +143,9 @@ const submissionForm = document.querySelector("#submissionForm");
 
 
 if (submissionForm) {
+
+    const contestSelect =
+        document.querySelector("#contestSelect");
 
     const participantName =
         document.querySelector("#participantName");
@@ -34,7 +169,178 @@ if (submissionForm) {
         document.querySelector("#formMessage");
 
 
-    // =====================================================
+    function loadContestOptions() {
+
+    if (!contestSelect) {
+        return;
+    }
+
+    const contests =
+        JSON.parse(
+            localStorage.getItem("contests")
+        ) || [];
+
+    const activeContests =
+        contests.filter(function (contest) {
+
+            return contest.status === "active";
+
+        });
+
+    contestSelect.innerHTML = `
+        <option value="">
+            Select a contest
+        </option>
+    `;
+
+    activeContests.forEach(function (contest) {
+
+        contestSelect.innerHTML += `
+            <option value="${contest.id}">
+                ${contest.title}
+            </option>
+        `;
+
+    });
+
+
+    // If opened from a contest details page,
+    // automatically select that contest
+
+    if (selectedContestId) {
+
+        const matchingContest =
+            activeContests.find(function (contest) {
+
+                return contest.id === selectedContestId;
+
+            });
+
+        if (matchingContest) {
+
+            contestSelect.value =
+                selectedContestId;
+            
+            contestSelect.dispatchEvent(
+                new Event("change")
+            );
+
+        }
+
+    }
+
+}
+
+loadContestOptions();
+// ==========================================
+// UPDATE SELECTED CONTEST DISPLAY
+// ==========================================
+
+contestSelect.addEventListener(
+    "change",
+    function () {
+
+        const chosenContestId =
+            contestSelect.value;
+
+        const contestName =
+            document.querySelector(
+                "#selectedContestName"
+            );
+
+        const criteriaContainer =
+            document.querySelector(
+                "#submissionCriteria"
+            );
+
+
+        // No contest selected
+
+        if (!chosenContestId) {
+
+            contestName.textContent =
+                "No contest selected";
+
+            criteriaContainer.innerHTML = `
+                <p>
+                    Please select a contest before submitting.
+                </p>
+            `;
+
+            return;
+        }
+
+
+        // Get contests
+
+        const contests =
+            JSON.parse(
+                localStorage.getItem("contests")
+            ) || [];
+
+
+        // Find selected contest
+
+        const selectedContest =
+            contests.find(function (contest) {
+
+                return contest.id ===
+                       chosenContestId;
+
+            });
+
+
+        if (!selectedContest) {
+            return;
+        }
+
+
+        // Update contest name
+
+        contestName.textContent =
+            selectedContest.title;
+
+
+        // Update judging criteria
+
+        criteriaContainer.innerHTML = `
+
+            <div>
+                <strong>
+                    ${selectedContest.criteria.creativity}%
+                </strong>
+
+                <span>
+                    Creativity
+                </span>
+            </div>
+
+            <div>
+                <strong>
+                    ${selectedContest.criteria.technical}%
+                </strong>
+
+                <span>
+                    Technical Quality
+                </span>
+            </div>
+
+            <div>
+                <strong>
+                    ${selectedContest.criteria.themeFit}%
+                </strong>
+
+                <span>
+                    Theme Fit
+                </span>
+            </div>
+
+        `;
+
+    }
+);
+
+// =====================================================
 // IMAGE PREVIEW
 // =====================================================
 
@@ -299,33 +605,90 @@ photoInput.addEventListener("change", function () {
                 // CREATE ENTRY
                 // =================================================
 
-                const entry = {
+                const currentUser =
+    JSON.parse(
+        localStorage.getItem("currentUser")
+    );
 
-                    id: Date.now(),
+if (!currentUser || currentUser.role !== "participant") {
 
-                    participantName: name,
+    window.location.href =
+        "login.html";
 
-                    title: title,
+    return;
+}
 
-                    description: description,
 
-                    image: compressedImage,
+// ==========================================
+// CHECK SELECTED CONTEST
+// ==========================================
+const chosenContestId =
+    contestSelect.value;
 
-                    createdAt:
-                        new Date().toISOString(),
 
-                    status: "Submitted",
+if (!chosenContestId) {
 
-                    scores: {
-                        creativity: null,
-                        technical: null,
-                        theme: null
-                    },
+    formMessage.textContent =
+        "Please select a contest before submitting.";
 
-                    finalScore: null
+    return;
+}
 
-                };
 
+const contests =
+    JSON.parse(
+        localStorage.getItem("contests")
+    ) || [];
+
+
+const selectedContest =
+    contests.find(function (contest) {
+
+        return contest.id === chosenContestId;
+
+    });
+
+
+if (!selectedContest) {
+
+    formMessage.textContent =
+        "Selected contest could not be found.";
+
+    return;
+}
+
+
+// ==========================================
+// CREATE ENTRY
+// ==========================================
+
+const entry = {
+
+    id: Date.now(),
+
+    participantId:
+        currentUser.id,
+
+    participantName:
+        currentUser.name,
+
+    contestId:
+        chosenContestId,
+
+    title:
+        photoTitle.value.trim(),
+
+    description:
+        photoDescription.value.trim(),
+
+    image:
+        compressedImage,
+
+    createdAt:
+        new Date().toISOString()
+
+};
+                
 
                 // =================================================
                 // GET EXISTING ENTRIES
@@ -436,6 +799,7 @@ photoInput.addEventListener("change", function () {
 // MY ENTRIES PAGE
 // =========================================================
 
+
 function displayEntries() {
 
     const entriesContainer =
@@ -445,33 +809,66 @@ function displayEntries() {
         document.querySelector("#noEntriesMessage");
 
 
-    // Not My Entries page
-
     if (!entriesContainer) {
         return;
     }
 
 
-    let entries = [];
+    // ==========================================
+    // GET CURRENT LOGGED-IN PARTICIPANT
+    // ==========================================
 
+    const currentUser =
+        JSON.parse(
+            localStorage.getItem("currentUser")
+        );
+
+
+    if (!currentUser || currentUser.role !== "participant") {
+
+        window.location.href =
+            "login.html";
+
+        return;
+    }
+
+
+    // ==========================================
+    // GET ALL ENTRIES
+    // ==========================================
+
+    let allEntries = [];
 
     try {
 
-        entries =
+        allEntries =
             JSON.parse(
                 localStorage.getItem("photoEntries")
             ) || [];
 
     } catch (error) {
 
-        entries = [];
+        allEntries = [];
 
     }
 
 
-    // =====================================================
+    // ==========================================
+    // GET ONLY CURRENT USER'S ENTRIES
+    // ==========================================
+
+    const entries =
+        allEntries.filter(function (entry) {
+
+            return String(entry.participantId) ===
+                   String(currentUser.id);
+
+        });
+
+
+    // ==========================================
     // NO ENTRIES
-    // =====================================================
+    // ==========================================
 
     if (entries.length === 0) {
 
@@ -487,26 +884,22 @@ function displayEntries() {
     noEntriesMessage.style.display =
         "none";
 
-
     entriesContainer.innerHTML = "";
 
 
-    // =====================================================
+    // ==========================================
     // DISPLAY ENTRIES
-    // =====================================================
+    // ==========================================
 
     entries.forEach(function (entry) {
 
         const card =
             document.createElement("article");
 
-
         card.className =
             "entry-card";
 
-
         card.innerHTML = `
-
             <div class="entry-image-wrapper">
 
                 <img
@@ -520,7 +913,6 @@ function displayEntries() {
                 </span>
 
             </div>
-
 
             <div class="entry-content">
 
@@ -546,7 +938,6 @@ function displayEntries() {
                         .toLocaleDateString()}
                 </p>
 
-
                 <div class="entry-actions">
 
                     <button
@@ -566,9 +957,7 @@ function displayEntries() {
                 </div>
 
             </div>
-
         `;
-
 
         entriesContainer.appendChild(card);
 
@@ -577,16 +966,32 @@ function displayEntries() {
 }
 
 
-// Run My Entries
-
-displayEntries();
-
-
 // =========================================================
 // DELETE ENTRY
 // =========================================================
 
+// ==========================================
+// DELETE ENTRY
+// ==========================================
+
 function deleteEntry(entryId) {
+
+    const currentUser =
+        JSON.parse(
+            localStorage.getItem("currentUser")
+        );
+
+
+    // User must be logged in as participant
+
+    if (!currentUser || currentUser.role !== "participant") {
+
+        window.location.href =
+            "login.html";
+
+        return;
+    }
+
 
     const confirmDelete =
         confirm(
@@ -605,10 +1010,47 @@ function deleteEntry(entryId) {
         ) || [];
 
 
-    entries =
-        entries.filter(function (entry) {
+    // Find the entry
 
-            return entry.id !== entryId;
+    const entry =
+        entries.find(function (item) {
+
+            return item.id === entryId;
+
+        });
+
+
+    // Entry doesn't exist
+
+    if (!entry) {
+
+        alert("Entry not found.");
+
+        return;
+    }
+
+
+    // Check ownership
+
+    if (
+        String(entry.participantId) !==
+        String(currentUser.id)
+    ) {
+
+        alert(
+            "You are not allowed to delete this entry."
+        );
+
+        return;
+    }
+
+
+    // Delete only the user's entry
+
+    entries =
+        entries.filter(function (item) {
+
+            return item.id !== entryId;
 
         });
 
@@ -625,26 +1067,22 @@ function deleteEntry(entryId) {
 
 
 // =========================================================
-// EDIT ENTRY
+// EDIT PAGE
 // =========================================================
-
-function editEntry(entryId) {
-
-    window.location.href =
-        `edit-entry.html?id=${entryId}`;
-
-}
-
-
 // =========================================================
 // EDIT PAGE
 // =========================================================
 
-const editForm =
-    document.querySelector("#editForm");
+function initializeEditPage() {
+
+    const editForm =
+        document.querySelector("#editForm");
 
 
-if (editForm) {
+    if (!editForm) {
+        return;
+    }
+
 
     const params =
         new URLSearchParams(
@@ -670,135 +1108,178 @@ if (editForm) {
         });
 
 
+    // ==========================================
+    // CHECK LOGGED-IN USER
+    // ==========================================
+
+    const currentUser =
+        JSON.parse(
+            localStorage.getItem("currentUser")
+        );
+
+
     const editMessage =
         document.querySelector("#editMessage");
 
 
-    // =====================================================
+    if (!currentUser ||
+        currentUser.role !== "participant") {
+
+        window.location.href =
+            "login.html";
+
+        return;
+    }
+
+
+    // ==========================================
+    // CHECK ENTRY OWNERSHIP
+    // ==========================================
+
+    if (
+        entry &&
+        String(entry.participantId) !==
+        String(currentUser.id)
+    ) {
+
+        editMessage.textContent =
+            "You are not allowed to edit this entry.";
+
+        editForm.style.display =
+            "none";
+
+        return;
+    }
+
+
+    // ==========================================
     // ENTRY NOT FOUND
-    // =====================================================
+    // ==========================================
 
     if (!entry) {
 
         editMessage.textContent =
             "Entry not found.";
 
+        return;
     }
 
 
-    else {
+    // ==========================================
+    // FILL FORM
+    // ==========================================
 
-        // Fill participant name
-
-        document.querySelector(
-            "#editParticipantName"
-        ).value =
-            entry.participantName;
-
-
-        // Fill title
-
-        document.querySelector(
-            "#editPhotoTitle"
-        ).value =
-            entry.title;
+    document.querySelector(
+        "#editParticipantName"
+    ).value =
+        entry.participantName;
 
 
-        // Fill description
-
-        document.querySelector(
-            "#editPhotoDescription"
-        ).value =
-            entry.description;
+    document.querySelector(
+        "#editPhotoTitle"
+    ).value =
+        entry.title;
 
 
-        // Show current image
-
-        document.querySelector(
-            "#editImagePreview"
-        ).innerHTML = `
-
-            <img
-                src="${entry.image}"
-                class="image-preview"
-                alt="${entry.title}"
-            >
-
-        `;
+    document.querySelector(
+        "#editPhotoDescription"
+    ).value =
+        entry.description;
 
 
-        // =================================================
-        // UPDATE ENTRY
-        // =================================================
+    document.querySelector(
+        "#editImagePreview"
+    ).innerHTML = `
 
-        editForm.addEventListener(
-            "submit",
-            function (event) {
+        <img
+            src="${entry.image}"
+            class="image-preview"
+            alt="${entry.title}"
+        >
 
-                event.preventDefault();
-
-
-                const updatedTitle =
-                    document.querySelector(
-                        "#editPhotoTitle"
-                    ).value.trim();
+    `;
 
 
-                const updatedDescription =
-                    document.querySelector(
-                        "#editPhotoDescription"
-                    ).value.trim();
+    // ==========================================
+    // UPDATE ENTRY
+    // ==========================================
+
+    editForm.addEventListener(
+        "submit",
+        function (event) {
+
+            event.preventDefault();
 
 
-                if (!updatedTitle ||
-                    !updatedDescription) {
-
-                    editMessage.textContent =
-                        "Please complete all fields.";
-
-                    return;
-
-                }
+            const updatedTitle =
+                document.querySelector(
+                    "#editPhotoTitle"
+                ).value.trim();
 
 
-                const entryIndex =
-                    entries.findIndex(
-                        function (item) {
-
-                            return item.id === entryId;
-
-                        }
-                    );
+            const updatedDescription =
+                document.querySelector(
+                    "#editPhotoDescription"
+                ).value.trim();
 
 
-                entries[entryIndex].title =
-                    updatedTitle;
+            if (!updatedTitle ||
+                !updatedDescription) {
+
+                editMessage.textContent =
+                    "Please complete all fields.";
+
+                return;
+            }
 
 
-                entries[entryIndex].description =
-                    updatedDescription;
+            const entryIndex =
+                entries.findIndex(
+                    function (item) {
 
+                        return item.id === entryId;
 
-                localStorage.setItem(
-                    "photoEntries",
-                    JSON.stringify(entries)
+                    }
                 );
 
 
-                editMessage.textContent =
-                    "✓ Entry updated successfully!";
+            entries[entryIndex].title =
+                updatedTitle;
 
 
-                setTimeout(function () {
+            entries[entryIndex].description =
+                updatedDescription;
 
-                    window.location.href =
-                        "my-entries.html";
 
-                }, 800);
+            localStorage.setItem(
+                "photoEntries",
+                JSON.stringify(entries)
+            );
 
-            }
-        );
 
-    }
+            editMessage.textContent =
+                "✓ Entry updated successfully!";
+
+
+            setTimeout(function () {
+
+                window.location.href =
+                    "my-entries.html";
+
+            }, 800);
+
+        }
+    );
 
 }
+
+
+// Initialize edit page
+initializeEditPage();
+
+
+// Run My Entries
+
+displayEntries();
+
+displaySelectedContest();

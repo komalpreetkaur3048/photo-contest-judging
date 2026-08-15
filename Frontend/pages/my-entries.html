@@ -22,49 +22,15 @@
     <!-- NAVIGATION -->
 
     <header>
-
         <nav class="navbar">
 
-            <div class="logo">
-                PhotoJudge<span>.</span>
-            </div>
+    <a href="../index.html" class="logo">
+        PhotoJudge
+    </a>
 
-            <ul class="nav-links">
+    <ul class="nav-links" id="mainNav"></ul>
 
-                <li>
-                    <a href="../index.html">
-                        Home
-                    </a>
-                </li>
-
-                <li>
-                    <a href="contests.html">
-                        Contests
-                    </a>
-                </li>
-
-                <li>
-                    <a href="submit.html">
-                        Submit
-                    </a>
-                </li>
-
-                <li>
-                    <a href="my-entries.html" class="active">
-                        My Entries
-                    </a>
-                </li>
-
-                <li>
-                    <a href="leaderboard.html">
-                        Leaderboard
-                    </a>
-                </li>
-
-            </ul>
-
-        </nav>
-
+</nav>
     </header>
 
 
@@ -170,8 +136,25 @@
 
     </footer>
 
+    <script src="../js/auth.js"></script>
 
     <script src="../js/entries.js"></script>
+    <script>
+    const currentUser =
+        JSON.parse(
+            localStorage.getItem("currentUser")
+        );
+
+    if (!currentUser) {
+
+        window.location.href = "login.html";
+
+    } else if (currentUser.role !== "participant") {
+
+        window.location.href = "judge.html";
+
+    }
+</script>
 
 </body>
 

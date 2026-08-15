@@ -13,12 +13,20 @@ const judgeEntriesContainer =
 const noJudgeEntries =
     document.querySelector("#noJudgeEntries");
 
-const judgeSelector =
-    document.querySelector("#judgeSelector");
+const currentUser =
+    JSON.parse(
+        localStorage.getItem("currentUser")
+    );
 
 const currentJudgeName =
     document.querySelector("#currentJudgeName");
 
+
+if (!currentUser || currentUser.role !== "judge") {
+
+    window.location.href = "login.html";
+
+}
 
 /* =========================================================
    JUDGE CONFIGURATION
@@ -43,25 +51,11 @@ const JUDGES = {
 
 function getCurrentJudge() {
 
-    const savedJudge =
-        localStorage.getItem("currentJudge");
-
-    if (
-        savedJudge &&
-        JUDGES[savedJudge]
-    ) {
-
-        return savedJudge;
-
+    if (!currentUser) {
+        return null;
     }
 
-    localStorage.setItem(
-        "currentJudge",
-        "judge1"
-    );
-
-    return "judge1";
-
+    return currentUser.id;
 }
 
 
@@ -74,49 +68,42 @@ function updateJudgeDisplay() {
     const judgeId =
         getCurrentJudge();
 
-    if (currentJudgeName) {
+    if (currentJudgeName && judgeId) {
 
         currentJudgeName.textContent =
-            JUDGES[judgeId];
-
-    }
-
-    if (judgeSelector) {
-
-        judgeSelector.value =
-            judgeId;
+            currentUser.name;
 
     }
 
 }
 
 
-/* =========================================================
-   CHANGE CURRENT JUDGE
-========================================================= */
+// /* =========================================================
+//    CHANGE CURRENT JUDGE
+// ========================================================= */
 
-if (judgeSelector) {
+// if (judgeSelector) {
 
-    judgeSelector.addEventListener(
-        "change",
-        function () {
+//     judgeSelector.addEventListener(
+//         "change",
+//         function () {
 
-            const selectedJudge =
-                judgeSelector.value;
+//             const selectedJudge =
+//                 judgeSelector.value;
 
-            localStorage.setItem(
-                "currentJudge",
-                selectedJudge
-            );
+//             localStorage.setItem(
+//                 "currentJudge",
+//                 selectedJudge
+//             );
 
-            updateJudgeDisplay();
+//             updateJudgeDisplay();
 
-            displayJudgeEntries();
+//             displayJudgeEntries();
 
-        }
-    );
+//         }
+//     );
 
-}
+// }
 
 
 /* =========================================================

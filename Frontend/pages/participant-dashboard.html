@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Participant Dashboard | PhotoJudge</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+
+</head>
+
+<body>
+
+    <!-- =========================
+         NAVBAR
+    ========================== -->
+
+    <nav class="navbar">
+
+    <a href="../index.html" class="logo">
+        PhotoJudge
+    </a>
+
+    <ul class="nav-links" id="mainNav"></ul>
+
+</nav>
+
+
+    <!-- =========================
+         DASHBOARD
+    ========================== -->
+
+    <main class="dashboard-section">
+
+        <div class="dashboard-header">
+
+            <p class="small-heading">
+                PARTICIPANT DASHBOARD
+            </p>
+
+            <h1>
+                Welcome, <span id="userName">Participant</span> 👋
+            </h1>
+
+            <p>
+                Manage your contest participation,
+                submissions, and results from one place.
+            </p>
+
+        </div>
+
+
+        <!-- =========================
+             DASHBOARD CARDS
+        ========================== -->
+
+        <div class="dashboard-grid">
+
+            <!-- Contests -->
+
+            <div class="dashboard-card">
+
+                <div class="card-icon">
+                    📸
+                </div>
+
+                <h2>
+                    Explore Contests
+                </h2>
+
+                <p>
+                    View active photography contests and
+                    find one that matches your creativity.
+                </p>
+
+                <a
+                    href="contests.html"
+                    class="dashboard-btn"
+                >
+                    View Contests
+                </a>
+
+            </div>
+
+
+            <!-- Submit -->
+
+            <div class="dashboard-card">
+
+                <div class="card-icon">
+                    🖼️
+                </div>
+
+                <h2>
+                    Submit Photo
+                </h2>
+
+                <p>
+                    Submit your best photograph to the
+                    current contest.
+                </p>
+
+                <a
+                    href="submit.html"
+                    class="dashboard-btn"
+                >
+                    Submit Photo
+                </a>
+
+            </div>
+
+
+            <!-- My Entries -->
+
+            <div class="dashboard-card">
+
+                <div class="card-icon">
+                    📂
+                </div>
+
+                <h2>
+                    My Entries
+                </h2>
+
+                <p>
+                    View, edit, or delete your submitted
+                    photographs.
+                </p>
+
+                <a
+                    href="my-entries.html"
+                    class="dashboard-btn"
+                >
+                    View My Entries
+                </a>
+
+            </div>
+
+
+            <!-- Leaderboard -->
+
+            <div class="dashboard-card">
+
+                <div class="card-icon">
+                    🏆
+                </div>
+
+                <h2>
+                    Leaderboard
+                </h2>
+
+                <p>
+                    See the latest contest rankings and
+                    track your performance.
+                </p>
+
+                <a
+                    href="leaderboard.html"
+                    class="dashboard-btn"
+                >
+                    View Leaderboard
+                </a>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <footer>
+
+        <p>
+            © 2026 PhotoJudge. All rights reserved.
+        </p>
+
+    </footer>
+
+
+    <script src="../js/auth.js"></script>
+    <script>
+    const currentUser =
+        JSON.parse(
+            localStorage.getItem("currentUser")
+        );
+
+    if (!currentUser) {
+
+        window.location.href = "login.html";
+
+    } else if (currentUser.role !== "participant") {
+
+        window.location.href = "judge.html";
+
+    }
+</script>
+
+</body>
+
+</html>

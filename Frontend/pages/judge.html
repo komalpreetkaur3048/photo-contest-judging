@@ -25,39 +25,13 @@
 
     <nav class="navbar">
 
-        <a href="../index.html" class="logo">
-            PhotoJudge
-        </a>
+    <a href="../index.html" class="logo">
+        PhotoJudge
+    </a>
 
-        <ul class="nav-links">
+    <ul class="nav-links" id="mainNav"></ul>
 
-            <li>
-                <a href="../index.html">
-                    Home
-                </a>
-            </li>
-
-            <li>
-                <a href="contests.html">
-                    Contests
-                </a>
-            </li>
-
-            <li>
-                <a href="judge.html" class="active">
-                    Judge
-                </a>
-            </li>
-
-            <li>
-                <a href="leaderboard.html">
-                    Leaderboard
-                </a>
-            </li>
-
-        </ul>
-
-    </nav>
+</nav>
 
 
     <!-- =====================================================
@@ -102,7 +76,7 @@
                     Judge 1
                 </strong>
 
-                <select id="judgeSelector">
+                <!-- <select id="judgeSelector">
 
                     <option value="judge1">
                         Judge 1
@@ -116,7 +90,19 @@
                         Judge 3
                     </option>
 
-                </select>
+                </select> -->
+
+                <div class="current-judge">
+
+                    <span>
+                        Logged in as:
+                    </span>
+
+                    <strong id="currentJudgeName">
+                        Judge
+                    </strong>
+
+                </div>
 
             </div>
 
@@ -230,7 +216,26 @@
     </footer>
 
 
+    <script src="../js/auth.js"></script>
     <script src="../js/judge.js"></script>
+
+    <script>
+    const currentUser =
+        JSON.parse(
+            localStorage.getItem("currentUser")
+        );
+
+    if (!currentUser) {
+
+        window.location.href = "login.html";
+
+    } else if (currentUser.role !== "judge") {
+
+        window.location.href =
+            "participant-dashboard.html";
+
+    }
+</script>
 
 </body>
 

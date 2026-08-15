@@ -1,0 +1,102 @@
+/* =========================
+   PARTICIPANT DASHBOARD
+========================= */
+
+.dashboard-section {
+    min-height: 80vh;
+    padding: 80px 8%;
+}
+
+.dashboard-header {
+    max-width: 750px;
+    margin-bottom: 50px;
+}
+
+.dashboard-header h1 {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.dashboard-header h1 span {
+    font-style: italic;
+}
+
+
+/* =========================
+   DASHBOARD GRID
+========================= */
+
+.dashboard-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(260px, 1fr));
+
+    gap: 25px;
+}
+
+
+/* =========================
+   DASHBOARD CARD
+========================= */
+
+.dashboard-card {
+    padding: 30px;
+
+    background: #ffffff;
+
+    border: 1px solid #ddd;
+}
+
+.card-icon {
+    font-size: 32px;
+
+    margin-bottom: 20px;
+}
+
+.dashboard-card h2 {
+    font-size: 24px;
+
+    margin-bottom: 12px;
+}
+
+.dashboard-card p {
+    color: #555;
+
+    margin-bottom: 25px;
+}
+
+
+/* =========================
+   BUTTON
+========================= */
+
+.dashboard-btn {
+    display: inline-block;
+
+    padding: 11px 20px;
+
+    background: #1d1d1d;
+
+    color: white;
+
+    text-decoration: none;
+
+    font-weight: bold;
+}
+
+.dashboard-btn:hover {
+    opacity: 0.8;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 600px) {
+
+    .dashboard-header h1 {
+        font-size: 38px;
+    }
+}

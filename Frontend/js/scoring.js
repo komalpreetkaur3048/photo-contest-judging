@@ -3,6 +3,27 @@
 ========================================================= */
 
 
+
+// ==========================================
+// GET LOGGED-IN USER
+// ==========================================
+
+const currentUser =
+    JSON.parse(
+        localStorage.getItem("currentUser")
+    );
+
+const currentJudge =
+    currentUser ? currentUser.id : null;
+
+if (!currentUser || currentUser.role !== "judge") {
+
+    window.location.href =
+        "login.html";
+
+}
+
+
 /* =========================================================
    DOM ELEMENTS
 ========================================================= */
@@ -20,8 +41,8 @@ const scoreDescription =
     document.querySelector("#scoreDescription");
 
 
-const judgeSelect =
-    document.querySelector("#judgeSelect");
+// const judgeSelect =
+//     document.querySelector("#judgeSelect");
 
 
 const creativity =
@@ -267,20 +288,15 @@ function checkSelectedJudge() {
         return;
     }
 
-
-    const selectedJudge =
-        judgeSelect.value;
-
-
-    if (!selectedJudge) {
+    if (!currentJudge) {
 
         submitScoreBtn.disabled = true;
 
         scoreMessage.textContent =
-            "Please select your judge identity before submitting.";
+            "Judge identity not found.";
 
         scoreMessage.className =
-            "score-message";
+            "score-message error";
 
         return;
     }
@@ -291,18 +307,17 @@ function checkSelectedJudge() {
 
 
     const alreadyScored =
-        scores.some(function (score) {
+    scores.some(function (score) {
 
-            return String(score.entryId) ===
-                       String(entryId)
+        return String(score.entryId) ===
+                   String(entryId)
 
-                &&
+            &&
 
-                   score.judgeId ===
-                       selectedJudge;
+               score.judgeId ===
+                   currentJudge;
 
-        });
-
+    });
 
     if (alreadyScored) {
 
@@ -411,21 +426,21 @@ function saveJudgeScore() {
        CHECK JUDGE
     ============================================== */
 
-    const selectedJudge =
-        judgeSelect.value;
+    const currentJudge =
+    currentUser.id;
 
 
-    if (!selectedJudge) {
+    if (!currentJudge) {
 
-        scoreMessage.textContent =
-            "Please select your judge identity.";
+    scoreMessage.textContent =
+        "Judge identity not found.";
 
-        scoreMessage.className =
-            "score-message error";
+    scoreMessage.className =
+        "score-message error";
 
-        return;
+    return;
 
-    }
+}
 
 
     /* ==============================================
@@ -441,17 +456,17 @@ function saveJudgeScore() {
     ============================================== */
 
     const duplicate =
-        scores.some(function (score) {
+    scores.some(function (score) {
 
-            return String(score.entryId) ===
-                       String(entry.id)
+        return String(score.entryId) ===
+                   String(entry.id)
 
-                &&
+            &&
 
-                   score.judgeId ===
-                       selectedJudge;
+               score.judgeId ===
+                   currentJudge;
 
-        });
+    });
 
 
     if (duplicate) {
@@ -511,33 +526,29 @@ function saveJudgeScore() {
 
     const scoreData = {
 
-        id:
-            Date.now(),
+    id: Date.now(),
 
-        entryId:
-            entry.id,
+    entryId: entry.id,
 
-        judgeId:
-            selectedJudge,
+    judgeId: currentJudge,
 
-        creativity:
-            creativityScore,
+    judgeName: currentUser.name,
 
-        technical:
-            technicalScore,
+    creativity: creativityScore,
 
-        theme:
-            themeScore,
+    technical: technicalScore,
 
-        weightedScore:
-            Number(
-                finalScore.toFixed(2)
-            ),
+    theme: themeScore,
 
-        judgedAt:
-            new Date().toISOString()
+    weightedScore:
+        Number(
+            finalScore.toFixed(2)
+        ),
 
-    };
+    judgedAt:
+        new Date().toISOString()
+
+};
 
 
     /* ==============================================
@@ -572,8 +583,8 @@ function saveJudgeScore() {
         true;
 
 
-    judgeSelect.disabled =
-        true;
+    // judgeSelect.disabled =
+    //     true;
 
 
     /* ==============================================
@@ -635,14 +646,14 @@ if (theme) {
    JUDGE SELECT EVENT
 ========================================================= */
 
-if (judgeSelect) {
+// if (judgeSelect) {
 
-    judgeSelect.addEventListener(
-        "change",
-        checkSelectedJudge
-    );
+//     judgeSelect.addEventListener(
+//         "change",
+//         checkSelectedJudge
+//     );
 
-}
+// }
 
 
 /* =========================================================
@@ -658,6 +669,22 @@ if (submitScoreBtn) {
 
 }
 
+// JUDGE
+
+const currentJudgeName =
+    document.querySelector("#currentJudgeName");
+
+if (currentJudgeName && currentUser) {
+
+    currentJudgeName.textContent =
+        currentUser.name;
+
+}
+
+
+
+
+
 
 /* =========================================================
    INITIALIZE PAGE
@@ -668,3 +695,5 @@ displayEntry();
 updateScoreDisplay();
 
 updateJudgingStatus();
+
+checkSelectedJudge();

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Register | PhotoJudge</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/auth.css">
+
+</head>
+
+<body>
+
+    <!-- Navbar -->
+
+    <nav class="navbar">
+
+    <a href="../index.html" class="logo">
+        PhotoJudge
+    </a>
+
+    <ul class="nav-links" id="mainNav"></ul>
+
+</nav>
+
+
+    <!-- Register Section -->
+
+    <main class="auth-section">
+
+        <div class="auth-container">
+
+            <p class="small-heading">
+                JOIN PHOTOJUDGE
+            </p>
+
+            <h1>
+                Create Your Account
+            </h1>
+
+            <p class="auth-description">
+                Register to participate in photo contests
+                or judge submitted photographs.
+            </p>
+
+
+            <form id="registerForm">
+
+                <!-- Name -->
+
+                <div class="form-group">
+
+                    <label for="registerName">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="registerName"
+                        placeholder="Enter your full name"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Email -->
+
+                <div class="form-group">
+
+                    <label for="registerEmail">
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="registerEmail"
+                        placeholder="Enter your email"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Password -->
+
+                <div class="form-group">
+
+                    <label for="registerPassword">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="registerPassword"
+                        placeholder="Create a password"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Confirm Password -->
+
+                <div class="form-group">
+
+                    <label for="confirmPassword">
+                        Confirm Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        placeholder="Confirm your password"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Role -->
+
+                <div class="form-group">
+                    <label for="registerRole">
+                        Register As
+                    </label>
+
+                    <input
+                    type="text"
+                    id="registerRole"
+                    value="participant"
+                    readonly
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="auth-btn"
+                >
+                    Create Account
+                </button>
+
+
+                <p
+                    id="registerMessage"
+                    class="auth-message"
+                ></p>
+
+            </form>
+
+
+            <p class="auth-switch">
+
+                Already have an account?
+
+                <a href="login.html">
+                    Login
+                </a>
+
+            </p>
+
+        </div>
+
+    </main>
+
+
+    <footer>
+
+        <p>
+            © 2026 PhotoJudge. All rights reserved.
+        </p>
+
+    </footer>
+
+
+    <script src="../js/auth.js"></script>
+
+</body>
+
+</html>
