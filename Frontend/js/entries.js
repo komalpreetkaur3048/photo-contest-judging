@@ -794,6 +794,89 @@ const entry = {
 
 }
 
+// ==========================================
+// SYNC ENTRY JUDGING STATES
+// ==========================================
+
+function syncEntryJudgingStates() {
+
+    let entries =
+        JSON.parse(
+            localStorage.getItem("photoEntries")
+        ) || [];
+
+    const judgeScores =
+        JSON.parse(
+            localStorage.getItem("judgeScores")
+        ) || [];
+
+
+    entries.forEach(function (entry) {
+
+        const scoreCount =
+            judgeScores.filter(function (score) {
+
+                return String(score.entryId) ===
+                       String(entry.id);
+
+            }).length;
+
+
+        entry.judgesCompleted =
+            scoreCount;
+
+
+        // ==========================================
+        // RANKED
+        // ==========================================
+
+        if (entry.isRanked === true &&
+            scoreCount >= 3) {
+
+            entry.judgingStatus =
+                "ranked";
+
+        }
+
+
+        // ==========================================
+        // UNDER JUDGING
+        // ==========================================
+
+        else if (scoreCount > 0) {
+
+            entry.judgingStatus =
+                "judging";
+
+            entry.isRanked =
+                false;
+
+        }
+
+
+        // ==========================================
+        // SUBMITTED
+        // ==========================================
+
+        else {
+
+            entry.judgingStatus =
+                "submitted";
+
+            entry.isRanked =
+                false;
+
+        }
+
+    });
+
+
+    localStorage.setItem(
+        "photoEntries",
+        JSON.stringify(entries)
+    );
+
+}
 
 // =========================================================
 // MY ENTRIES PAGE
@@ -801,6 +884,8 @@ const entry = {
 
 
 function displayEntries() {
+
+    syncEntryJudgingStates();
 
     const entriesContainer =
         document.querySelector("#entriesContainer");
@@ -887,88 +972,338 @@ function displayEntries() {
     entriesContainer.innerHTML = "";
 
 
-    // ==========================================
-    // DISPLAY ENTRIES
-    // ==========================================
 
-    entries.forEach(function (entry) {
+// ==========================================
+// DISPLAY ENTRIES
+// ==========================================
 
-        const card =
-            document.createElement("article");
+entries.forEach(function (entry) {
 
-        card.className =
-            "entry-card";
+    const card =
+        document.createElement("article");
 
-        card.innerHTML = `
-            <div class="entry-image-wrapper">
 
-                <img
-                    src="${entry.image}"
-                    alt="${entry.title}"
-                    class="entry-image"
-                >
+    card.className =
+        "entry-card";
 
-                <span class="entry-status">
-                    ${entry.status || "Submitted"}
-                </span>
 
-            </div>
+    card.innerHTML = `
 
-            <div class="entry-content">
+        <div class="entry-image-wrapper">
 
-                <p class="small-heading">
-                    PHOTO ENTRY
-                </p>
+            <img
+                src="${entry.image}"
+                alt="${entry.title}"
+                class="entry-image"
+            >
 
-                <h2>
-                    ${entry.title}
-                </h2>
+            <span class="entry-status">
 
-                <p class="entry-description">
-                    ${entry.description}
-                </p>
+    ${
+        entry.judgingStatus === "ranked"
+            ? "Ranked"
+            : entry.judgingStatus === "judging"
+                ? "Under Judging"
+                : "Submitted"
+    }
 
-                <p class="entry-participant">
-                    By ${entry.participantName}
-                </p>
+</span>
 
-                <p class="entry-date">
-                    Submitted
-                    ${new Date(entry.createdAt)
-                        .toLocaleDateString()}
-                </p>
+        </div>
 
-                <div class="entry-actions">
 
-                    <button
-                        class="entry-btn"
-                        onclick="editEntry(${entry.id})"
-                    >
-                        Edit
-                    </button>
+        <div class="entry-content">
 
-                    <button
-                        class="entry-btn delete-btn"
-                        onclick="deleteEntry(${entry.id})"
-                    >
-                        Delete
-                    </button>
+            <p class="small-heading">
+                PHOTO ENTRY
+            </p>
+
+
+            <h2>
+                ${entry.title}
+            </h2>
+
+
+            <p class="entry-description">
+                ${entry.description}
+            </p>
+
+
+            <p class="entry-participant">
+                By ${entry.participantName}
+            </p>
+
+
+            <p class="entry-date">
+                Submitted
+                ${new Date(entry.createdAt)
+                    .toLocaleDateString()}
+            </p>
+
+
+            <div class="entry-actions">
+
+    ${
+        entry.judgingStatus === "ranked"
+        ? `
+
+            <!-- =========================
+                 FINAL RESULT
+            ========================== -->
+
+            <div class="final-result-box">
+
+                <div class="result-main">
+
+                    <div class="result-score">
+
+                        <span class="result-label">
+                            FINAL SCORE
+                        </span>
+
+                        <strong>
+                            ${Number(
+                                entry.finalScore
+                            ).toFixed(2)}
+                        </strong>
+
+                        <span class="score-max">
+                            / 10
+                        </span>
+
+                    </div>
+
+
+                    <div class="result-rank">
+
+                        <span>
+                            RANK
+                        </span>
+
+                        <strong>
+                            #${entry.rank}
+                        </strong>
+
+                    </div>
 
                 </div>
 
+
+                <div class="result-status">
+                    ✓ Final Result
+                </div>
+
+
+                <a
+                    href="result.html?id=${entry.id}"
+                    class="result-btn"
+                >
+                    View Evaluation
+                    <span>→</span>
+                </a>
+
             </div>
-        `;
 
-        entriesContainer.appendChild(card);
+        `
 
-    });
+        : entry.judgingStatus === "judging"
 
+        ? `
+
+            <!-- =========================
+                 UNDER JUDGING
+            ========================== -->
+
+            <div class="judging-status-box">
+
+                <div class="judging-status-header">
+
+                    <span class="status-lock">
+                        🔒
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Under Judging
+                        </strong>
+
+                        <span>
+                            Your entry is currently being evaluated.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="judging-progress">
+
+                    <div class="progress-text">
+
+                        <span>
+                            Judges completed
+                        </span>
+
+                        <strong>
+                            ${entry.judgesCompleted || 0}/3
+                        </strong>
+
+                    </div>
+
+
+                    <div class="progress-bar">
+
+                        <div
+                            style="
+                                width:${(
+                                    (entry.judgesCompleted || 0)
+                                    / 3
+                                    * 100
+                                )}%;
+                            "
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+                <p class="judging-note">
+                    Editing and deletion are locked while
+                    judging is in progress.
+                </p>
+
+            </div>
+
+        `
+
+        : `
+
+            <!-- =========================
+                 SUBMITTED
+            ========================== -->
+
+            <button
+                class="entry-btn"
+                onclick="editEntry(${entry.id})"
+            >
+                Edit
+            </button>
+
+
+            <button
+                class="entry-btn delete-btn"
+                onclick="deleteEntry(${entry.id})"
+            >
+                Delete
+            </button>
+
+        `
+    }
+
+</div>
+
+        </div>
+
+    `;
+
+
+    entriesContainer.appendChild(card);
+
+});
+
+}
+// =========================================================
+// EDIT ENTRY
+// =========================================================
+
+function editEntry(entryId) {
+
+    const currentUser =
+        JSON.parse(
+            localStorage.getItem("currentUser")
+        );
+
+
+    // User must be logged in as participant
+
+    if (!currentUser || currentUser.role !== "participant") {
+
+        window.location.href =
+            "login.html";
+
+        return;
+    }
+
+
+    // Get all entries
+
+    const entries =
+        JSON.parse(
+            localStorage.getItem("photoEntries")
+        ) || [];
+
+
+    // Find selected entry
+
+    const entry =
+        entries.find(function (item) {
+
+            return item.id === entryId;
+
+        });
+
+
+    // ==========================================
+// ENTRY NOT FOUND
+// ==========================================
+
+if (!entry) {
+
+    alert("Entry not found.");
+
+    return;
 }
 
 
-// =========================================================
-// DELETE ENTRY
-// =========================================================
+// ==========================================
+// LOCK ENTRY AFTER JUDGING STARTS
+// ==========================================
+
+if (
+    entry.judgingStatus === "judging" ||
+    entry.judgingStatus === "ranked"
+) {
+
+    alert(
+        "This entry is locked because judging has started."
+    );
+
+    return;
+}
+
+    // Check ownership
+
+    if (
+        String(entry.participantId) !==
+        String(currentUser.id)
+    ) {
+
+        alert(
+            "You are not allowed to edit this entry."
+        );
+
+        return;
+    }
+
+
+    // Open edit page
+
+    window.location.href =
+        `edit-entry.html?id=${entryId}`;
+
+}
 
 // ==========================================
 // DELETE ENTRY
@@ -1020,14 +1355,33 @@ function deleteEntry(entryId) {
         });
 
 
-    // Entry doesn't exist
+   // ==========================================
+// ENTRY NOT FOUND
+// ==========================================
 
-    if (!entry) {
+if (!entry) {
 
-        alert("Entry not found.");
+    alert("Entry not found.");
 
-        return;
-    }
+    return;
+}
+
+
+// ==========================================
+// LOCK ENTRY AFTER JUDGING STARTS
+// ==========================================
+
+if (
+    entry.judgingStatus === "judging" ||
+    entry.judgingStatus === "ranked"
+) {
+
+    alert(
+        "This entry is locked because judging has started."
+    );
+
+    return;
+}
 
 
     // Check ownership
@@ -1066,9 +1420,6 @@ function deleteEntry(entryId) {
 }
 
 
-// =========================================================
-// EDIT PAGE
-// =========================================================
 // =========================================================
 // EDIT PAGE
 // =========================================================

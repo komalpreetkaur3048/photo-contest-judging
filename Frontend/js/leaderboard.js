@@ -401,13 +401,13 @@ function buildLeaderboard() {
     ============================================= */
 
     const scoredEntries =
-        results.filter(
-            function(result) {
+    results.filter(
+        function(result) {
 
-                return result.scoreCount > 0;
+            return result.scoreCount >= 3;
 
-            }
-        );
+        }
+    );
 
 
     /* =============================================
@@ -415,22 +415,127 @@ function buildLeaderboard() {
     ============================================= */
 
     scoredEntries.sort(
-        function(a, b) {
+    function(a, b) {
 
-            return (
-                b.normalizedAverage -
-                a.normalizedAverage
+        return (
+            b.normalizedAverage -
+            a.normalizedAverage
+        );
+
+    }
+);
+
+
+// ==========================================
+// UPDATE ENTRY JUDGING STATES
+// ==========================================
+
+let storedEntries =
+    JSON.parse(
+        localStorage.getItem("photoEntries")
+    ) || [];
+
+
+// Update every entry based on judge count
+
+results.forEach(function(result) {
+
+    const storedEntry =
+        storedEntries.find(function(entry) {
+
+            return String(entry.id) ===
+                   String(result.entry.id);
+
+        });
+
+
+    if (!storedEntry) {
+        return;
+    }
+
+
+    storedEntry.judgesCompleted =
+        result.scoreCount;
+
+
+    // 0 judges
+    if (result.scoreCount === 0) {
+
+        storedEntry.judgingStatus =
+            "submitted";
+
+        storedEntry.isRanked =
+            false;
+
+    }
+
+
+    // 1 or 2 judges
+    else if (result.scoreCount < 3) {
+
+        storedEntry.judgingStatus =
+            "judging";
+
+        storedEntry.isRanked =
+            false;
+
+    }
+
+});
+
+
+// ==========================================
+// FINAL RANKED ENTRIES
+// ==========================================
+
+scoredEntries.forEach(
+    function(result, index) {
+
+        const storedEntry =
+            storedEntries.find(
+                function(entry) {
+
+                    return String(entry.id) ===
+                           String(result.entry.id);
+
+                }
             );
 
+
+        if (!storedEntry) {
+            return;
         }
-    );
 
 
-    return scoredEntries;
+        storedEntry.judgingStatus =
+            "ranked";
+
+        storedEntry.isRanked =
+            true;
+
+        storedEntry.rank =
+            index + 1;
+
+        storedEntry.finalScore =
+            Number(
+                result.normalizedAverage.toFixed(2)
+            );
+
+        storedEntry.judgesCompleted =
+            result.scoreCount;
+
+    }
+);
+
+
+localStorage.setItem(
+    "photoEntries",
+    JSON.stringify(storedEntries)
+);
+
+return scoredEntries;
 
 }
-
-
 /* =========================================================
    FORMAT SCORE
 ========================================================= */

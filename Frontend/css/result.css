@@ -1,0 +1,466 @@
+/* ==========================================
+   RESULT PAGE
+========================================== */
+
+.result-page {
+    width: min(
+        calc(100% - 40px),
+        1100px
+    );
+
+    margin: 0 auto;
+
+    padding: 90px 0 120px;
+}
+
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.result-header {
+    margin-bottom: 45px;
+}
+
+.result-header h1 {
+    margin-bottom: 10px;
+
+    font-size: clamp(
+        2.5rem,
+        5vw,
+        4.5rem
+    );
+
+    line-height: 0.95;
+}
+
+.result-contest {
+    font-size: 1.1rem;
+
+    color: var(--text-muted);
+
+    margin-bottom: 6px;
+}
+
+.result-participant {
+    color: var(--text-muted);
+}
+
+
+/* ==========================================
+   SCORE CARD
+========================================== */
+
+.result-score-card {
+    display: grid;
+
+    grid-template-columns:
+        1fr 2fr 1fr;
+
+    align-items: center;
+
+    gap: 20px;
+
+    padding: 35px;
+
+    margin-bottom: 70px;
+
+    background: #181818;
+
+    color: white;
+
+    border-radius: 10px;
+}
+
+.result-rank-box,
+.judges-complete {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.result-rank-box span,
+.judges-complete span,
+.main-score > span {
+    font-size: 0.68rem;
+
+    letter-spacing: 2px;
+
+    font-weight: 800;
+
+    opacity: 0.6;
+}
+
+.result-rank-box strong {
+    font-size: 2.3rem;
+}
+
+.judges-complete {
+    text-align: right;
+}
+
+.judges-complete strong {
+    font-size: 1.5rem;
+}
+
+.main-score {
+    text-align: center;
+}
+
+.main-score strong {
+    font-size: clamp(
+        3rem,
+        7vw,
+        5.5rem
+    );
+
+    line-height: 0.9;
+}
+
+.main-score small {
+    font-size: 1rem;
+
+    opacity: 0.65;
+}
+
+
+/* ==========================================
+   PHOTO SECTION
+========================================== */
+
+.result-photo-section {
+    display: grid;
+
+    grid-template-columns:
+        1.1fr 0.9fr;
+
+    gap: 60px;
+
+    margin-bottom: 90px;
+
+    align-items: center;
+}
+
+.result-photo {
+    overflow: hidden;
+
+    background: #eee;
+
+    border-radius: 8px;
+}
+
+.result-photo img {
+    width: 100%;
+
+    display: block;
+
+    aspect-ratio: 4 / 3;
+
+    object-fit: cover;
+}
+
+.result-story h2 {
+    margin-bottom: 15px;
+
+    font-size: 2rem;
+}
+
+.result-story p:last-child {
+    color: var(--text-muted);
+
+    line-height: 1.7;
+}
+
+
+/* ==========================================
+   EVALUATION
+========================================== */
+
+.evaluation-section {
+    padding: 70px 0;
+
+    border-top: 1px solid #ddd;
+
+    border-bottom: 1px solid #ddd;
+}
+
+.section-header {
+    margin-bottom: 40px;
+}
+
+.section-header h2 {
+    margin-bottom: 12px;
+
+    font-size: 2.5rem;
+}
+
+.section-header > p:last-child {
+    max-width: 650px;
+
+    color: var(--text-muted);
+}
+
+
+/* ==========================================
+   CRITERIA
+========================================== */
+
+.criteria-results {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 30px;
+}
+
+.criteria-top {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-end;
+
+    gap: 20px;
+
+    margin-bottom: 10px;
+}
+
+.criteria-top div {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+}
+
+.criteria-top div strong {
+    font-size: 1.1rem;
+}
+
+.criteria-top div span {
+    color: var(--text-muted);
+
+    font-size: 0.78rem;
+}
+
+.result-progress {
+    width: 100%;
+
+    height: 10px;
+
+    background: #e7e5df;
+
+    border-radius: 999px;
+
+    overflow: hidden;
+}
+
+.result-progress div {
+    height: 100%;
+
+    background: #181818;
+
+    border-radius: inherit;
+
+    transition: width 600ms ease;
+}
+
+
+/* ==========================================
+   FAIRNESS
+========================================== */
+
+.fairness-result {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 30px;
+
+    padding: 40px;
+
+    margin-top: 60px;
+
+    background: #f5f3ee;
+
+    border-radius: 8px;
+}
+
+.fairness-result h2 {
+    margin-bottom: 10px;
+}
+
+.fairness-result p:last-child {
+    max-width: 650px;
+
+    margin-bottom: 0;
+
+    color: var(--text-muted);
+
+    line-height: 1.6;
+}
+
+.fairness-badge {
+    min-width: 120px;
+
+    height: 120px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 5px;
+
+    border: 1px solid #ccc;
+
+    border-radius: 50%;
+
+    font-size: 2rem;
+}
+
+.fairness-badge span {
+    font-size: 0.65rem;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+}
+
+
+/* ==========================================
+   ACTIONS
+========================================== */
+
+.result-actions {
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-top: 50px;
+}
+
+.primary-result-btn,
+.secondary-result-btn {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-height: 48px;
+
+    padding: 0 22px;
+
+    text-decoration: none;
+
+    font-weight: 700;
+
+    font-size: 0.85rem;
+
+    border-radius: 4px;
+}
+
+.primary-result-btn {
+    background: #181818;
+
+    color: white;
+}
+
+.secondary-result-btn {
+    border: 1px solid #ccc;
+
+    color: #181818;
+
+    background: white;
+}
+
+.primary-result-btn:hover {
+    background: #333;
+}
+
+
+/* ==========================================
+   ERROR
+========================================== */
+
+.result-error {
+    padding: 100px 0;
+
+    text-align: center;
+}
+
+.result-error h1 {
+    margin-bottom: 15px;
+}
+
+.result-error p {
+    margin-bottom: 25px;
+
+    color: var(--text-muted);
+}
+
+.result-btn {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-height: 45px;
+
+    padding: 0 20px;
+
+    background: #181818;
+
+    color: white;
+
+    text-decoration: none;
+}
+
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 800px) {
+
+    .result-score-card {
+        grid-template-columns: 1fr;
+
+        text-align: center;
+    }
+
+    .judges-complete {
+        text-align: center;
+    }
+
+    .result-photo-section {
+        grid-template-columns: 1fr;
+    }
+
+    .fairness-result {
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+    .result-actions {
+        flex-direction: column;
+    }
+
+    .primary-result-btn,
+    .secondary-result-btn {
+        width: 100%;
+    }
+
+}
