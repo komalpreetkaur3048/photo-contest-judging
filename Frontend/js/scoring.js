@@ -2,8 +2,6 @@
    PHOTOJUDGE — SCORE ENGINE
 ========================================================= */
 
-
-
 // ==========================================
 // GET LOGGED-IN USER
 // ==========================================
@@ -17,10 +15,7 @@ const currentJudge =
     currentUser ? currentUser.id : null;
 
 if (!currentUser || currentUser.role !== "judge") {
-
-    window.location.href =
-        "login.html";
-
+    window.location.href = "login.html";
 }
 
 
@@ -40,11 +35,6 @@ const scoreParticipant =
 const scoreDescription =
     document.querySelector("#scoreDescription");
 
-
-// const judgeSelect =
-//     document.querySelector("#judgeSelect");
-
-
 const creativity =
     document.querySelector("#creativity");
 
@@ -53,7 +43,6 @@ const technical =
 
 const theme =
     document.querySelector("#theme");
-
 
 const creativityValue =
     document.querySelector("#creativityValue");
@@ -64,10 +53,8 @@ const technicalValue =
 const themeValue =
     document.querySelector("#themeValue");
 
-
 const weightedScore =
     document.querySelector("#weightedScore");
-
 
 const submitScoreBtn =
     document.querySelector("#submitScoreBtn");
@@ -80,7 +67,30 @@ const scoreStatus =
 
 
 /* =========================================================
-   CONTEST WEIGHTS
+   GET ENTRY ID FROM URL & LOAD ENTRY FIRST
+========================================================= */
+
+const urlParams =
+    new URLSearchParams(
+        window.location.search
+    );
+
+const entryId =
+    urlParams.get("id");
+
+const entries =
+    JSON.parse(
+        localStorage.getItem("photoEntries")
+    ) || [];
+
+const entry =
+    entries.find(function (item) {
+        return String(item.id) === String(entryId);
+    });
+
+
+/* =========================================================
+   CONTEST WEIGHTS (RESOLVED AFTER ENTRY)
 ========================================================= */
 
 const contests =
@@ -108,48 +118,7 @@ const WEIGHTS = {
     theme: (criteria.themeFit || criteria.theme || 30) / 100
 };
 
-
-/* =========================================================
-   JUDGE INFORMATION
-========================================================= */
-
 const TOTAL_JUDGES = 3;
-
-
-/* =========================================================
-   GET ENTRY ID FROM URL
-========================================================= */
-
-const urlParams =
-    new URLSearchParams(
-        window.location.search
-    );
-
-const entryId =
-    urlParams.get("id");
-
-
-/* =========================================================
-   LOAD PHOTO ENTRIES
-========================================================= */
-
-const entries =
-    JSON.parse(
-        localStorage.getItem("photoEntries")
-    ) || [];
-
-
-/* =========================================================
-   FIND ENTRY
-========================================================= */
-
-const entry =
-    entries.find(function (item) {
-
-        return String(item.id) ===
-               String(entryId);
-
-    });
 
 
 /* =========================================================
@@ -157,11 +126,9 @@ const entry =
 ========================================================= */
 
 function getJudgeScores() {
-
     return JSON.parse(
         localStorage.getItem("judgeScores")
     ) || [];
-
 }
 
 
@@ -170,48 +137,33 @@ function getJudgeScores() {
 ========================================================= */
 
 function displayEntry() {
-
     if (!entry) {
-
-        scorePhotoTitle.textContent =
-            "Submission not found";
-
-        scoreDescription.textContent =
-            "The photograph you are trying to evaluate could not be found.";
-
-        submitScoreBtn.disabled = true;
-
-        scoreMessage.textContent =
-            "Invalid submission.";
-
-        scoreMessage.classList.add("error");
-
+        if (scorePhotoTitle) scorePhotoTitle.textContent = "Submission not found";
+        if (scoreDescription) scoreDescription.textContent = "The photograph you are trying to evaluate could not be found.";
+        if (submitScoreBtn) submitScoreBtn.disabled = true;
+        if (scoreMessage) {
+            scoreMessage.textContent = "Invalid submission.";
+            scoreMessage.className = "score-message error";
+        }
         return;
     }
 
+    if (scoreImage) {
+        scoreImage.src = entry.image;
+        scoreImage.alt = entry.title || "Submitted photograph";
+    }
 
-    scoreImage.src =
-        entry.image;
+    if (scorePhotoTitle) {
+        scorePhotoTitle.textContent = entry.title || "Untitled Photograph";
+    }
 
-    scoreImage.alt =
-        entry.title ||
-        "Submitted photograph";
+    if (scoreParticipant) {
+        scoreParticipant.textContent = entry.participantName || "Anonymous";
+    }
 
-
-    scorePhotoTitle.textContent =
-        entry.title ||
-        "Untitled Photograph";
-
-
-    scoreParticipant.textContent =
-        entry.participantName ||
-        "Anonymous";
-
-
-    scoreDescription.textContent =
-        entry.description ||
-        "No description provided.";
-
+    if (scoreDescription) {
+        scoreDescription.textContent = entry.description || "No description provided.";
+    }
 }
 
 
@@ -220,24 +172,15 @@ function displayEntry() {
 ========================================================= */
 
 function getJudgesForEntry() {
-
-    const scores =
-        getJudgeScores();
-
+    const scores = getJudgeScores();
 
     return scores
         .filter(function (score) {
-
-            return String(score.entryId) ===
-                   String(entryId);
-
+            return String(score.entryId) === String(entryId);
         })
         .map(function (score) {
-
             return score.judgeId;
-
         });
-
 }
 
 
@@ -246,128 +189,78 @@ function getJudgesForEntry() {
 ========================================================= */
 
 function updateJudgingStatus() {
-
     if (!entry) {
         return;
     }
 
-
-    const judgedBy =
-        getJudgesForEntry();
-
-
-    const numberOfJudges =
-        judgedBy.length;
-
+    const judgedBy = getJudgesForEntry();
+    const numberOfJudges = judgedBy.length;
 
     if (numberOfJudges >= TOTAL_JUDGES) {
-
-        scoreStatus.textContent =
-            "All 3 judges have completed their evaluations.";
-
-        scoreStatus.className =
-            "score-status success";
-
-        submitScoreBtn.disabled = true;
-
-        const judgeSelect =
-            document.querySelector("#judgeSelect");
-        if (judgeSelect) {
-            judgeSelect.disabled = true;
+        if (scoreStatus) {
+            scoreStatus.textContent = "All 3 judges have completed their evaluations.";
+            scoreStatus.className = "score-status success";
         }
-
+        if (submitScoreBtn) submitScoreBtn.disabled = true;
         return;
     }
 
-
-    scoreStatus.textContent =
-        `${numberOfJudges} of ${TOTAL_JUDGES} judges have completed this evaluation.`;
-
-    scoreStatus.className =
-        "score-status";
-
-
-    /*
-        If a judge is selected,
-        check whether they already scored.
-    */
+    if (scoreStatus) {
+        scoreStatus.textContent = `${numberOfJudges} of ${TOTAL_JUDGES} judges have completed this evaluation.`;
+        scoreStatus.className = "score-status";
+    }
 
     checkSelectedJudge();
-
 }
 
 
 /* =========================================================
-   CHECK SELECTED JUDGE
+   CHECK SELECTED JUDGE (SELF-JUDGING & DUPLICATE CHECKS)
 ========================================================= */
 
 function checkSelectedJudge() {
-
     if (!entry) {
         return;
     }
 
     if (!currentJudge) {
-
-        submitScoreBtn.disabled = true;
-
-        scoreMessage.textContent =
-            "Judge identity not found.";
-
-        scoreMessage.className =
-            "score-message error";
-
+        if (submitScoreBtn) submitScoreBtn.disabled = true;
+        if (scoreMessage) {
+            scoreMessage.textContent = "Judge identity not found.";
+            scoreMessage.className = "score-message error";
+        }
         return;
     }
 
-
-    const scores =
-        getJudgeScores();
-
-
-    const alreadyScored =
-    scores.some(function (score) {
-
-        return String(score.entryId) ===
-                   String(entryId)
-
-            &&
-
-               score.judgeId ===
-                   currentJudge;
-
-    if (entry && String(entry.participantId) === String(currentJudge)) {
-        submitScoreBtn.disabled = true;
-        scoreMessage.textContent =
-            "Judges are not permitted to evaluate their own submissions.";
-        scoreMessage.className =
-            "score-message error";
+    // Check Self-Judging
+    if (String(entry.participantId) === String(currentJudge)) {
+        if (submitScoreBtn) submitScoreBtn.disabled = true;
+        if (scoreMessage) {
+            scoreMessage.textContent = "Judges are not permitted to evaluate their own submissions.";
+            scoreMessage.className = "score-message error";
+        }
         return;
     }
+
+    const scores = getJudgeScores();
+    const alreadyScored = scores.some(function (score) {
+        return String(score.entryId) === String(entryId) && String(score.judgeId) === String(currentJudge);
+    });
 
     if (alreadyScored) {
-
-        submitScoreBtn.disabled = true;
-
-        scoreMessage.textContent =
-            "This judge has already evaluated this photograph.";
-
-        scoreMessage.className =
-            "score-message error";
-
+        if (submitScoreBtn) submitScoreBtn.disabled = true;
+        if (scoreMessage) {
+            scoreMessage.textContent = "You have already evaluated this photograph.";
+            scoreMessage.className = "score-message error";
+        }
         return;
-
     }
 
-
-    submitScoreBtn.disabled = false;
-
-    scoreMessage.textContent =
-        "";
-
-    scoreMessage.className =
-        "score-message";
-
+    if (submitScoreBtn) submitScoreBtn.disabled = false;
+    if (scoreMessage) {
+        scoreMessage.textContent = "";
+        scoreMessage.className = "score-message";
+    }
 }
 
 
@@ -376,41 +269,20 @@ function checkSelectedJudge() {
 ========================================================= */
 
 function calculateWeightedScore() {
-
-    const creativityScore =
-        Number(creativity.value);
-
-
-    const technicalScore =
-        Number(technical.value);
-
-
-    const themeScore =
-        Number(theme.value);
-
+    const creativityScore = creativity ? Number(creativity.value) : 5;
+    const technicalScore = technical ? Number(technical.value) : 5;
+    const themeScore = theme ? Number(theme.value) : 5;
 
     const finalScore =
+        (creativityScore * WEIGHTS.creativity) +
+        (technicalScore * WEIGHTS.technical) +
+        (themeScore * WEIGHTS.theme);
 
-        (creativityScore *
-            WEIGHTS.creativity)
-
-        +
-
-        (technicalScore *
-            WEIGHTS.technical)
-
-        +
-
-        (themeScore *
-            WEIGHTS.theme);
-
-
-    weightedScore.textContent =
-        finalScore.toFixed(2);
-
+    if (weightedScore) {
+        weightedScore.textContent = finalScore.toFixed(2);
+    }
 
     return finalScore;
-
 }
 
 
@@ -419,21 +291,19 @@ function calculateWeightedScore() {
 ========================================================= */
 
 function updateScoreDisplay() {
+    if (creativityValue && creativity) {
+        creativityValue.textContent = creativity.value;
+    }
 
-    creativityValue.textContent =
-        creativity.value;
+    if (technicalValue && technical) {
+        technicalValue.textContent = technical.value;
+    }
 
-
-    technicalValue.textContent =
-        technical.value;
-
-
-    themeValue.textContent =
-        theme.value;
-
+    if (themeValue && theme) {
+        themeValue.textContent = theme.value;
+    }
 
     calculateWeightedScore();
-
 }
 
 
@@ -442,178 +312,78 @@ function updateScoreDisplay() {
 ========================================================= */
 
 function saveJudgeScore() {
-
     if (!entry) {
         return;
     }
 
-
-    /* ==============================================
-       CHECK JUDGE
-    ============================================== */
-
-    const currentJudge =
-    currentUser.id;
-
-
     if (!currentJudge) {
-
-    scoreMessage.textContent =
-        "Judge identity not found.";
-
-    scoreMessage.className =
-        "score-message error";
-
-    return;
-
-}
-
-
-    if (String(entry.participantId) === String(currentJudge)) {
-        scoreMessage.textContent =
-            "Judges are not permitted to evaluate their own submissions.";
-        scoreMessage.className =
-            "score-message error";
-        submitScoreBtn.disabled = true;
+        if (scoreMessage) {
+            scoreMessage.textContent = "Judge identity not found.";
+            scoreMessage.className = "score-message error";
+        }
         return;
     }
 
-    /* ==============================================
-       LOAD EXISTING SCORES
-    ============================================== */
+    // Prevent Self-Judging
+    if (String(entry.participantId) === String(currentJudge)) {
+        if (scoreMessage) {
+            scoreMessage.textContent = "Judges are not permitted to evaluate their own submissions.";
+            scoreMessage.className = "score-message error";
+        }
+        if (submitScoreBtn) submitScoreBtn.disabled = true;
+        return;
+    }
 
-    const scores =
-        getJudgeScores();
+    const scores = getJudgeScores();
 
-
-    /* ==============================================
-       PREVENT DUPLICATE JUDGING
-    ============================================== */
-
-    const duplicate =
-    scores.some(function (score) {
-
-        return String(score.entryId) ===
-                   String(entry.id)
-
-            &&
-
-               score.judgeId ===
-                   currentJudge;
-
+    // Prevent duplicate score
+    const duplicate = scores.some(function (score) {
+        return String(score.entryId) === String(entry.id) && String(score.judgeId) === String(currentJudge);
     });
 
-
     if (duplicate) {
-
-        scoreMessage.textContent =
-            "This judge has already scored this photograph.";
-
-        scoreMessage.className =
-            "score-message error";
-
-        submitScoreBtn.disabled = true;
-
+        if (scoreMessage) {
+            scoreMessage.textContent = "You have already scored this photograph.";
+            scoreMessage.className = "score-message error";
+        }
+        if (submitScoreBtn) submitScoreBtn.disabled = true;
         return;
-
     }
 
-
-    /* ==============================================
-       GET SCORES
-    ============================================== */
-
-    const creativityScore =
-        Number(creativity.value);
-
-
-    const technicalScore =
-        Number(technical.value);
-
-
-    const themeScore =
-        Number(theme.value);
-
-
-    /* ==============================================
-       CALCULATE WEIGHTED SCORE
-    ============================================== */
+    const creativityScore = creativity ? Number(creativity.value) : 5;
+    const technicalScore = technical ? Number(technical.value) : 5;
+    const themeScore = theme ? Number(theme.value) : 5;
 
     const finalScore =
-
-        (creativityScore *
-            WEIGHTS.creativity)
-
-        +
-
-        (technicalScore *
-            WEIGHTS.technical)
-
-        +
-
-        (themeScore *
-            WEIGHTS.theme);
-
-
-    /* ==============================================
-       CREATE SCORE OBJECT
-    ============================================== */
+        (creativityScore * WEIGHTS.creativity) +
+        (technicalScore * WEIGHTS.technical) +
+        (themeScore * WEIGHTS.theme);
 
     const scoreData = {
-
-    id: Date.now(),
-
-    entryId: entry.id,
-
-    judgeId: currentJudge,
-
-    judgeName: currentUser.name,
-
-    creativity: creativityScore,
-
-    technical: technicalScore,
-
-    theme: themeScore,
-
-    weightedScore:
-        Number(
-            finalScore.toFixed(2)
-        ),
-
-    judgedAt:
-        new Date().toISOString()
-
-};
-
-
-    /* ==============================================
-       SAVE SCORE
-    ============================================== */
+        id: Date.now(),
+        entryId: entry.id,
+        judgeId: currentJudge,
+        judgeName: currentUser.name || "Judge",
+        creativity: creativityScore,
+        technical: technicalScore,
+        theme: themeScore,
+        weightedScore: Number(finalScore.toFixed(2)),
+        judgedAt: new Date().toISOString()
+    };
 
     scores.push(scoreData);
+    localStorage.setItem("judgeScores", JSON.stringify(scores));
 
-
-    localStorage.setItem(
-        "judgeScores",
-        JSON.stringify(scores)
-    );
-
-
-    let photoEntries =
-        JSON.parse(
-            localStorage.getItem("photoEntries")
-        ) || [];
-
-    const targetEntry =
-        photoEntries.find(function (p) {
-            return String(p.id) === String(entry.id);
-        });
+    // Update Photo Entry State
+    let photoEntries = JSON.parse(localStorage.getItem("photoEntries")) || [];
+    const targetEntry = photoEntries.find(function (p) {
+        return String(p.id) === String(entry.id);
+    });
 
     if (targetEntry) {
-        const entryScores =
-            scores.filter(function (s) {
-                return String(s.entryId) === String(entry.id);
-            });
+        const entryScores = scores.filter(function (s) {
+            return String(s.entryId) === String(entry.id);
+        });
 
         targetEntry.judgesCompleted = entryScores.length;
         if (entryScores.length >= TOTAL_JUDGES) {
@@ -622,153 +392,65 @@ function saveJudgeScore() {
         } else if (entryScores.length > 0) {
             targetEntry.judgingStatus = "judging";
         }
-        localStorage.setItem(
-            "photoEntries",
-            JSON.stringify(photoEntries)
-        );
+        localStorage.setItem("photoEntries", JSON.stringify(photoEntries));
     }
 
+    if (scoreMessage) {
+        scoreMessage.textContent = "✓ Evaluation submitted successfully.";
+        scoreMessage.className = "score-message success";
+    }
 
-    /* ==============================================
-       SUCCESS
-    ============================================== */
-
-    scoreMessage.textContent =
-        "Evaluation submitted successfully.";
-
-    scoreMessage.className =
-        "score-message success";
-
-
-    submitScoreBtn.textContent =
-        "Evaluation Submitted";
-
-
-    submitScoreBtn.disabled =
-        true;
-
-
-    // judgeSelect.disabled =
-    //     true;
-
-
-    /* ==============================================
-       UPDATE STATUS
-    ============================================== */
+    if (submitScoreBtn) {
+        submitScoreBtn.textContent = "Evaluation Submitted";
+        submitScoreBtn.disabled = true;
+    }
 
     updateJudgingStatus();
 
-
-    /* ==============================================
-       REDIRECT
-    ============================================== */
-
     setTimeout(function () {
-
-        window.location.href =
-            "judge.html";
-
-    }, 1300);
-
+        window.location.href = "judge.html";
+    }, 1200);
 }
 
 
 /* =========================================================
-   SLIDER EVENTS
+   EVENT LISTENERS
 ========================================================= */
 
 if (creativity) {
-
-    creativity.addEventListener(
-        "input",
-        updateScoreDisplay
-    );
-
+    creativity.addEventListener("input", updateScoreDisplay);
 }
-
 
 if (technical) {
-
-    technical.addEventListener(
-        "input",
-        updateScoreDisplay
-    );
-
+    technical.addEventListener("input", updateScoreDisplay);
 }
-
 
 if (theme) {
-
-    theme.addEventListener(
-        "input",
-        updateScoreDisplay
-    );
-
+    theme.addEventListener("input", updateScoreDisplay);
 }
-
-
-/* =========================================================
-   JUDGE SELECT EVENT
-========================================================= */
-
-// if (judgeSelect) {
-
-//     judgeSelect.addEventListener(
-//         "change",
-//         checkSelectedJudge
-//     );
-
-// }
-
-
-/* =========================================================
-   SUBMIT EVENT
-========================================================= */
 
 if (submitScoreBtn) {
-
-    submitScoreBtn.addEventListener(
-        "click",
-        saveJudgeScore
-    );
-
+    submitScoreBtn.addEventListener("click", saveJudgeScore);
 }
 
-// JUDGE
-
-const currentJudgeName =
-    document.querySelector("#currentJudgeName");
-
-const currentJudgeTitle =
-    document.querySelector("#currentJudgeTitle");
+const currentJudgeName = document.querySelector("#currentJudgeName");
+const currentJudgeTitle = document.querySelector("#currentJudgeTitle");
 
 if (currentUser) {
-
     if (currentJudgeName) {
-        currentJudgeName.textContent =
-            currentUser.name;
+        currentJudgeName.textContent = currentUser.name;
     }
-
     if (currentJudgeTitle) {
-        currentJudgeTitle.textContent =
-            currentUser.specialization || "Official Contest Judge";
+        currentJudgeTitle.textContent = currentUser.specialization || "Official Contest Judge";
     }
-
 }
-
-
-
-
 
 
 /* =========================================================
-   INITIALIZE PAGE
+   INITIALIZE
 ========================================================= */
 
 displayEntry();
-
 updateScoreDisplay();
-
 updateJudgingStatus();
-
 checkSelectedJudge();

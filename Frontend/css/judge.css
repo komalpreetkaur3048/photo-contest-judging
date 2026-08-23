@@ -1,5 +1,6 @@
 /* =========================================================
    PHOTOJUDGE — JUDGE DASHBOARD
+   "Obsidian & Gold Gallery" Modern High-Contrast Theme
 ========================================================= */
 
 
@@ -8,13 +9,9 @@
 ========================================================= */
 
 .judge-section {
-
     min-height: 80vh;
-
-    padding:
-        70px
-        max(5%, calc((100vw - 1200px) / 2));
-
+    padding: 70px max(5%, calc((100vw - 1240px) / 2)) 120px;
+    background: #f8fafc;
 }
 
 
@@ -23,49 +20,30 @@
 ========================================================= */
 
 .judge-header {
-
     display: flex;
-
     justify-content: space-between;
-
     align-items: flex-end;
-
     gap: 40px;
-
     margin-bottom: 45px;
-
 }
 
 .judge-header > div:first-child {
-
     max-width: 720px;
-
 }
 
 .judge-header h1 {
-
-    margin-bottom: 18px;
-
-    font-size: clamp(
-        2.6rem,
-        5vw,
-        4.5rem
-    );
-
-    line-height: 1.05;
-
-    letter-spacing: -2px;
-
+    margin-bottom: 14px;
+    font-size: var(--heading-md);
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    color: var(--text-main);
 }
 
 .judge-intro {
-
     max-width: 650px;
-
     color: var(--text-muted);
-
     font-size: 1.05rem;
-
+    line-height: 1.65;
 }
 
 
@@ -74,59 +52,31 @@
 ========================================================= */
 
 .judge-identity {
-
-    min-width: 190px;
-
-    padding: 18px;
-
-    background: white;
-
+    min-width: 240px;
+    padding: 20px 24px;
+    background: #ffffff;
     border: 1px solid var(--border);
-
-    border-radius: var(--radius-sm);
-
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-soft);
+    display: flex;
+    flex-direction: column;
 }
 
 .judge-identity-label {
-
     display: block;
-
-    margin-bottom: 5px;
-
-    color: var(--text-muted);
-
-    font-size: 0.68rem;
-
+    margin-bottom: 6px;
+    color: var(--accent-gold-dark);
+    font-size: 0.72rem;
     font-weight: 800;
-
     letter-spacing: 1.5px;
-
+    text-transform: uppercase;
 }
 
 .judge-identity strong {
-
     display: block;
-
-    margin-bottom: 10px;
-
-    font-size: 1rem;
-
-}
-
-.judge-identity select {
-
-    width: 100%;
-
-    padding: 8px 10px;
-
-    border: 1px solid var(--border);
-
-    background: #faf9f6;
-
+    font-size: 1.15rem;
     color: var(--text-main);
-
-    border-radius: var(--radius-sm);
-
+    font-weight: 800;
 }
 
 
@@ -135,54 +85,39 @@
 ========================================================= */
 
 .judge-info-bar {
-
     display: grid;
-
-    grid-template-columns:
-        repeat(3, 1fr);
-
+    grid-template-columns: repeat(3, 1fr);
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-soft);
     margin-bottom: 45px;
-
-    border-top: 1px solid var(--border);
-
-    border-bottom: 1px solid var(--border);
-
+    overflow: hidden;
 }
 
 .info-item {
-
-    padding: 20px 25px;
-
+    padding: 24px 28px;
     border-right: 1px solid var(--border);
-
 }
 
 .info-item:last-child {
-
     border-right: none;
-
 }
 
 .info-item span {
-
     display: block;
-
-    margin-bottom: 5px;
-
-    color: var(--text-muted);
-
-    font-size: 0.68rem;
-
+    font-size: 0.72rem;
     font-weight: 800;
-
     letter-spacing: 1.5px;
-
+    color: var(--accent-gold-dark);
+    text-transform: uppercase;
+    margin-bottom: 6px;
 }
 
 .info-item strong {
-
-    font-size: 0.95rem;
-
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text-main);
 }
 
 
@@ -191,17 +126,9 @@
 ========================================================= */
 
 .judge-entries-container {
-
     display: grid;
-
-    grid-template-columns:
-        repeat(
-            auto-fit,
-            minmax(300px, 1fr)
-        );
-
-    gap: 28px;
-
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
 }
 
 
@@ -210,30 +137,21 @@
 ========================================================= */
 
 .judge-card {
-
-    overflow: hidden;
-
-    background: white;
-
+    background: #ffffff;
     border: 1px solid var(--border);
-
-    border-radius: var(--radius-sm);
-
+    border-radius: var(--radius-lg);
     box-shadow: var(--shadow-soft);
-
-    transition:
-        transform 180ms ease,
-        box-shadow 180ms ease;
-
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
 }
 
 .judge-card:hover {
-
-    transform: translateY(-4px);
-
-    box-shadow:
-        0 16px 40px rgba(0, 0, 0, 0.09);
-
+    transform: translateY(-6px);
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-hover);
 }
 
 
@@ -242,34 +160,22 @@
 ========================================================= */
 
 .judge-image-wrapper {
-
     position: relative;
-
-    height: 290px;
-
-    background: #eee;
-
+    height: 250px;
+    background: #0f172a;
     overflow: hidden;
-
 }
 
 .judge-card img {
-
     width: 100%;
-
     height: 100%;
-
     object-fit: cover;
-
-    transition:
-        transform 300ms ease;
-
+    display: block;
+    transition: transform 500ms ease;
 }
 
 .judge-card:hover img {
-
-    transform: scale(1.025);
-
+    transform: scale(1.04);
 }
 
 
@@ -278,53 +184,44 @@
 ========================================================= */
 
 .judge-card-content {
-
-    padding: 24px;
-
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-between;
 }
 
 .judge-card-top {
-
     display: flex;
-
     align-items: flex-start;
-
     justify-content: space-between;
-
     gap: 15px;
-
-    margin-bottom: 12px;
-
+    margin-bottom: 10px;
 }
 
 .judge-card-content h2 {
-
-    font-size: 1.4rem;
-
+    font-size: 1.35rem;
     line-height: 1.2;
-
+    letter-spacing: -0.5px;
+    color: var(--text-main);
 }
 
 .participant-name {
-
-    margin-bottom: 12px;
-
+    margin-bottom: 14px;
     color: var(--text-muted);
-
     font-size: 0.85rem;
+}
 
+.participant-name strong {
+    color: var(--text-main);
 }
 
 .judge-description {
-
     margin-bottom: 20px;
-
-    color: #555;
-
+    color: var(--text-secondary);
     font-size: 0.9rem;
-
     line-height: 1.6;
-
+    flex-grow: 1;
 }
 
 
@@ -333,248 +230,154 @@
 ========================================================= */
 
 .judging-progress {
-
     margin-bottom: 20px;
-
     padding-top: 18px;
-
     border-top: 1px solid var(--border);
-
 }
 
 .progress-header {
-
     display: flex;
-
     justify-content: space-between;
-
     align-items: center;
-
     margin-bottom: 8px;
-
 }
 
 .progress-label {
-
     color: var(--text-muted);
-
     font-size: 0.72rem;
-
     font-weight: 800;
-
     letter-spacing: 1px;
-
     text-transform: uppercase;
-
 }
 
 .progress-count {
-
-    font-size: 0.8rem;
-
+    font-size: 0.82rem;
     font-weight: 800;
-
+    color: var(--text-main);
 }
 
 .progress-track {
-
     width: 100%;
-
-    height: 6px;
-
+    height: 7px;
     overflow: hidden;
-
-    background: #e8e5de;
-
-    border-radius: 999px;
-
+    background: var(--bg-soft);
+    border-radius: var(--radius-full);
 }
 
 .progress-bar {
-
     height: 100%;
-
-    background: #181818;
-
-    border-radius: 999px;
-
-    transition:
-        width 250ms ease;
-
+    background: linear-gradient(90deg, var(--accent-gold), #fbbf24);
+    border-radius: var(--radius-full);
+    transition: width 300ms ease;
 }
 
 
 /* =========================================================
-   STATUS
+   STATUS BADGES
 ========================================================= */
 
 .judging-status {
-
     display: inline-flex;
-
     align-items: center;
-
-    gap: 7px;
-
-    padding: 6px 10px;
-
-    border-radius: 999px;
-
-    font-size: 0.68rem;
-
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: var(--radius-full);
+    font-size: 0.7rem;
     font-weight: 800;
-
-    letter-spacing: 0.7px;
-
+    letter-spacing: 0.5px;
     text-transform: uppercase;
-
+    white-space: nowrap;
 }
 
 .judging-status::before {
-
     content: "";
-
     width: 6px;
-
     height: 6px;
-
     border-radius: 50%;
-
     background: currentColor;
-
 }
 
-.status-pending {
-
-    color: var(--warning);
-
-    background: #f5eddc;
-
+.judging-status.status-pending {
+    color: #92400e;
+    background: var(--warning-bg);
+    border: 1px solid var(--warning-border);
 }
 
-.status-complete {
-
-    color: var(--success);
-
-    background: #e7f0ea;
-
+.judging-status.status-complete {
+    color: #065f46;
+    background: var(--success-bg);
+    border: 1px solid var(--success-border);
 }
 
 
 /* =========================================================
-   SCORE BUTTON
+   ACTIONS & MESSAGES
 ========================================================= */
 
 .score-btn {
-
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
+    gap: 10px;
     width: 100%;
-
     min-height: 46px;
-
-    padding: 0 18px;
-
+    padding: 0 20px;
     background: var(--bg-dark);
-
-    color: white;
-
-    border-radius: var(--radius-sm);
-
-    text-decoration: none;
-
-    font-size: 0.85rem;
-
+    color: #ffffff;
+    font-size: 0.9rem;
     font-weight: 800;
-
-    transition:
-        background 180ms ease,
-        transform 180ms ease;
-
+    border-radius: var(--radius-sm);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.18);
+    transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
 }
 
 .score-btn:hover {
-
-    background: #333;
-
+    background: var(--accent-gold-dark);
     transform: translateY(-2px);
-
+    box-shadow: 0 6px 18px rgba(217, 119, 6, 0.35);
 }
-
-
-/* =========================================================
-   COMPLETED MESSAGE
-========================================================= */
 
 .completed-message {
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    width: 100%;
-
-    min-height: 46px;
-
-    padding: 0 18px;
-
-    background: #e7f0ea;
-
-    color: var(--success);
-
+    padding: 12px 14px;
+    background: var(--success-bg);
+    color: #065f46;
+    border: 1px solid var(--success-border);
     border-radius: var(--radius-sm);
-
-    font-size: 0.85rem;
-
-    font-weight: 800;
-
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-align: center;
 }
 
 
 /* =========================================================
-   NO ENTRIES
+   EMPTY STATE
 ========================================================= */
 
 .no-judge-entries {
-
     display: none;
-
-    padding: 80px 20px;
-
     text-align: center;
-
-    background: white;
-
-    border: 1px dashed var(--border);
-
+    padding: 80px 30px;
+    background: #ffffff;
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-lg);
+    margin: 20px auto 0;
+    max-width: 600px;
 }
 
-.empty-icon {
-
-    margin-bottom: 15px;
-
-    font-size: 2rem;
-
+.no-judge-entries .empty-icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
 }
 
 .no-judge-entries h2 {
-
-    margin-bottom: 8px;
-
+    font-size: 1.5rem;
+    margin-bottom: 10px;
 }
 
 .no-judge-entries p {
-
-    margin-bottom: 25px;
-
     color: var(--text-muted);
-
+    font-size: 0.95rem;
+    margin-bottom: 24px;
 }
 
 
@@ -582,63 +385,41 @@
    RESPONSIVE
 ========================================================= */
 
-@media (max-width: 800px) {
+@media (max-width: 1050px) {
+    .judge-entries-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
 
     .judge-header {
-
         flex-direction: column;
-
-        align-items: stretch;
-
+        align-items: flex-start;
     }
 
     .judge-identity {
+        width: 100%;
+    }
+}
 
-        max-width: 300px;
-
+@media (max-width: 650px) {
+    .judge-section {
+        padding: 45px 20px 80px;
     }
 
     .judge-info-bar {
-
         grid-template-columns: 1fr;
-
     }
 
     .info-item {
-
         border-right: none;
-
         border-bottom: 1px solid var(--border);
-
+        padding: 18px 20px;
     }
 
     .info-item:last-child {
-
         border-bottom: none;
-
     }
 
-}
-
-
-@media (max-width: 500px) {
-
-    .judge-section {
-
-        padding: 50px 20px;
-
+    .judge-entries-container {
+        grid-template-columns: 1fr;
     }
-
-    .judge-header h1 {
-
-        letter-spacing: -1px;
-
-    }
-
-    .judge-image-wrapper {
-
-        height: 240px;
-
-    }
-
 }

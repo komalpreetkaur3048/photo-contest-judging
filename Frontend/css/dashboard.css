@@ -1,6 +1,6 @@
 /* =========================================================
    PHOTOJUDGE — PARTICIPANT DASHBOARD
-   Editorial / Cream / Charcoal Theme
+   "Obsidian & Gold Gallery" Modern High-Contrast Theme
 ========================================================= */
 
 
@@ -10,16 +10,9 @@
 
 .dashboard-page {
     min-height: 100vh;
-
-    background: #f5f3ee;
-
+    background: #f8fafc;
     padding: 0 0 100px;
 }
-
-
-/* ==========================================
-   FULL WIDTH CONTAINER
-========================================== */
 
 .dashboard-container {
     width: 100%;
@@ -28,181 +21,160 @@
 
 
 /* ==========================================
-   HERO
+   HERO BANNER
 ========================================== */
 
 .dashboard-hero {
     position: relative;
-
     width: 100%;
-
-    min-height: 560px;
-
+    min-height: 420px;
     display: flex;
     align-items: center;
-
     overflow: hidden;
-
-    margin: 0 0 35px;
-
-    background:
-        linear-gradient(
-            90deg,
-            rgba(35, 34, 32, 0.88) 0%,
-            rgba(35, 34, 32, 0.72) 50%,
-            rgba(35, 34, 32, 0.55) 100%
-        ),
-        #4a4843;
-
+    margin: 0 0 40px;
+    background: linear-gradient(135deg, #090d16 0%, #0f172a 60%, #1e293b 100%);
     color: #ffffff;
+    border-bottom: 1px solid var(--border-dark);
 }
 
-
-/*
-   You can add the same background image
-   used on your leaderboard here.
-
-   Example:
-
-   background:
-       linear-gradient(
-           90deg,
-           rgba(20,20,19,0.92),
-           rgba(20,20,19,0.55)
-       ),
-       url("../images/your-image.jpg");
-
-   background-size: cover;
-   background-position: center;
-*/
-
-
-/* ==========================================
-   HERO CONTENT
-========================================== */
+.dashboard-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 85% 30%, rgba(245, 158, 11, 0.12), transparent 45%),
+        radial-gradient(circle at 15% 70%, rgba(79, 70, 229, 0.08), transparent 40%);
+    pointer-events: none;
+}
 
 .dashboard-hero-content {
-    width: 100%;
-
-    max-width: 1180px;
-
+    position: relative;
+    z-index: 2;
+    width: min(calc(100% - 48px), 1240px);
     margin: 0 auto;
-
-    padding: 90px 55px;
+    padding: 80px 0;
 }
-
-
-/* ==========================================
-   HERO KICKER
-========================================== */
 
 .hero-kicker {
-    margin: 0 0 22px;
-
-    font-size: 0.68rem;
-
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 18px;
+    color: var(--accent-gold);
+    font-size: 0.78rem;
     font-weight: 800;
-
     letter-spacing: 3px;
-
-    color: #d0cbc2;
+    text-transform: uppercase;
 }
 
-
-/* ==========================================
-   HERO TITLE
-========================================== */
-
 .dashboard-hero h1 {
-    max-width: 900px;
-
-    margin: 0 0 25px;
-
-    font-size: clamp(
-        4rem,
-        8vw,
-        7.5rem
-    );
-
-    line-height: 0.88;
-
-    letter-spacing: -0.06em;
-
+    margin-bottom: 20px;
+    font-size: var(--heading-lg);
+    line-height: 1.05;
+    letter-spacing: -2px;
     color: #ffffff;
 }
 
-
 .dashboard-hero h1 span {
+    color: var(--accent-gold-light);
+    font-family: Georgia, serif;
     font-style: italic;
-
-    color: #d5d0c7;
+    font-weight: 400;
 }
-
-
-/* ==========================================
-   HERO DESCRIPTION
-========================================== */
 
 .hero-description {
-    max-width: 700px;
-
-    margin: 0 0 34px;
-
+    max-width: 620px;
+    margin-bottom: 32px;
+    color: #cbd5e1;
     font-size: 1.1rem;
-
     line-height: 1.7;
-
-    color: #d4d0c8;
 }
-
-
-/* ==========================================
-   HERO BUTTON
-========================================== */
 
 .hero-submit-btn {
     display: inline-flex;
-
     align-items: center;
-
-    gap: 14px;
-
-    min-height: 52px;
-
-    padding: 0 24px;
-
-    background: #ffffff;
-
-    color: #171717;
-
+    gap: 12px;
+    min-height: 50px;
+    padding: 0 28px;
+    background: var(--accent-gold);
+    color: #0f172a;
     text-decoration: none;
-
-    border-radius: 3px;
-
-    font-size: 0.82rem;
-
+    border-radius: var(--radius-sm);
+    font-size: 0.92rem;
     font-weight: 800;
-
-    transition:
-        background 160ms ease,
-        transform 160ms ease,
-        box-shadow 160ms ease;
+    box-shadow: 0 4px 18px rgba(245, 158, 11, 0.35);
+    transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
 }
-
 
 .hero-submit-btn:hover {
-    background: #ebe8e1;
-
+    background: #fbbf24;
     transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(245, 158, 11, 0.45);
+}
 
-    box-shadow:
-        0 8px 20px
-        rgba(0, 0, 0, 0.16);
+.hero-submit-btn span {
+    font-size: 1.1rem;
+    transition: transform var(--transition);
+}
+
+.hero-submit-btn:hover span {
+    transform: translateX(4px);
 }
 
 
-.hero-submit-btn span {
-    font-size: 1rem;
+/* ==========================================
+   QUICK STATS
+========================================== */
+
+.dashboard-stats {
+    width: min(calc(100% - 48px), 1240px);
+    margin: 0 auto 45px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+    overflow: hidden;
+}
+
+.dashboard-stat {
+    padding: 30px 28px;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.dashboard-stat:last-child {
+    border-right: none;
+}
+
+.stat-label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: var(--accent-gold-dark);
+    text-transform: uppercase;
+}
+
+.dashboard-stat strong {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 2.4rem;
+    line-height: 1;
+    letter-spacing: -1px;
+    color: var(--text-main);
+    font-weight: 900;
+}
+
+.stat-description {
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    line-height: 1.4;
 }
 
 
@@ -211,186 +183,93 @@
 ========================================== */
 
 .dashboard-actions {
-    width: min(
-        calc(100% - 110px),
-        1180px
-    );
-
-    margin: 0 auto 35px;
-
+    width: min(calc(100% - 48px), 1240px);
+    margin: 0 auto 60px;
     display: grid;
-
-    grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
-    gap: 30px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
 }
-
-
-/* ==========================================
-   ACTION CARD
-========================================== */
 
 .dashboard-action {
-    min-height: 290px;
-
+    min-height: 240px;
     display: flex;
-
     align-items: flex-end;
-
     justify-content: space-between;
-
-    padding: 38px;
-
+    padding: 36px;
     background: #ffffff;
-
-    color: #1b1a18;
-
+    color: var(--text-main);
     text-decoration: none;
-
-    border:
-        1px solid
-        #ddd9d0;
-
-    border-radius: 10px;
-
-    box-shadow:
-        0 8px 25px
-        rgba(
-            0,
-            0,
-            0,
-            0.04
-        );
-
-    transition:
-        transform 180ms ease,
-        box-shadow 180ms ease,
-        background 180ms ease,
-        border-color 180ms ease;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+    transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
 }
-
 
 .dashboard-action:hover {
-    transform: translateY(-5px);
-
-    background: #faf9f6;
-
-    border-color: #cfcbc2;
-
-    box-shadow:
-        0 18px 38px
-        rgba(
-            0,
-            0,
-            0,
-            0.08
-        );
+    transform: translateY(-6px);
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-hover);
 }
-
-
-/* ==========================================
-   DARK LEADERBOARD CARD
-========================================== */
 
 .dashboard-action.dark-action {
     grid-column: 1 / -1;
-
-    min-height: 240px;
-
-    background: #4a4843;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
     color: #ffffff;
-
-    border-color: #272622;
-
-    box-shadow:
-        0 12px 28px
-        rgba(0, 0, 0, 0.10);
+    border-color: var(--accent-gold-dark);
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15);
 }
-
 
 .dashboard-action.dark-action:hover {
-    background: #403e3a;
-    border-color: #403e3a;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.25);
 }
-
-/* ==========================================
-   ACTION LABEL
-========================================== */
 
 .action-label {
     display: block;
-
-    margin-bottom: 14px;
-
-    font-size: 0.65rem;
-
+    margin-bottom: 12px;
+    font-size: 0.72rem;
     font-weight: 800;
-
-    letter-spacing: 2.5px;
-
-    color: #99948b;
+    letter-spacing: 2px;
+    color: var(--accent-gold-dark);
+    text-transform: uppercase;
 }
-
 
 .dark-action .action-label {
-    color: #aaa59b;
+    color: var(--accent-gold);
 }
-
-
-/* ==========================================
-   ACTION TITLE
-========================================== */
 
 .dashboard-action h2 {
-    margin: 0 0 12px;
-
-    font-size: 2.2rem;
-
-    line-height: 1;
-
-    letter-spacing: -0.035em;
+    margin: 0 0 10px;
+    font-size: 1.8rem;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
 }
 
-
-/* ==========================================
-   ACTION DESCRIPTION
-========================================== */
+.dark-action h2 {
+    color: #ffffff;
+}
 
 .dashboard-action p {
     max-width: 440px;
-
     margin: 0;
-
-    color: #77736b;
-
-    line-height: 1.65;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
 }
-
 
 .dark-action p {
-    color: rgba(255, 255, 255, 0.72);
+    color: #cbd5e1;
 }
-
-.dark-action .action-label {
-    color: rgba(255, 255, 255, 0.58);
-}
-
-/* ==========================================
-   ACTION ARROW
-========================================== */
 
 .action-arrow {
-    font-size: 1.6rem;
-
+    font-size: 1.8rem;
     font-weight: 400;
-
-    color: inherit;
-
-    transition:
-        transform 180ms ease;
+    color: var(--accent-gold-dark);
+    transition: transform var(--transition);
 }
 
+.dark-action .action-arrow {
+    color: var(--accent-gold);
+}
 
 .dashboard-action:hover .action-arrow {
     transform: translateX(6px);
@@ -402,333 +281,121 @@
 ========================================== */
 
 .dashboard-info {
-    width: min(
-        calc(100% - 110px),
-        1180px
-    );
-
+    width: min(calc(100% - 48px), 1240px);
     margin: 0 auto;
-
     display: grid;
-
-    grid-template-columns:
-        0.8fr 1.2fr;
-
+    grid-template-columns: 0.8fr 1.2fr;
     gap: 80px;
-
-    padding: 65px 0 20px;
+    padding: 60px 0 20px;
 }
-
-
-/* ==========================================
-   INFO HEADING
-========================================== */
 
 .info-heading > p {
-    margin: 0 0 15px;
-
-    font-size: 0.67rem;
-
+    margin: 0 0 14px;
+    font-size: 0.75rem;
     font-weight: 800;
-
     letter-spacing: 2.5px;
-
-    color: #858077;
+    color: var(--accent-gold-dark);
+    text-transform: uppercase;
 }
-
 
 .info-heading h2 {
     max-width: 420px;
-
     margin: 0;
-
-    font-size: 3.1rem;
-
-    line-height: 0.98;
-
-    letter-spacing: -0.045em;
-
-    color: #1d1c19;
+    font-size: var(--heading-md);
+    line-height: 1.05;
+    letter-spacing: -1.5px;
+    color: var(--text-main);
 }
-
-
-/* ==========================================
-   JOURNEY LIST
-========================================== */
 
 .journey {
     display: flex;
-
     flex-direction: column;
-
-    border-top:
-        1px solid
-        #d5d1c8;
+    border-top: 1px solid var(--border);
 }
-
-
-/* ==========================================
-   JOURNEY ITEM
-========================================== */
 
 .journey-item {
     display: grid;
-
-    grid-template-columns:
-        60px 1fr;
-
+    grid-template-columns: 60px 1fr;
     gap: 20px;
-
-    padding: 25px 0;
-
-    border-bottom:
-        1px solid
-        #d5d1c8;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--border);
 }
-
 
 .journey-item > span {
-    font-size: 0.7rem;
-
-    font-weight: 800;
-
+    font-size: 0.85rem;
+    font-weight: 900;
     letter-spacing: 1.5px;
-
-    color: #aaa59b;
+    color: var(--accent-gold-dark);
 }
-
 
 .journey-item h3 {
-    margin: 0 0 7px;
-
-    font-size: 1.25rem;
-
-    color: #1c1b19;
+    margin: 0 0 6px;
+    font-size: 1.3rem;
+    color: var(--text-main);
 }
-
 
 .journey-item p {
     margin: 0;
-
-    color: #767169;
-
+    color: var(--text-muted);
     line-height: 1.6;
+    font-size: 0.95rem;
 }
 
 
 /* ==========================================
-   FOOTER
+   RESPONSIVE
 ========================================== */
 
-footer {
-    padding: 30px 20px;
-
-    background: #f5f3ee;
-
-    border-top:
-        1px solid
-        #d9d5cc;
-
-    text-align: center;
-
-    color: #7c776e;
-
-    font-size: 0.78rem;
-}
-
-
-/* ==========================================
-   TABLET
-========================================== */
-
-@media (max-width: 900px) {
-
-    .dashboard-hero-content {
-        padding: 70px 40px;
+@media (max-width: 950px) {
+    .dashboard-stats {
+        grid-template-columns: repeat(2, 1fr);
     }
 
-
-    .dashboard-hero h1 {
-        font-size: 5.5rem;
+    .dashboard-stat:nth-child(2) {
+        border-right: none;
     }
 
-
-    .dashboard-actions {
-        width: min(
-            calc(100% - 50px),
-            1180px
-        );
+    .dashboard-stat:nth-child(1),
+    .dashboard-stat:nth-child(2) {
+        border-bottom: 1px solid var(--border);
     }
-
 
     .dashboard-info {
-        width: min(
-            calc(100% - 50px),
-            1180px
-        );
-
         grid-template-columns: 1fr;
-
-        gap: 50px;
-
-        padding-top: 60px;
+        gap: 40px;
     }
-
 }
 
-
-/* ==========================================
-   MOBILE
-========================================== */
-
-@media (max-width: 600px) {
-
-    .dashboard-page {
-        padding-bottom: 70px;
-    }
-
-
-    .dashboard-hero {
-        min-height: 470px;
-    }
-
-
+@media (max-width: 650px) {
     .dashboard-hero-content {
-        padding: 50px 28px;
+        padding: 50px 0;
     }
-
 
     .dashboard-hero h1 {
-        font-size: 3.4rem;
+        font-size: 2.4rem;
     }
 
-
-    .hero-description {
-        font-size: 0.95rem;
+    .dashboard-stats {
+        grid-template-columns: 1fr;
     }
 
+    .dashboard-stat {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 20px;
+    }
+
+    .dashboard-stat:last-child {
+        border-bottom: none;
+    }
 
     .dashboard-actions {
-        width: calc(100% - 28px);
-
         grid-template-columns: 1fr;
-
         gap: 18px;
-
-        margin-bottom: 25px;
     }
-
 
     .dashboard-action {
-        min-height: 220px;
-
-        padding: 28px;
+        min-height: 190px;
+        padding: 24px;
     }
-
-
-    .dashboard-action.dark-action {
-        min-height: 220px;
-
-        grid-column: auto;
-    }
-
-
-    .dashboard-info {
-        width: calc(100% - 28px);
-
-        padding-top: 45px;
-    }
-
-
-    .info-heading h2 {
-        font-size: 2.5rem;
-    }
-
-}
-
-
-
-/* ==========================================
-   QUICK STATS
-========================================== */
-
-.dashboard-stats {
-    width: min(
-        calc(100% - 110px),
-        1180px
-    );
-
-    margin: 0 auto 35px;
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(4, 1fr);
-
-    background: #ffffff;
-
-    border:
-        1px solid
-        #ddd9d0;
-
-    border-radius: 8px;
-
-    overflow: hidden;
-}
-
-
-.dashboard-stat {
-    min-height: 145px;
-
-    padding: 26px 28px;
-
-    border-right:
-        1px solid
-        #ddd9d0;
-}
-
-
-.dashboard-stat:last-child {
-    border-right: none;
-}
-
-
-.stat-label {
-    display: block;
-
-    margin-bottom: 12px;
-
-    font-size: 0.62rem;
-
-    font-weight: 800;
-
-    letter-spacing: 2px;
-
-    color: #969188;
-}
-
-
-.dashboard-stat strong {
-    display: block;
-
-    margin-bottom: 7px;
-
-    font-size: 2.5rem;
-
-    line-height: 1;
-
-    letter-spacing: -0.04em;
-
-    color: #242321;
-}
-
-
-.stat-description {
-    display: block;
-
-    color: #77736b;
-
-    font-size: 0.75rem;
-
-    line-height: 1.5;
 }
