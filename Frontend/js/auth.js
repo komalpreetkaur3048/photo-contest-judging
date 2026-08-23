@@ -162,16 +162,13 @@ if (mainNav) {
             </li>
 
             <li>
-                <a href="${pagePath("submit.html")}">
-                    Submit
-                </a>
-            </li>
-
-            <li>
-                <a href="${pagePath("my-entries.html")}">
-                    My Entries
-                </a>
-            </li>
+    <a
+        href="${pagePath("submit.html")}"
+        class="nav-submit"
+    >
+        Submit →
+    </a>
+</li>
 
             <li>
                 <a href="${pagePath("leaderboard.html")}">
@@ -188,6 +185,7 @@ if (mainNav) {
         `;
 
     }
+
 
 
     // ==========================================
@@ -265,6 +263,38 @@ if (mainNav) {
         `;
 
     }
+
+    // ==========================================
+// HIGHLIGHT CURRENT PAGE
+// ==========================================
+
+const currentPage =
+    window.location.pathname
+        .split("/")
+        .pop();
+
+
+document
+    .querySelectorAll("#mainNav a")
+    .forEach(function (link) {
+
+        const linkPage =
+            link.getAttribute("href")
+                ?.split("?")[0]
+                .split("/")
+                .pop();
+
+
+        if (
+            linkPage &&
+            linkPage === currentPage
+        ) {
+
+            link.classList.add("active");
+
+        }
+
+    });
 
 
     // ==========================================

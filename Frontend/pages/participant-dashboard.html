@@ -12,10 +12,18 @@
 
     <title>Participant Dashboard | PhotoJudge</title>
 
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/dashboard.css">
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/dashboard.css"
+    >
 
 </head>
+
 
 <body>
 
@@ -25,156 +33,346 @@
 
     <nav class="navbar">
 
-    <a href="../index.html" class="logo">
-        PhotoJudge
-    </a>
+        <a
+            href="../index.html"
+            class="logo"
+        >
+            PhotoJudge
+        </a>
 
-    <ul class="nav-links" id="mainNav"></ul>
+        <ul
+            class="nav-links"
+            id="mainNav"
+        ></ul>
 
-</nav>
+    </nav>
 
 
     <!-- =========================
          DASHBOARD
     ========================== -->
 
-    <main class="dashboard-section">
+    <main class="dashboard-page">
 
-        <div class="dashboard-header">
-
-            <p class="small-heading">
-                PARTICIPANT DASHBOARD
-            </p>
-
-            <h1>
-                Welcome, <span id="userName">Participant</span> 👋
-            </h1>
-
-            <p>
-                Manage your contest participation,
-                submissions, and results from one place.
-            </p>
-
-        </div>
+        <section class="dashboard-container">
 
 
-        <!-- =========================
-             DASHBOARD CARDS
-        ========================== -->
+            <!-- =========================
+                 HERO
+            ========================== -->
 
-        <div class="dashboard-grid">
+            <section class="dashboard-hero">
 
-            <!-- Contests -->
+                <div class="dashboard-hero-content">
 
-            <div class="dashboard-card">
+                    <p class="hero-kicker">
+                        PHOTO CONTEST 2026
+                    </p>
 
-                <div class="card-icon">
-                    📸
+                    <h1>
+                        Welcome,
+                        <span id="userName">
+                            Participant
+                        </span>.
+                    </h1>
+
+                    <p class="hero-description">
+                        Submit your best work, follow the judging
+                        process, and see where your photograph ranks.
+                    </p>
+
+                    <a
+                        href="submit.html"
+                        class="hero-submit-btn"
+                    >
+                        Submit Photo
+                        <span>→</span>
+                    </a>
+
                 </div>
 
-                <h2>
-                    Explore Contests
-                </h2>
+            </section>
 
-                <p>
-                    View active photography contests and
-                    find one that matches your creativity.
-                </p>
+
+            <!-- =========================
+     QUICK STATS
+========================== -->
+
+<section class="dashboard-stats">
+
+    <div class="dashboard-stat">
+
+        <span class="stat-label">
+            ACTIVE CONTESTS
+        </span>
+
+        <strong id="activeContestCount">
+            —
+        </strong>
+
+        <span class="stat-description">
+            competitions open for submission
+        </span>
+
+    </div>
+
+
+    <div class="dashboard-stat">
+
+        <span class="stat-label">
+            MY ENTRIES
+        </span>
+
+        <strong id="myEntryCount">
+            —
+        </strong>
+
+        <span class="stat-description">
+            photographs submitted
+        </span>
+
+    </div>
+
+
+    <div class="dashboard-stat">
+
+        <span class="stat-label">
+            UNDER JUDGING
+        </span>
+
+        <strong id="judgingEntryCount">
+            —
+        </strong>
+
+        <span class="stat-description">
+            entries currently being evaluated
+        </span>
+
+    </div>
+
+
+    <div class="dashboard-stat">
+
+        <span class="stat-label">
+            FINAL RESULTS
+        </span>
+
+        <strong id="rankedEntryCount">
+            —
+        </strong>
+
+        <span class="stat-description">
+            entries with final rankings
+        </span>
+
+    </div>
+
+</section>
+
+
+            <!-- =========================
+                 QUICK ACTION STRIP
+            ========================== -->
+
+            <section class="dashboard-actions">
+
+
+                <!-- Explore -->
 
                 <a
                     href="contests.html"
-                    class="dashboard-btn"
+                    class="dashboard-action"
                 >
-                    View Contests
+
+                    <div>
+
+                        <span class="action-label">
+                            EXPLORE
+                        </span>
+
+                        <h2>
+                            Contests
+                        </h2>
+
+                        <p>
+                            Find an active competition
+                            for your photograph.
+                        </p>
+
+                    </div>
+
+                    <span class="action-arrow">
+                        →
+                    </span>
+
                 </a>
 
-            </div>
 
-
-            <!-- Submit -->
-
-            <div class="dashboard-card">
-
-                <div class="card-icon">
-                    🖼️
-                </div>
-
-                <h2>
-                    Submit Photo
-                </h2>
-
-                <p>
-                    Submit your best photograph to the
-                    current contest.
-                </p>
-
-                <a
-                    href="submit.html"
-                    class="dashboard-btn"
-                >
-                    Submit Photo
-                </a>
-
-            </div>
-
-
-            <!-- My Entries -->
-
-            <div class="dashboard-card">
-
-                <div class="card-icon">
-                    📂
-                </div>
-
-                <h2>
-                    My Entries
-                </h2>
-
-                <p>
-                    View, edit, or delete your submitted
-                    photographs.
-                </p>
+                <!-- My Entries -->
 
                 <a
                     href="my-entries.html"
-                    class="dashboard-btn"
+                    class="dashboard-action"
                 >
-                    View My Entries
+
+                    <div>
+
+                        <span class="action-label">
+                            YOUR WORK
+                        </span>
+
+                        <h2>
+                            My Entries
+                        </h2>
+
+                        <p>
+                            Track submissions, judging
+                            and final results.
+                        </p>
+
+                    </div>
+
+                    <span class="action-arrow">
+                        →
+                    </span>
+
                 </a>
 
-            </div>
 
-
-            <!-- Leaderboard -->
-
-            <div class="dashboard-card">
-
-                <div class="card-icon">
-                    🏆
-                </div>
-
-                <h2>
-                    Leaderboard
-                </h2>
-
-                <p>
-                    See the latest contest rankings and
-                    track your performance.
-                </p>
+                <!-- Leaderboard -->
 
                 <a
                     href="leaderboard.html"
-                    class="dashboard-btn"
+                    class="dashboard-action dark-action"
                 >
-                    View Leaderboard
+
+                    <div>
+
+                        <span class="action-label">
+                            COMPETITION
+                        </span>
+
+                        <h2>
+                            Leaderboard
+                        </h2>
+
+                        <p>
+                            See the leading photographs
+                            and final rankings.
+                        </p>
+
+                    </div>
+
+                    <span class="action-arrow">
+                        →
+                    </span>
+
                 </a>
 
-            </div>
+            </section>
 
-        </div>
+
+            <!-- =========================
+                 INFORMATION AREA
+            ========================== -->
+
+            <section class="dashboard-info">
+
+
+                <div class="info-heading">
+
+                    <p>
+                        YOUR JOURNEY
+                    </p>
+
+                    <h2>
+                        From submission
+                        to final result.
+                    </h2>
+
+                </div>
+
+
+                <div class="journey">
+
+                    <div class="journey-item">
+
+                        <span>
+                            01
+                        </span>
+
+                        <div>
+
+                            <h3>
+                                Submit
+                            </h3>
+
+                            <p>
+                                Choose a contest and
+                                upload your photograph.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="journey-item">
+
+                        <span>
+                            02
+                        </span>
+
+                        <div>
+
+                            <h3>
+                                Judging
+                            </h3>
+
+                            <p>
+                                Your photograph is evaluated
+                                by the contest judges.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="journey-item">
+
+                        <span>
+                            03
+                        </span>
+
+                        <div>
+
+                            <h3>
+                                Result
+                            </h3>
+
+                            <p>
+                                Receive your normalized score,
+                                rank, and evaluation.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+        </section>
 
     </main>
 
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
 
     <footer>
 
@@ -185,23 +383,112 @@
     </footer>
 
 
+    <!-- =========================
+         SCRIPTS
+    ========================== -->
+
     <script src="../js/auth.js"></script>
+
     <script>
-    const currentUser =
-        JSON.parse(
-            localStorage.getItem("currentUser")
-        );
 
-    if (!currentUser) {
+        const currentUser =
+            JSON.parse(
+                localStorage.getItem("currentUser")
+            );
 
-        window.location.href = "login.html";
 
-    } else if (currentUser.role !== "participant") {
+        if (!currentUser) {
 
-        window.location.href = "judge.html";
+            window.location.href =
+                "login.html";
 
-    }
-</script>
+        }
+
+        else if (
+            currentUser.role !== "participant"
+        ) {
+
+            window.location.href =
+                "judge.html";
+
+        }
+
+
+        // ==========================================
+// DASHBOARD STATS
+// ==========================================
+
+const contests =
+    JSON.parse(
+        localStorage.getItem("contests")
+    ) || [];
+
+const entries =
+    JSON.parse(
+        localStorage.getItem("photoEntries")
+    ) || [];
+
+const currentParticipantEntries =
+    entries.filter(function (entry) {
+
+        return String(entry.participantId) ===
+               String(currentUser.id);
+
+    });
+
+
+const activeContestCount =
+    contests.filter(function (contest) {
+
+        return contest.status === "active";
+
+    }).length;
+
+
+const myEntryCount =
+    currentParticipantEntries.length;
+
+
+const judgingEntryCount =
+    currentParticipantEntries.filter(function (entry) {
+
+        return entry.judgingStatus === "judging";
+
+    }).length;
+
+
+const rankedEntryCount =
+    currentParticipantEntries.filter(function (entry) {
+
+        return entry.judgingStatus === "ranked";
+
+    }).length;
+
+
+document.querySelector(
+    "#activeContestCount"
+).textContent =
+    activeContestCount;
+
+
+document.querySelector(
+    "#myEntryCount"
+).textContent =
+    myEntryCount;
+
+
+document.querySelector(
+    "#judgingEntryCount"
+).textContent =
+    judgingEntryCount;
+
+
+document.querySelector(
+    "#rankedEntryCount"
+).textContent =
+    rankedEntryCount;
+
+    </script>
 
 </body>
 

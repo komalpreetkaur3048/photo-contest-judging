@@ -1,3 +1,31 @@
+/* ==========================================
+   ACTIVE NAVIGATION
+========================================== */
+
+.nav-links a {
+    position: relative;
+}
+
+.nav-links a.active {
+    font-weight: 700;
+}
+
+.nav-links a.active::after {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: -8px;
+
+    height: 2px;
+
+    background: currentColor;
+
+    border-radius: 999px;
+}
+
 /* =========================================================
    PHOTOJUDGE — GLOBAL DESIGN SYSTEM
 ========================================================= */
@@ -672,4 +700,258 @@ footer {
 
 .contest-dropdown a:hover {
     background: var(--bg-soft);
+}
+
+/* ==========================================
+   PHOTOJUDGE — UI POLISH
+========================================== */
+
+:root {
+    --surface-soft: #f6f4ef;
+    --surface-card: #ffffff;
+    --border-soft: #e5e1d8;
+    --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.06);
+    --shadow-hover: 0 16px 36px rgba(0, 0, 0, 0.10);
+}
+
+
+/* ==========================================
+   CARDS
+========================================== */
+
+.entry-card,
+.contest-card,
+.sidebar-card,
+.fairness-card,
+.contest-mini-card {
+    background: var(--surface-card);
+    border: 1px solid var(--border-soft);
+    box-shadow: var(--shadow-soft);
+    transition:
+        transform 180ms ease,
+        box-shadow 180ms ease,
+        border-color 180ms ease;
+}
+
+.entry-card:hover,
+.contest-card:hover,
+.sidebar-card:hover,
+.fairness-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+}
+
+
+/* ==========================================
+   BUTTONS
+========================================== */
+
+button,
+.entry-btn,
+.result-btn,
+.primary-result-btn,
+.secondary-result-btn {
+    transition:
+        transform 160ms ease,
+        box-shadow 160ms ease,
+        background 160ms ease;
+}
+
+button:hover,
+.entry-btn:hover,
+.result-btn:hover,
+.primary-result-btn:hover,
+.secondary-result-btn:hover {
+    transform: translateY(-2px);
+}
+
+
+/* ==========================================
+   STATUS BADGES
+========================================== */
+
+.entry-status {
+    padding: 6px 10px;
+    border-radius: 999px;
+
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+
+    background: #f1efe9;
+    border: 1px solid #ddd9d0;
+}
+
+
+/* ==========================================
+   SECTION EMPHASIS
+========================================== */
+
+.form-section,
+.evaluation-section,
+.criteria-info,
+.fairness-result {
+    background: var(--surface-soft);
+    border: 1px solid var(--border-soft);
+    border-radius: 10px;
+}
+
+
+/* ==========================================
+   HEADINGS
+========================================== */
+
+h1,
+h2,
+h3 {
+    letter-spacing: -0.02em;
+}
+
+.eyebrow {
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+
+
+/* ==========================================
+   ACTIVE NAVIGATION
+========================================== */
+
+.nav-links a {
+    position: relative;
+}
+
+
+.nav-links a.active {
+    font-weight: 700;
+}
+
+
+.nav-links a.active::after {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: -8px;
+
+    height: 2px;
+
+    background: currentColor;
+
+    border-radius: 999px;
+}
+
+
+.nav-links a:hover {
+    opacity: 0.75;
+}
+
+
+
+/* ==========================================
+   BACK BUTTON
+========================================== */
+
+.back-link {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 28px;
+
+    color: #6d6a63;
+
+    text-decoration: none;
+
+    font-size: 0.82rem;
+    font-weight: 700;
+
+    transition:
+        color 160ms ease,
+        transform 160ms ease;
+}
+
+.back-link:hover {
+    color: #181818;
+    transform: translateX(-3px);
+}
+
+
+/* 
+nav */
+
+
+/* ==========================================
+   NAVBAR — SUBMIT LINK
+========================================== */
+/* ==========================================
+   NAVBAR SUBMIT
+========================================== */
+
+.nav-links .nav-submit {
+    padding: 5px 0;
+
+    background: transparent !important;
+    color: #242321 !important;
+
+    border: none;
+
+    font-weight: 700;
+
+    text-decoration: none;
+
+    position: relative;
+}
+
+
+/* Remove custom pseudo decorations */
+
+.nav-links .nav-submit::before,
+.nav-links .nav-submit::after {
+    content: none !important;
+}
+
+
+/* Hover */
+
+.nav-links .nav-submit:hover {
+    color: #000000 !important;
+}
+
+
+
+
+
+
+
+/* ==========================================
+   STICKY NAVBAR
+========================================== */
+
+.navbar {
+    position: sticky;
+
+    top: 0;
+
+    z-index: 1000;
+
+    background:
+        rgba(250, 249, 246, 0.94);
+
+    backdrop-filter: blur(12px);
+
+    -webkit-backdrop-filter: blur(12px);
+
+    border-bottom:
+        1px solid
+        rgba(0, 0, 0, 0.10);
+
+    box-shadow:
+        0 4px 18px
+        rgba(0, 0, 0, 0.035);
 }
