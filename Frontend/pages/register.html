@@ -123,19 +123,78 @@
                 </div>
 
 
-                <!-- Role -->
+                <!-- Role Selection -->
 
                 <div class="form-group">
-                    <label for="registerRole">
-                        Register As
-                    </label>
+                    <label>Register As</label>
+                    <div class="role-selector">
+                        <label class="role-option active" id="roleParticipantOption">
+                            <input
+                                type="radio"
+                                name="registerRole"
+                                value="participant"
+                                checked
+                            >
+                            <span class="role-title">Participant</span>
+                            <span class="role-desc">Submit photos to contests</span>
+                        </label>
 
-                    <input
-                    type="text"
-                    id="registerRole"
-                    value="participant"
-                    readonly
-                    >
+                        <label class="role-option" id="roleJudgeOption">
+                            <input
+                                type="radio"
+                                name="registerRole"
+                                value="judge"
+                            >
+                            <span class="role-title">Contest Judge</span>
+                            <span class="role-desc">Evaluate submissions</span>
+                        </label>
+                    </div>
+                </div>
+
+
+                <!-- Judge-Only Fields -->
+
+                <div id="judgeFieldsContainer" class="judge-fields" style="display: none;">
+
+                    <div class="judge-alert">
+                        <strong>Official Judge Registration:</strong> Requires an authorized organizer access key.
+                    </div>
+
+                    <div class="form-group">
+                        <label for="judgeAccessKey">
+                            Judge Access Key <span style="color: #dc2626;">*</span>
+                        </label>
+                        <input
+                            type="password"
+                            id="judgeAccessKey"
+                            placeholder="Enter organizer secret key"
+                            autocomplete="off"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="judgeSpecialization">
+                            Specialization / Title
+                        </label>
+                        <input
+                            type="text"
+                            id="judgeSpecialization"
+                            placeholder="e.g. Senior Wildlife Photographer"
+                            maxlength="80"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="judgeBio">
+                            Short Bio / Credentials
+                        </label>
+                        <textarea
+                            id="judgeBio"
+                            rows="2"
+                            placeholder="e.g. 10+ years experience, nature documentary specialist"
+                            maxlength="200"
+                        ></textarea>
+                    </div>
 
                 </div>
 

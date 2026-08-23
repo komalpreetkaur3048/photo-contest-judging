@@ -4,21 +4,6 @@
 
 
 /* =========================================================
-   CONSTANTS
-========================================================= */
-
-const WEIGHTS = {
-
-    creativity: 0.40,
-
-    technical: 0.30,
-
-    theme: 0.30
-
-};
-
-
-/* =========================================================
    DOM ELEMENTS
 ========================================================= */
 
@@ -57,29 +42,48 @@ const judgeScores =
     ) || [];
 
 
+const contests =
+    JSON.parse(
+        localStorage.getItem("contests")
+    ) || [];
+
+
 /* =========================================================
    CALCULATE RAW WEIGHTED SCORE
 ========================================================= */
 
+function getScoreWeights(score) {
+    const entry = entries.find(function (e) {
+        return String(e.id) === String(score.entryId);
+    });
+
+    const contest = entry
+        ? contests.find(function (c) {
+              return String(c.id) === String(entry.contestId);
+          })
+        : null;
+
+    const criteria = contest?.criteria || {
+        creativity: 40,
+        technical: 30,
+        themeFit: 30
+    };
+
+    return {
+        creativity: (criteria.creativity || 40) / 100,
+        technical: (criteria.technical || 30) / 100,
+        theme: (criteria.themeFit || criteria.theme || 30) / 100
+    };
+}
+
 function calculateWeightedScore(score) {
+    const weights = getScoreWeights(score);
 
     return (
-
-        Number(score.creativity) *
-        WEIGHTS.creativity
-
-        +
-
-        Number(score.technical) *
-        WEIGHTS.technical
-
-        +
-
-        Number(score.theme) *
-        WEIGHTS.theme
-
+        Number(score.creativity) * weights.creativity +
+        Number(score.technical) * weights.technical +
+        Number(score.theme) * weights.theme
     );
-
 }
 
 

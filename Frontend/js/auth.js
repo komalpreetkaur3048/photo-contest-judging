@@ -220,11 +220,6 @@ if (mainNav) {
             </a>
         </li>
 
-        <li>
-            <a href="${pagePath("contests.html?status=active")}">
-                Active Contests
-            </a>
-        </li>
 
         <li>
             <a href="${pagePath("contests.html?status=upcoming")}">
@@ -408,6 +403,28 @@ initializeJudges();
 
 
 // ==========================================
+// CRYPTO HASHING UTILITY
+// ==========================================
+
+async function hashString(str) {
+    if (!str) return "";
+    try {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(str);
+        const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(function (b) {
+            return b.toString(16).padStart(2, "0");
+        }).join("");
+    } catch (e) {
+        return str;
+    }
+}
+
+const JUDGE_SECRET_KEY = "JUDGE2026";
+
+
+// ==========================================
 // REGISTER
 // ==========================================
 
@@ -417,9 +434,37 @@ const registerForm =
 
 if (registerForm) {
 
+    // Toggle Role UI
+    const roleRadios =
+        document.querySelectorAll('input[name="registerRole"]');
+
+    const judgeFields =
+        document.querySelector("#judgeFieldsContainer");
+
+    const rolePartOption =
+        document.querySelector("#roleParticipantOption");
+
+    const roleJudgeOption =
+        document.querySelector("#roleJudgeOption");
+
+    roleRadios.forEach(function (radio) {
+        radio.addEventListener("change", function () {
+            if (radio.value === "judge") {
+                if (judgeFields) judgeFields.style.display = "block";
+                if (roleJudgeOption) roleJudgeOption.classList.add("active");
+                if (rolePartOption) rolePartOption.classList.remove("active");
+            } else {
+                if (judgeFields) judgeFields.style.display = "none";
+                if (rolePartOption) rolePartOption.classList.add("active");
+                if (roleJudgeOption) roleJudgeOption.classList.remove("active");
+            }
+        });
+    });
+
+
     registerForm.addEventListener(
         "submit",
-        function (event) {
+        async function (event) {
 
             // Stop normal form submission
             event.preventDefault();
@@ -449,11 +494,11 @@ if (registerForm) {
                     .querySelector("#confirmPassword")
                     .value;
 
-            const role =
-                document
-                    .querySelector("#registerRole")
-                    .value;
+            const selectedRoleRadio =
+                document.querySelector('input[name="registerRole"]:checked');
 
+            const selectedRole =
+                selectedRoleRadio ? selectedRoleRadio.value : "participant";
 
             const message =
                 document
@@ -468,6 +513,7 @@ if (registerForm) {
 
                 message.textContent =
                     "Password must contain at least 6 characters.";
+                message.style.color = "#dc2626";
 
                 return;
             }
@@ -477,8 +523,39 @@ if (registerForm) {
 
                 message.textContent =
                     "Passwords do not match.";
+                message.style.color = "#dc2626";
 
                 return;
+            }
+
+
+            // ==========================================
+            // JUDGE KEY VALIDATION
+            // ==========================================
+
+            let judgeSpecialization = "";
+            let judgeBio = "";
+
+            if (selectedRole === "judge") {
+                const accessKeyInput =
+                    document.querySelector("#judgeAccessKey");
+                const enteredKey =
+                    accessKeyInput ? accessKeyInput.value.trim() : "";
+
+                if (!enteredKey || enteredKey.toUpperCase() !== JUDGE_SECRET_KEY) {
+                    message.textContent =
+                        "Invalid Judge Access Key. Only authorized judges can create an account.";
+                    message.style.color = "#dc2626";
+                    return;
+                }
+
+                judgeSpecialization =
+                    document.querySelector("#judgeSpecialization")?.value.trim() ||
+                    "Official Contest Judge";
+
+                judgeBio =
+                    document.querySelector("#judgeBio")?.value.trim() ||
+                    "";
             }
 
 
@@ -508,26 +585,34 @@ if (registerForm) {
 
                 message.textContent =
                     "An account with this email already exists.";
+                message.style.color = "#dc2626";
 
                 return;
             }
 
 
             // ==========================================
-            // CREATE USER
+            // CREATE USER (WITH HASHED PASSWORD)
             // ==========================================
+
+            const hashedPassword =
+                await hashString(password);
 
             const user = {
 
-                id: Date.now(),
+                id: selectedRole === "judge" ? ("judge_" + Date.now()) : Date.now(),
 
                 name: name,
 
                 email: email,
 
-                password: password,
+                password: hashedPassword,
 
-                role: role
+                role: selectedRole,
+
+                specialization: selectedRole === "judge" ? judgeSpecialization : undefined,
+
+                bio: selectedRole === "judge" ? judgeBio : undefined
 
             };
 
@@ -548,7 +633,10 @@ if (registerForm) {
             // Success message
 
             message.textContent =
-                "Account created successfully!";
+                selectedRole === "judge"
+                    ? "✓ Judge account verified and created successfully!"
+                    : "✓ Account created successfully!";
+            message.style.color = "#16a34a";
 
 
             // Clear form
@@ -563,7 +651,7 @@ if (registerForm) {
                 window.location.href =
                     "login.html";
 
-            }, 1000);
+            }, 1200);
 
         }
     );
@@ -583,7 +671,7 @@ if (loginForm) {
 
     loginForm.addEventListener(
         "submit",
-        function (event) {
+        async function (event) {
 
             // Prevent normal form submission
             event.preventDefault();
@@ -623,12 +711,15 @@ if (loginForm) {
             // FIND USER
             // ==========================================
 
+            const hashedPassword =
+                await hashString(password);
+
             const user =
                 users.find(function (existingUser) {
 
                     return (
                         existingUser.email === email &&
-                        existingUser.password === password
+                        (existingUser.password === hashedPassword || existingUser.password === password)
                     );
 
                 });
@@ -642,6 +733,7 @@ if (loginForm) {
 
                 message.textContent =
                     "Invalid email or password.";
+                message.style.color = "#dc2626";
 
                 return;
             }
@@ -662,7 +754,8 @@ if (loginForm) {
             // ==========================================
 
             message.textContent =
-                "Login successful!";
+                "✓ Login successful!";
+            message.style.color = "#16a34a";
 
 
             // ==========================================
@@ -687,9 +780,6 @@ if (loginForm) {
 
         }
     );
-
-
-
 
 }
 

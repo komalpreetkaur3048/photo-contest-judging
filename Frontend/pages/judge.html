@@ -69,40 +69,16 @@
             <div class="judge-identity">
 
                 <span class="judge-identity-label">
-                    CURRENT JUDGE
+                    OFFICIAL JUROR
                 </span>
 
                 <strong id="currentJudgeName">
-                    Judge 1
+                    Judge
                 </strong>
 
-                <!-- <select id="judgeSelector">
-
-                    <option value="judge1">
-                        Judge 1
-                    </option>
-
-                    <option value="judge2">
-                        Judge 2
-                    </option>
-
-                    <option value="judge3">
-                        Judge 3
-                    </option>
-
-                </select> -->
-
-                <div class="current-judge">
-
-                    <span>
-                        Logged in as:
-                    </span>
-
-                    <strong id="currentJudgeName">
-                        Judge
-                    </strong>
-
-                </div>
+                <span id="currentJudgeTitle" style="font-size: 13px; color: #64748b; margin-top: 2px; font-weight: 500;">
+                    Official Contest Judge
+                </span>
 
             </div>
 
@@ -220,22 +196,15 @@
     <script src="../js/judge.js"></script>
 
     <script>
-    const currentUser =
-        JSON.parse(
-            localStorage.getItem("currentUser")
-        );
-
-    if (!currentUser) {
-
-        window.location.href = "login.html";
-
-    } else if (currentUser.role !== "judge") {
-
-        window.location.href =
-            "participant-dashboard.html";
-
-    }
-</script>
+    (function () {
+        const user = JSON.parse(localStorage.getItem("currentUser"));
+        if (!user) {
+            window.location.href = "login.html";
+        } else if (user.role !== "judge") {
+            window.location.href = "participant-dashboard.html";
+        }
+    })();
+    </script>
 
 </body>
 

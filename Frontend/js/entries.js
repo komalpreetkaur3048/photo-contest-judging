@@ -168,6 +168,24 @@ if (submissionForm) {
     const formMessage =
         document.querySelector("#formMessage");
 
+    const titleCount =
+        document.querySelector("#titleCount");
+
+    const descriptionCount =
+        document.querySelector("#descriptionCount");
+
+    if (photoTitle && titleCount) {
+        photoTitle.addEventListener("input", function () {
+            titleCount.textContent = photoTitle.value.length;
+        });
+    }
+
+    if (photoDescription && descriptionCount) {
+        photoDescription.addEventListener("input", function () {
+            descriptionCount.textContent = photoDescription.value.length;
+        });
+    }
+
 
     function loadContestOptions() {
 
@@ -658,6 +676,30 @@ if (!selectedContest) {
 }
 
 
+// Check maximum submissions limit
+let existingPhotoEntries = [];
+try {
+    existingPhotoEntries =
+        JSON.parse(
+            localStorage.getItem("photoEntries")
+        ) || [];
+} catch (e) {
+    existingPhotoEntries = [];
+}
+
+const userContestEntries = existingPhotoEntries.filter(function (e) {
+    return String(e.participantId) === String(currentUser.id) &&
+           String(e.contestId) === String(chosenContestId);
+});
+
+const maxAllowed = selectedContest.maxSubmissions || 3;
+if (userContestEntries.length >= maxAllowed) {
+    formMessage.textContent =
+        `You have reached the maximum limit of ${maxAllowed} submissions for this contest.`;
+    return;
+}
+
+
 // ==========================================
 // CREATE ENTRY
 // ==========================================
@@ -830,11 +872,13 @@ function syncEntryJudgingStates() {
         // RANKED
         // ==========================================
 
-        if (entry.isRanked === true &&
-            scoreCount >= 3) {
+        if (scoreCount >= 3) {
 
             entry.judgingStatus =
                 "ranked";
+
+            entry.isRanked =
+                true;
 
         }
 
@@ -1511,6 +1555,26 @@ function initializeEditPage() {
 
         editMessage.textContent =
             "Entry not found.";
+
+        return;
+    }
+
+
+    // ==========================================
+    // CHECK JUDGING LOCK
+    // ==========================================
+
+    if (
+        entry.judgingStatus === "judging" ||
+        entry.judgingStatus === "ranked" ||
+        (entry.judgesCompleted && entry.judgesCompleted > 0)
+    ) {
+
+        editMessage.textContent =
+            "This entry is locked because judging has started.";
+
+        editForm.style.display =
+            "none";
 
         return;
     }

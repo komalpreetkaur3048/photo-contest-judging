@@ -417,8 +417,15 @@ else {
 
                     </div>
 
-                </div>
+            </div>
 
+            <div style="margin-top: 25px; padding-top: 15px; border-top: 1px solid #e2e8f0;">
+                <span style="font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Evaluated By Official Jury:</span>
+                <div style="margin-top: 8px; display: flex; flex-wrap: wrap; gap: 8px;">
+                    ${scores.map(function(s) {
+                        return `<span style="padding: 5px 12px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 13px; color: #334155; font-weight: 500;">✓ ${s.judgeName || "Official Judge"}</span>`;
+                    }).join("") || "<span style='color:#94a3b8; font-size:13px;'>Pending evaluations</span>"}
+                </div>
             </div>
 
         </section>

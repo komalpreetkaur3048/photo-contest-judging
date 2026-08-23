@@ -390,104 +390,70 @@
     <script src="../js/auth.js"></script>
 
     <script>
-
-        const currentUser =
+    (function () {
+        const user =
             JSON.parse(
                 localStorage.getItem("currentUser")
             );
 
-
-        if (!currentUser) {
-
-            window.location.href =
-                "login.html";
-
+        if (!user) {
+            window.location.href = "login.html";
+            return;
+        } else if (user.role !== "participant") {
+            window.location.href = "judge.html";
+            return;
         }
-
-        else if (
-            currentUser.role !== "participant"
-        ) {
-
-            window.location.href =
-                "judge.html";
-
-        }
-
 
         // ==========================================
-// DASHBOARD STATS
-// ==========================================
+        // DASHBOARD STATS
+        // ==========================================
 
-const contests =
-    JSON.parse(
-        localStorage.getItem("contests")
-    ) || [];
+        const contests =
+            JSON.parse(
+                localStorage.getItem("contests")
+            ) || [];
 
-const entries =
-    JSON.parse(
-        localStorage.getItem("photoEntries")
-    ) || [];
+        const entries =
+            JSON.parse(
+                localStorage.getItem("photoEntries")
+            ) || [];
 
-const currentParticipantEntries =
-    entries.filter(function (entry) {
+        const currentParticipantEntries =
+            entries.filter(function (entry) {
+                return String(entry.participantId) ===
+                       String(user.id);
+            });
 
-        return String(entry.participantId) ===
-               String(currentUser.id);
+        const activeContestCount =
+            contests.filter(function (contest) {
+                return contest.status === "active";
+            }).length;
 
-    });
+        const myEntryCount =
+            currentParticipantEntries.length;
 
+        const judgingEntryCount =
+            currentParticipantEntries.filter(function (entry) {
+                return entry.judgingStatus === "judging";
+            }).length;
 
-const activeContestCount =
-    contests.filter(function (contest) {
+        const rankedEntryCount =
+            currentParticipantEntries.filter(function (entry) {
+                return entry.judgingStatus === "ranked";
+            }).length;
 
-        return contest.status === "active";
+        const activeElem = document.querySelector("#activeContestCount");
+        if (activeElem) activeElem.textContent = activeContestCount;
 
-    }).length;
+        const myEntryElem = document.querySelector("#myEntryCount");
+        if (myEntryElem) myEntryElem.textContent = myEntryCount;
 
+        const judgingElem = document.querySelector("#judgingEntryCount");
+        if (judgingElem) judgingElem.textContent = judgingEntryCount;
 
-const myEntryCount =
-    currentParticipantEntries.length;
-
-
-const judgingEntryCount =
-    currentParticipantEntries.filter(function (entry) {
-
-        return entry.judgingStatus === "judging";
-
-    }).length;
-
-
-const rankedEntryCount =
-    currentParticipantEntries.filter(function (entry) {
-
-        return entry.judgingStatus === "ranked";
-
-    }).length;
-
-
-document.querySelector(
-    "#activeContestCount"
-).textContent =
-    activeContestCount;
-
-
-document.querySelector(
-    "#myEntryCount"
-).textContent =
-    myEntryCount;
-
-
-document.querySelector(
-    "#judgingEntryCount"
-).textContent =
-    judgingEntryCount;
-
-
-document.querySelector(
-    "#rankedEntryCount"
-).textContent =
-    rankedEntryCount;
-
+        const rankedElem = document.querySelector("#rankedEntryCount");
+        if (rankedElem) rankedElem.textContent = rankedEntryCount;
+    })();
     </script>
 
 </body>

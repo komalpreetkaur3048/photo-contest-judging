@@ -65,45 +65,27 @@ function getCurrentJudge() {
 
 function updateJudgeDisplay() {
 
-    const judgeId =
-        getCurrentJudge();
+    if (currentUser) {
 
-    if (currentJudgeName && judgeId) {
+        if (currentJudgeName) {
+            currentJudgeName.textContent =
+                currentUser.name;
+        }
 
-        currentJudgeName.textContent =
-            currentUser.name;
+        const currentJudgeTitle =
+            document.querySelector("#currentJudgeTitle");
+
+        if (currentJudgeTitle) {
+            currentJudgeTitle.textContent =
+                currentUser.specialization || "Official Contest Judge";
+        }
 
     }
 
 }
 
 
-// /* =========================================================
-//    CHANGE CURRENT JUDGE
-// ========================================================= */
 
-// if (judgeSelector) {
-
-//     judgeSelector.addEventListener(
-//         "change",
-//         function () {
-
-//             const selectedJudge =
-//                 judgeSelector.value;
-
-//             localStorage.setItem(
-//                 "currentJudge",
-//                 selectedJudge
-//             );
-
-//             updateJudgeDisplay();
-
-//             displayJudgeEntries();
-
-//         }
-//     );
-
-// }
 
 
 /* =========================================================
@@ -300,6 +282,21 @@ function createJudgeCard(entry) {
 
                 ✓ All 3 judges have evaluated this photo
 
+            </div>
+
+        `;
+
+    }
+
+    else if (
+        currentUser &&
+        String(entry.participantId) === String(currentUser.id)
+    ) {
+
+        actionHTML = `
+
+            <div class="completed-message" style="background:#fef3c7;color:#92400e;border:1px solid #fde68a;">
+                Your submission (Self-judging disabled)
             </div>
 
         `;

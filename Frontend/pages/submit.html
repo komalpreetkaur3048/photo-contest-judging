@@ -430,21 +430,15 @@
     <script src="../js/entries.js"></script>
 
     <script>
-    const currentUser =
-        JSON.parse(
-            localStorage.getItem("currentUser")
-        );
-
-    if (!currentUser) {
-
-        window.location.href = "login.html";
-
-    } else if (currentUser.role !== "participant") {
-
-        window.location.href = "judge.html";
-
-    }
-</script>
+    (function () {
+        const user = JSON.parse(localStorage.getItem("currentUser"));
+        if (!user) {
+            window.location.href = "login.html";
+        } else if (user.role !== "participant") {
+            window.location.href = "judge.html";
+        }
+    })();
+    </script>
 
 </body>
 

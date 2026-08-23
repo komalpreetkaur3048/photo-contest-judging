@@ -587,12 +587,25 @@ function displayContestDetails() {
             </section>
 
 
+            ${
+                contest.status === "active"
+                    ? `
             <a
                 href="submit.html?contestId=${encodeURIComponent(contest.id)}"
                 class="contest-submit-btn"
             >
                 Submit to This Contest →
             </a>
+            `
+                    : `
+            <div
+                class="contest-submit-btn"
+                style="opacity: 0.65; cursor: not-allowed; text-align: center;"
+            >
+                Submissions Open Soon (${contest.status.toUpperCase()})
+            </div>
+            `
+            }
 
         </div>
 

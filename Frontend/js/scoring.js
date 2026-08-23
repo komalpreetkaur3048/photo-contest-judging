@@ -83,14 +83,29 @@ const scoreStatus =
    CONTEST WEIGHTS
 ========================================================= */
 
+const contests =
+    JSON.parse(
+        localStorage.getItem("contests")
+    ) || [];
+
+const contest =
+    entry
+        ? contests.find(function (c) {
+              return String(c.id) === String(entry.contestId);
+          })
+        : null;
+
+const criteria =
+    contest?.criteria || {
+        creativity: 40,
+        technical: 30,
+        themeFit: 30
+    };
+
 const WEIGHTS = {
-
-    creativity: 0.40,
-
-    technical: 0.30,
-
-    theme: 0.30
-
+    creativity: (criteria.creativity || 40) / 100,
+    technical: (criteria.technical || 30) / 100,
+    theme: (criteria.themeFit || criteria.theme || 30) / 100
 };
 
 
@@ -255,7 +270,11 @@ function updateJudgingStatus() {
 
         submitScoreBtn.disabled = true;
 
-        judgeSelect.disabled = true;
+        const judgeSelect =
+            document.querySelector("#judgeSelect");
+        if (judgeSelect) {
+            judgeSelect.disabled = true;
+        }
 
         return;
     }
@@ -317,7 +336,14 @@ function checkSelectedJudge() {
                score.judgeId ===
                    currentJudge;
 
-    });
+    if (entry && String(entry.participantId) === String(currentJudge)) {
+        submitScoreBtn.disabled = true;
+        scoreMessage.textContent =
+            "Judges are not permitted to evaluate their own submissions.";
+        scoreMessage.className =
+            "score-message error";
+        return;
+    }
 
     if (alreadyScored) {
 
@@ -443,6 +469,15 @@ function saveJudgeScore() {
 }
 
 
+    if (String(entry.participantId) === String(currentJudge)) {
+        scoreMessage.textContent =
+            "Judges are not permitted to evaluate their own submissions.";
+        scoreMessage.className =
+            "score-message error";
+        submitScoreBtn.disabled = true;
+        return;
+    }
+
     /* ==============================================
        LOAD EXISTING SCORES
     ============================================== */
@@ -564,6 +599,36 @@ function saveJudgeScore() {
     );
 
 
+    let photoEntries =
+        JSON.parse(
+            localStorage.getItem("photoEntries")
+        ) || [];
+
+    const targetEntry =
+        photoEntries.find(function (p) {
+            return String(p.id) === String(entry.id);
+        });
+
+    if (targetEntry) {
+        const entryScores =
+            scores.filter(function (s) {
+                return String(s.entryId) === String(entry.id);
+            });
+
+        targetEntry.judgesCompleted = entryScores.length;
+        if (entryScores.length >= TOTAL_JUDGES) {
+            targetEntry.judgingStatus = "ranked";
+            targetEntry.isRanked = true;
+        } else if (entryScores.length > 0) {
+            targetEntry.judgingStatus = "judging";
+        }
+        localStorage.setItem(
+            "photoEntries",
+            JSON.stringify(photoEntries)
+        );
+    }
+
+
     /* ==============================================
        SUCCESS
     ============================================== */
@@ -674,10 +739,20 @@ if (submitScoreBtn) {
 const currentJudgeName =
     document.querySelector("#currentJudgeName");
 
-if (currentJudgeName && currentUser) {
+const currentJudgeTitle =
+    document.querySelector("#currentJudgeTitle");
 
-    currentJudgeName.textContent =
-        currentUser.name;
+if (currentUser) {
+
+    if (currentJudgeName) {
+        currentJudgeName.textContent =
+            currentUser.name;
+    }
+
+    if (currentJudgeTitle) {
+        currentJudgeTitle.textContent =
+            currentUser.specialization || "Official Contest Judge";
+    }
 
 }
 
