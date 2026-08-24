@@ -2,185 +2,190 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <title>Contests | PhotoJudge</title>
+    <title>Photography Contests | PhotoJudge</title>
 
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/contests.css">
-
 </head>
 
 <body>
 
-    <!-- =========================
-         NAVIGATION
-    ========================== -->
-
     <header>
-
         <nav class="navbar">
 
-    <a href="../index.html" class="logo">
-        PhotoJudge
-    </a>
+            <a href="../index.html" class="logo">
+                PhotoJudge
+            </a>
 
-    <ul class="nav-links" id="mainNav"></ul>
+            <ul class="nav-links" id="mainNav"></ul>
 
-</nav>
-
+        </nav>
     </header>
 
 
-    <!-- =========================
-         PAGE HEADER
-    ========================== -->
-
     <main>
+
+        <!-- =====================================================
+             HERO
+        ====================================================== -->
 
         <section class="contests-hero">
 
-            <div class="contests-heading">
+            <div class="contests-hero-inner">
 
-                <p class="eyebrow">
-                    PHOTO CONTEST 2026
-                </p>
+                <div class="hero-copy">
 
-                <h1>
-                    Find your next
-                    <em>frame.</em>
-                </h1>
+                    <span class="hero-kicker">
+                        PHOTO CONTEST 2026
+                    </span>
 
-                <p>
-                    Explore active photography contests,
-                    understand the judging criteria, and
-                    submit your best work.
-                </p>
+                    <h1 class="hero-title">
+                        Choose your next
+                        <span>frame.</span>
+                    </h1>
+
+                    <p class="hero-description">
+                        Explore active photography contests, discover
+                        their themes, understand the judging criteria,
+                        and submit your best work.
+                    </p>
+
+                </div>
+
+
+                <!-- =================================================
+                     LARGE THEME CAROUSEL
+                ================================================== -->
+
+                <div
+                    class="theme-carousel"
+                    aria-label="Photography contest themes"
+                >
+
+                    <div
+                        class="theme-carousel-viewport"
+                    >
+
+                        <div
+                            id="themeCarouselTrack"
+                            class="theme-carousel-track"
+                        ></div>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        id="carouselPrev"
+                        class="carousel-arrow carousel-arrow-prev"
+                        aria-label="Previous contest theme"
+                    >
+                        <span aria-hidden="true">←</span>
+                    </button>
+
+
+                    <button
+                        type="button"
+                        id="carouselNext"
+                        class="carousel-arrow carousel-arrow-next"
+                        aria-label="Next contest theme"
+                    >
+                        <span aria-hidden="true">→</span>
+                    </button>
+
+
+                    <div
+                        id="carouselProgress"
+                        class="carousel-progress"
+                        aria-label="Carousel navigation"
+                    ></div>
+
+                </div>
 
             </div>
 
         </section>
 
 
-        <!-- =========================
-             ACTIVE CONTEST
-        ========================== -->
+        <!-- =====================================================
+             CONTEST LIST
+        ====================================================== -->
 
-        <!-- =========================
-     AVAILABLE CONTESTS
-========================= -->
+        <section class="contests-section">
 
-<section class="contest-list-section">
+            <div class="section-heading">
 
-    <div class="contests-heading">
+                <div>
 
-        <p class="eyebrow">
-            AVAILABLE CONTESTS
-        </p>
+                    <span class="section-kicker">
+                        AVAILABLE CONTESTS
+                    </span>
 
-        <h2>
-            Choose your next
-            <em>frame.</em>
-        </h2>
+                    <h2>
+                        Explore the
+                        <span>frames.</span>
+                    </h2>
 
-        <p>
-            Explore photography contests, review their
-            themes and judging criteria, and participate
-            in the contest that inspires you.
-        </p>
+                    <p>
+                        Explore photography contests, review their
+                        themes and judging criteria, and participate
+                        in the contest that inspires you.
+                    </p>
 
-    </div>
-
-    <!-- Filter Buttons -->
-    <div class="contests-filter">
-        <button class="filter-btn active" data-filter="all">All Contests</button>
-        <button class="filter-btn" data-filter="active">Active</button>
-        <button class="filter-btn" data-filter="upcoming">Upcoming</button>
-        <button class="filter-btn" data-filter="completed">Completed</button>
-    </div>
-
-    <!-- Contests are inserted by JavaScript -->
-    <div
-        id="contestsContainer"
-        class="contests-container"
-    >
-    </div>
-
-</section>
-
-        <!-- =========================
-             FAIR JUDGING
-        ========================== -->
-
-        <section class="fairness-section">
-
-            <div class="fairness-content">
-
-                <p class="eyebrow">
-                    WHY PHOTOJUDGE?
-                </p>
-
-                <h2>
-                    Your score isn't
-                    <em>just a number.</em>
-                </h2>
-
-                <p>
-                    Different judges naturally score differently.
-                    Some are generous, while others are more
-                    critical. PhotoJudge normalizes scores before
-                    calculating the final ranking.
-                </p>
+                </div>
 
             </div>
 
 
-            <div class="fairness-card">
+            <div class="contest-filters">
 
-                <div class="judge-score">
+                <button
+                    type="button"
+                    class="filter-btn active"
+                    data-filter="all"
+                >
+                    All Contests
+                </button>
 
-                    <div>
-                        <strong>Judge A</strong>
-                        <span>Lenient</span>
-                    </div>
+                <button
+                    type="button"
+                    class="filter-btn"
+                    data-filter="active"
+                >
+                    Active
+                </button>
 
-                    <b>8.8</b>
+                <button
+                    type="button"
+                    class="filter-btn"
+                    data-filter="upcoming"
+                >
+                    Upcoming
+                </button>
 
-                </div>
+                <button
+                    type="button"
+                    class="filter-btn"
+                    data-filter="completed"
+                >
+                    Completed
+                </button>
 
-
-                <div class="judge-score">
-
-                    <div>
-                        <strong>Judge B</strong>
-                        <span>Strict</span>
-                    </div>
-
-                    <b>6.4</b>
-
-                </div>
-
-
-                <div class="normalization-arrow">
-                    ↓
-                </div>
+            </div>
 
 
-                <div class="normalized-result">
-
-                    <span>
-                        NORMALIZED
-                    </span>
-
-                    <strong>
-                        Comparable scoring
-                    </strong>
-
-                </div>
-
+            <div
+                id="contestsContainer"
+                class="contests-grid"
+            >
+                <!-- Contest cards are inserted by contests.js -->
             </div>
 
         </section>
@@ -188,14 +193,10 @@
     </main>
 
 
-    <!-- =========================
-         FOOTER
-    ========================== -->
-
-
     <script src="../js/auth.js"></script>
     <script src="../js/contests.js"></script>
     <script src="../js/footer.js"></script>
+
 </body>
 
 </html>

@@ -24,7 +24,7 @@
         <nav class="navbar">
 
             <a href="../index.html" class="logo">
-                PhotoJudge
+                PhotoJudge<span>.</span>
             </a>
 
             <ul class="nav-links" id="mainNav"></ul>
@@ -34,19 +34,22 @@
     </header>
 
 
-    <main>
+    <main class="contest-details-page">
+
         <a
-    href="contests.html"
-    class="back-link"
->
-    ← Back to Contests
-</a>
+            href="contests.html"
+            class="back-link"
+        >
+            ← Back to Contests
+        </a>
 
         <section class="contest-details">
 
             <div id="contestDetailsContainer">
 
-                <p>Loading contest...</p>
+                <p class="details-loading">
+                    Loading contest...
+                </p>
 
             </div>
 
@@ -55,11 +58,10 @@
     </main>
 
 
-    
-
     <script src="../js/auth.js"></script>
     <script src="../js/contests.js"></script>
     <script src="../js/footer.js"></script>
+
 </body>
 
 </html>
