@@ -48,6 +48,12 @@ footer.innerHTML = `
             </h3>
 
             <a href="${window.location.pathname.includes("/pages/")
+                ? "explore.html"
+                : "pages/explore.html"}">
+                Explore Community
+            </a>
+
+            <a href="${window.location.pathname.includes("/pages/")
                 ? "contests.html"
                 : "pages/contests.html"}">
                 All Contests

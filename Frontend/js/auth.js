@@ -79,6 +79,12 @@ if (mainNav) {
             ${contestsDropdownHTML}
 
             <li>
+                <a href="${pagePath("explore.html")}">
+                    Explore
+                </a>
+            </li>
+
+            <li>
                 <a href="${pagePath("leaderboard.html")}">
                     Leaderboard
                 </a>
@@ -112,6 +118,12 @@ if (mainNav) {
             </li>
 
             ${contestsDropdownHTML}
+
+            <li>
+                <a href="${pagePath("explore.html")}">
+                    Explore
+                </a>
+            </li>
 
             <li>
                 <a href="${pagePath("participant-dashboard.html")}">
@@ -171,6 +183,12 @@ if (mainNav) {
             </li>
 
             ${contestsDropdownHTML}
+
+            <li>
+                <a href="${pagePath("explore.html")}">
+                    Explore
+                </a>
+            </li>
 
             <li>
                 <a href="${pagePath("judge.html")}">
