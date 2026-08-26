@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore and discover inspiring community photography on PhotoJudge. Share your own shots, like, and download high-resolution photos freely.">
+    <title>Explore Community Gallery | PhotoJudge</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/explore.css">
+</head>
+
+<body>
+
+    <!-- =====================================================
+         NAVIGATION
+    ====================================================== -->
+    <header>
+        <nav class="navbar">
+            <a href="../index.html" class="logo">
+                PhotoJudge
+            </a>
+            <ul class="nav-links" id="mainNav"></ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- =====================================================
+             HERO SECTION
+        ====================================================== -->
+        <section class="explore-hero">
+            <div class="explore-hero-inner">
+                <div class="explore-badge">
+                    ✨ Community Showcase
+                </div>
+                <h1 class="explore-title">
+                    Explore & Discover <span>Inspiration</span>
+                </h1>
+                <p class="explore-subtitle">
+                    A vibrant space to share your creative photography, discover stunning visual stories, like your favorites, and download high-resolution frames — no contest entry required.
+                </p>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             CONTROLS: SEARCH, FILTERS & POST PHOTO
+        ====================================================== -->
+        <section class="explore-controls-wrapper">
+            <div class="explore-top-bar">
+                <div class="explore-search-box">
+                    <span class="explore-search-icon">🔍</span>
+                    <input type="text" id="exploreSearchInput" placeholder="Search by title, creator, or tags..." autocomplete="off">
+                </div>
+
+                <div class="explore-actions">
+                    <div class="sort-select-wrapper">
+                        <select id="exploreSortSelect" aria-label="Sort Photos">
+                            <option value="newest">⚡ Newest First</option>
+                            <option value="popular">❤️ Most Liked</option>
+                            <option value="oldest">⏳ Oldest First</option>
+                        </select>
+                    </div>
+
+                    <button type="button" class="btn-post-photo" id="btnOpenPostModal">
+                        <span>📷</span> Share a Photo
+                    </button>
+                </div>
+            </div>
+
+            <!-- Category Pills -->
+            <div class="explore-categories" id="categoryPills">
+                <button type="button" class="category-pill active" data-category="all">✨ All Frames</button>
+                <button type="button" class="category-pill" data-category="Nature">🌲 Nature</button>
+                <button type="button" class="category-pill" data-category="Wildlife">🦁 Wildlife</button>
+                <button type="button" class="category-pill" data-category="Architecture">🏛️ Architecture</button>
+                <button type="button" class="category-pill" data-category="Street">🚶 Street & Urban</button>
+                <button type="button" class="category-pill" data-category="Portraits">👤 Portraits</button>
+                <button type="button" class="category-pill" data-category="Travel">✈️ Travel</button>
+                <button type="button" class="category-pill" data-category="Night">🌌 Night & Astro</button>
+                <button type="button" class="category-pill" data-category="Minimalist">⚪ Minimalist</button>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             PINTEREST-STYLE MASONRY GALLERY
+        ====================================================== -->
+        <section class="gallery-section">
+            <div class="masonry-grid" id="exploreGallery">
+                <!-- Photo cards injected dynamically by explore.js -->
+            </div>
+
+            <div class="gallery-empty" id="galleryEmptyState" style="display: none;">
+                <h3>No photos found</h3>
+                <p>Try searching for a different keyword or be the first to share a photo in this category!</p>
+                <button type="button" class="btn-post-photo" id="btnEmptyPost">
+                    <span>📷</span> Share a Photo Now
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- =====================================================
+         POST / SHARE PHOTO MODAL
+    ====================================================== -->
+    <div class="modal-overlay" id="postPhotoModal" role="dialog" aria-modal="true" aria-labelledby="postModalTitle">
+        <div class="post-modal-container">
+            <div class="modal-header">
+                <h2 id="postModalTitle">Share a Photo with Community</h2>
+                <button type="button" class="btn-close-modal" id="btnClosePostModal" aria-label="Close modal">&times;</button>
+            </div>
+
+            <form id="postPhotoForm" class="modal-body">
+                <!-- Dropzone / File Upload -->
+                <div class="upload-dropzone" id="uploadDropzone">
+                    <input type="file" id="fileUploadInput" accept="image/*" style="display: none;">
+                    <div class="dropzone-icon">📁</div>
+                    <div class="dropzone-text">Click to choose image or drag & drop</div>
+                    <div class="dropzone-subtext">Supports JPG, PNG, WEBP up to 10MB</div>
+                </div>
+
+                <!-- Preview Box -->
+                <div class="image-preview-wrapper" id="imagePreviewWrapper">
+                    <img id="imagePreview" src="" alt="Selected Preview">
+                    <button type="button" class="btn-remove-preview" id="btnRemovePreview" title="Remove image">&times;</button>
+                </div>
+
+                <!-- Or image URL -->
+                <div class="form-group">
+                    <label for="postImageUrl">Or Paste Image URL</label>
+                    <input type="url" id="postImageUrl" placeholder="https://images.unsplash.com/...">
+                </div>
+
+                <div class="form-group">
+                    <label for="postTitle">Photo Title *</label>
+                    <input type="text" id="postTitle" placeholder="e.g. Golden Mist Over Misty Valley" required maxlength="80">
+                </div>
+
+                <div class="form-group">
+                    <label for="postAuthor">Photographer Name *</label>
+                    <input type="text" id="postAuthor" placeholder="Your name or handle" required maxlength="50">
+                </div>
+
+                <div class="form-group">
+                    <label for="postCategory">Category</label>
+                    <select id="postCategory">
+                        <option value="Nature">🌲 Nature</option>
+                        <option value="Wildlife">🦁 Wildlife</option>
+                        <option value="Architecture">🏛️ Architecture</option>
+                        <option value="Street">🚶 Street & Urban</option>
+                        <option value="Portraits">👤 Portraits</option>
+                        <option value="Travel">✈️ Travel</option>
+                        <option value="Night">🌌 Night & Astro</option>
+                        <option value="Minimalist">⚪ Minimalist</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="postTags">Tags (separated by commas)</label>
+                    <input type="text" id="postTags" placeholder="e.g. mountains, sunset, fujifilm, 4k">
+                </div>
+
+                <div class="form-group">
+                    <label for="postDescription">Story / Caption</label>
+                    <textarea id="postDescription" placeholder="Share a few words about the moment, camera settings, or location..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit-post" id="btnSubmitPost">
+                    🚀 Post to Explore
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- =====================================================
+         LIGHTBOX / PHOTO DETAIL MODAL
+    ====================================================== -->
+    <div class="modal-overlay" id="lightboxModal" role="dialog" aria-modal="true" aria-labelledby="lightboxTitle">
+        <div class="lightbox-container">
+            <div class="lightbox-photo-side">
+                <img id="lightboxImg" src="" alt="Full resolution view">
+            </div>
+
+            <div class="lightbox-info-side">
+                <div class="lightbox-header">
+                    <div class="lightbox-author-block">
+                        <div class="lightbox-author-avatar" id="lightboxAvatar">P</div>
+                        <div>
+                            <div class="lightbox-author-name" id="lightboxAuthor">Photographer</div>
+                            <div class="lightbox-post-date" id="lightboxDate">Recently shared</div>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn-close-modal" id="btnCloseLightbox" aria-label="Close details">&times;</button>
+                </div>
+
+                <div class="lightbox-content">
+                    <h2 class="lightbox-title" id="lightboxTitle">Photo Title</h2>
+                    <p class="lightbox-description" id="lightboxDescription">Photo description will appear here.</p>
+                    
+                    <div class="lightbox-tags" id="lightboxTags">
+                        <!-- Tags injected here -->
+                    </div>
+                </div>
+
+                <div class="lightbox-actions-bar">
+                    <button type="button" class="btn-lightbox-action btn-lightbox-like" id="lightboxLikeBtn">
+                        <span class="like-icon">🤍</span>
+                        <span id="lightboxLikeCount">0</span> Likes
+                    </button>
+
+                    <button type="button" class="btn-lightbox-action btn-lightbox-download" id="lightboxDownloadBtn">
+                        <span>⬇️</span> Download Photo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Global scripts -->
+    <script src="../js/auth.js"></script>
+    <script src="../js/explore.js"></script>
+    <script src="../js/footer.js"></script>
+
+</body>
+</html>
