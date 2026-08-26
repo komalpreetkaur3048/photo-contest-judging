@@ -224,3 +224,19 @@
     border: 1px solid var(--success-border);
     color: #065f46;
 }
+
+.auth-message {
+    display: block;
+    min-height: 24px;
+    margin: 12px 0;
+
+    font-size: 0.9rem;
+    font-weight: 600;
+
+    line-height: 1.5;
+}
+
+.auth-message:empty {
+    min-height: 0;
+    margin: 0;
+}
