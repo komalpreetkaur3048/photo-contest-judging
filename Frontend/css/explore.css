@@ -53,6 +53,7 @@
 }
 
 .explore-title {
+    color: #ffffff !important;
     font-size: 2.75rem;
     font-weight: 800;
     line-height: 1.2;
@@ -68,7 +69,7 @@
 
 .explore-subtitle {
     font-size: 1.1rem;
-    color: #94a3b8;
+    color: #e2e8f0;
     margin-bottom: 2rem;
     line-height: 1.6;
 }
