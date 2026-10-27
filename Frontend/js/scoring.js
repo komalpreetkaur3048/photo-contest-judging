@@ -12,7 +12,7 @@ const currentUser =
     );
 
 const currentJudge =
-    currentUser ? currentUser.id : null;
+    currentUser ? String(currentUser._id || currentUser.id) : null;
 
 if (!currentUser || currentUser.role !== "judge") {
     window.location.href = "login.html";
@@ -67,7 +67,7 @@ const scoreStatus =
 
 
 /* =========================================================
-   GET ENTRY ID FROM URL & LOAD ENTRY FIRST
+   GET ENTRY ID FROM URL & LOAD ENTRY ASYNC
 ========================================================= */
 
 const urlParams =
@@ -78,47 +78,74 @@ const urlParams =
 const entryId =
     urlParams.get("id");
 
-const entries =
-    JSON.parse(
-        localStorage.getItem("photoEntries")
-    ) || [];
-
-const entry =
-    entries.find(function (item) {
-        return String(item.id) === String(entryId);
-    });
-
-
-/* =========================================================
-   CONTEST WEIGHTS (RESOLVED AFTER ENTRY)
-========================================================= */
-
-const contests =
-    JSON.parse(
-        localStorage.getItem("contests")
-    ) || [];
-
-const contest =
-    entry
-        ? contests.find(function (c) {
-              return String(c.id) === String(entry.contestId);
-          })
-        : null;
-
-const criteria =
-    contest?.criteria || {
-        creativity: 40,
-        technical: 30,
-        themeFit: 30
-    };
-
-const WEIGHTS = {
-    creativity: (criteria.creativity || 40) / 100,
-    technical: (criteria.technical || 30) / 100,
-    theme: (criteria.themeFit || criteria.theme || 30) / 100
-};
+let entry = null;
+let contest = null;
 
 const TOTAL_JUDGES = 3;
+
+let WEIGHTS = {
+    creativity: 0.40,
+    technical: 0.30,
+    theme: 0.30
+};
+
+async function loadEntryAndContest() {
+    let entries = JSON.parse(localStorage.getItem("photoEntries")) || [];
+    
+    // Find entry in local storage first
+    entry = entries.find(function (item) {
+        return String(item._id || item.id) === String(entryId);
+    });
+
+    // If not found in localStorage, fetch from Backend API
+    if (!entry && window.EntriesAPI && entryId && entryId !== "undefined") {
+        try {
+            const apiRes = await window.EntriesAPI.getById(entryId);
+            if (apiRes && apiRes.data && apiRes.data.entry) {
+                entry = apiRes.data.entry;
+                entries.push(entry);
+                localStorage.setItem("photoEntries", JSON.stringify(entries));
+            }
+        } catch (e) {
+            console.warn("Could not load entry from API:", e);
+        }
+    }
+
+    // Resolve Contest & Criteria Weights
+    if (entry) {
+        let contests = JSON.parse(localStorage.getItem("contests")) || [];
+        contest = contests.find(function (c) {
+            return String(c.id || c._id) === String(entry.contestId);
+        });
+
+        if (!contest && window.ContestsAPI) {
+            try {
+                const cRes = await window.ContestsAPI.getAll();
+                const list = cRes?.data?.contests || cRes?.contests || [];
+                contest = list.find(c => String(c.id || c._id) === String(entry.contestId));
+            } catch (e) {
+                console.warn("Could not load contests from API:", e);
+            }
+        }
+
+        const criteria = contest?.criteria || {
+            creativity: 40,
+            technical: 30,
+            themeFit: 30
+        };
+
+        WEIGHTS = {
+            creativity: (criteria.creativity || 40) / 100,
+            technical: (criteria.technical || 30) / 100,
+            theme: (criteria.themeFit || criteria.theme || 30) / 100
+        };
+    }
+
+    displayEntry();
+    updateScoreDisplay();
+    updateJudgingStatus();
+    checkSelectedJudge();
+}
 
 
 /* =========================================================
@@ -139,10 +166,10 @@ function getJudgeScores() {
 function displayEntry() {
     if (!entry) {
         if (scorePhotoTitle) scorePhotoTitle.textContent = "Submission not found";
-        if (scoreDescription) scoreDescription.textContent = "The photograph you are trying to evaluate could not be found.";
+        if (scoreDescription) scoreDescription.textContent = "The photograph you are trying to evaluate could not be found or has an invalid ID.";
         if (submitScoreBtn) submitScoreBtn.disabled = true;
         if (scoreMessage) {
-            scoreMessage.textContent = "Invalid submission.";
+            scoreMessage.textContent = "Invalid photograph submission.";
             scoreMessage.className = "score-message error";
         }
         return;
@@ -172,14 +199,16 @@ function displayEntry() {
 ========================================================= */
 
 function getJudgesForEntry() {
+    if (!entry) return [];
+    const actualEntryId = String(entry._id || entry.id || entryId);
     const scores = getJudgeScores();
 
     return scores
         .filter(function (score) {
-            return String(score.entryId) === String(entryId);
+            return String(score.entryId) === actualEntryId;
         })
         .map(function (score) {
-            return score.judgeId;
+            return String(score.judgeId);
         });
 }
 
@@ -188,17 +217,17 @@ function getJudgesForEntry() {
    UPDATE JUDGING STATUS
 ========================================================= */
 
-function updateJudgingStatus() {
+function updateJudgingStatus(skipCheckJudge = false) {
     if (!entry) {
         return;
     }
 
-    const judgedBy = getJudgesForEntry();
-    const numberOfJudges = judgedBy.length;
+    const judgedBy = [...new Set(getJudgesForEntry())];
+    const numberOfJudges = Math.max(judgedBy.length, Number(entry.judgesCompleted || 0));
 
-    if (numberOfJudges >= TOTAL_JUDGES) {
+    if (numberOfJudges >= TOTAL_JUDGES || entry.judgingStatus === "ranked" || entry.isRanked) {
         if (scoreStatus) {
-            scoreStatus.textContent = "All 3 judges have completed their evaluations.";
+            scoreStatus.textContent = "✓ All 3 judges have completed their evaluations.";
             scoreStatus.className = "score-status success";
         }
         if (submitScoreBtn) submitScoreBtn.disabled = true;
@@ -210,7 +239,9 @@ function updateJudgingStatus() {
         scoreStatus.className = "score-status";
     }
 
-    checkSelectedJudge();
+    if (!skipCheckJudge) {
+        checkSelectedJudge();
+    }
 }
 
 
@@ -223,17 +254,19 @@ function checkSelectedJudge() {
         return;
     }
 
+    const actualEntryId = String(entry._id || entry.id || entryId);
+
     if (!currentJudge) {
         if (submitScoreBtn) submitScoreBtn.disabled = true;
         if (scoreMessage) {
-            scoreMessage.textContent = "Judge identity not found.";
+            scoreMessage.textContent = "Judge identity not found. Please log in again.";
             scoreMessage.className = "score-message error";
         }
         return;
     }
 
     // Check Self-Judging
-    if (String(entry.participantId) === String(currentJudge)) {
+    if (String(entry.participantId) === currentJudge) {
         if (submitScoreBtn) submitScoreBtn.disabled = true;
         if (scoreMessage) {
             scoreMessage.textContent = "Judges are not permitted to evaluate their own submissions.";
@@ -244,7 +277,7 @@ function checkSelectedJudge() {
 
     const scores = getJudgeScores();
     const alreadyScored = scores.some(function (score) {
-        return String(score.entryId) === String(entryId) && String(score.judgeId) === String(currentJudge);
+        return String(score.entryId) === actualEntryId && String(score.judgeId) === currentJudge;
     });
 
     if (alreadyScored) {
@@ -311,10 +344,12 @@ function updateScoreDisplay() {
    SAVE JUDGE SCORE
 ========================================================= */
 
-function saveJudgeScore() {
+async function saveJudgeScore() {
     if (!entry) {
         return;
     }
+
+    const actualEntryId = String(entry._id || entry.id || entryId);
 
     if (!currentJudge) {
         if (scoreMessage) {
@@ -325,7 +360,7 @@ function saveJudgeScore() {
     }
 
     // Prevent Self-Judging
-    if (String(entry.participantId) === String(currentJudge)) {
+    if (String(entry.participantId) === currentJudge) {
         if (scoreMessage) {
             scoreMessage.textContent = "Judges are not permitted to evaluate their own submissions.";
             scoreMessage.className = "score-message error";
@@ -338,7 +373,7 @@ function saveJudgeScore() {
 
     // Prevent duplicate score
     const duplicate = scores.some(function (score) {
-        return String(score.entryId) === String(entry.id) && String(score.judgeId) === String(currentJudge);
+        return String(score.entryId) === actualEntryId && String(score.judgeId) === currentJudge;
     });
 
     if (duplicate) {
@@ -359,9 +394,41 @@ function saveJudgeScore() {
         (technicalScore * WEIGHTS.technical) +
         (themeScore * WEIGHTS.theme);
 
+    if (submitScoreBtn) {
+        submitScoreBtn.disabled = true;
+        submitScoreBtn.textContent = "Submitting Evaluation...";
+    }
+
+    // 1. Submit to Backend API if token is present
+    if (typeof ScoresAPI !== "undefined" && localStorage.getItem("token")) {
+        try {
+            const apiRes = await ScoresAPI.submit({
+                entryId: actualEntryId,
+                creativity: creativityScore,
+                technical: technicalScore,
+                theme: themeScore
+            });
+
+            if (apiRes && !apiRes.ok && apiRes.data && apiRes.data.message) {
+                if (scoreMessage) {
+                    scoreMessage.textContent = apiRes.data.message;
+                    scoreMessage.className = "score-message error";
+                }
+                if (submitScoreBtn) {
+                    submitScoreBtn.disabled = false;
+                    submitScoreBtn.textContent = "Submit Evaluation";
+                }
+                return;
+            }
+        } catch (apiErr) {
+            console.warn("Backend score submit error:", apiErr);
+        }
+    }
+
+    // 2. Save locally in judgeScores
     const scoreData = {
         id: Date.now(),
-        entryId: entry.id,
+        entryId: actualEntryId,
         judgeId: currentJudge,
         judgeName: currentUser.name || "Judge",
         creativity: creativityScore,
@@ -374,15 +441,15 @@ function saveJudgeScore() {
     scores.push(scoreData);
     localStorage.setItem("judgeScores", JSON.stringify(scores));
 
-    // Update Photo Entry State
+    // 3. Update Photo Entry State in localStorage
     let photoEntries = JSON.parse(localStorage.getItem("photoEntries")) || [];
     const targetEntry = photoEntries.find(function (p) {
-        return String(p.id) === String(entry.id);
+        return String(p._id || p.id) === actualEntryId;
     });
 
     if (targetEntry) {
         const entryScores = scores.filter(function (s) {
-            return String(s.entryId) === String(entry.id);
+            return String(s.entryId) === actualEntryId;
         });
 
         targetEntry.judgesCompleted = entryScores.length;
@@ -395,17 +462,17 @@ function saveJudgeScore() {
         localStorage.setItem("photoEntries", JSON.stringify(photoEntries));
     }
 
+    updateJudgingStatus(true);
+
     if (scoreMessage) {
-        scoreMessage.textContent = "✓ Evaluation submitted successfully.";
+        scoreMessage.textContent = "✓ Evaluation submitted successfully! Redirecting to dashboard...";
         scoreMessage.className = "score-message success";
     }
 
     if (submitScoreBtn) {
-        submitScoreBtn.textContent = "Evaluation Submitted";
+        submitScoreBtn.textContent = "✓ Evaluation Submitted";
         submitScoreBtn.disabled = true;
     }
-
-    updateJudgingStatus();
 
     setTimeout(function () {
         window.location.href = "judge.html";
@@ -450,7 +517,4 @@ if (currentUser) {
    INITIALIZE
 ========================================================= */
 
-displayEntry();
-updateScoreDisplay();
-updateJudgingStatus();
-checkSelectedJudge();
+loadEntryAndContest();

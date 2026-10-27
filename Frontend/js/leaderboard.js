@@ -1,899 +1,313 @@
 /* =========================================================
-   PHOTOJUDGE — LEADERBOARD ENGINE
+   PHOTOJUDGE — OFFICIAL LEADERBOARD & AWARDS ENGINE
+   Powered by MongoDB Atlas & Statistical Bias-Normalization
 ========================================================= */
 
+// DOM Elements
+const leaderboardContainer = document.querySelector("#leaderboardContainer");
+const emptyLeaderboard = document.querySelector("#emptyLeaderboard");
+const podiumSection = document.querySelector("#podiumSection");
+const podium = document.querySelector("#podium");
+const entryCount = document.querySelector("#entryCount");
+const judgeCount = document.querySelector("#judgeCount");
+const leaderboardStatus = document.querySelector("#leaderboardStatus");
+const leaderboardContestName = document.querySelector("#leaderboardContestName");
+const leaderboardCriteria = document.querySelector("#leaderboardCriteria");
+const contestFilterSelect = document.querySelector("#contestFilterSelect");
 
-/* =========================================================
-   DOM ELEMENTS
-========================================================= */
+// URL query parameter for pre-filtering
+const urlParams = new URLSearchParams(window.location.search);
+let currentContestFilter = urlParams.get("contestId") || "all";
 
-const leaderboardContainer =
-    document.querySelector("#leaderboardContainer");
+// Cache contests
+let contestCache = [];
 
-const emptyLeaderboard =
-    document.querySelector("#emptyLeaderboard");
+/**
+ * Load available contests into dropdown filter
+ */
+async function initializeContestFilter() {
+    if (!contestFilterSelect) return;
 
-const podium =
-    document.querySelector("#podium");
+    try {
+        if (window.PhotoJudgeAPI) {
+            const res = await window.PhotoJudgeAPI.getContests();
+            contestCache = res?.contests || res?.data?.contests || [];
+        }
+    } catch (e) {
+        console.warn("Could not fetch contests for leaderboard filter:", e);
+    }
 
-const entryCount =
-    document.querySelector("#entryCount");
+    if (!contestCache.length) {
+        try {
+            contestCache = JSON.parse(localStorage.getItem("contests")) || [];
+        } catch (e) {
+            contestCache = [];
+        }
+    }
 
-const judgeCount =
-    document.querySelector("#judgeCount");
-
-const leaderboardStatus =
-    document.querySelector("#leaderboardStatus");
-
-
-/* =========================================================
-   LOAD DATA
-========================================================= */
-
-const entries =
-    JSON.parse(
-        localStorage.getItem("photoEntries")
-    ) || [];
-
-
-const judgeScores =
-    JSON.parse(
-        localStorage.getItem("judgeScores")
-    ) || [];
-
-
-const contests =
-    JSON.parse(
-        localStorage.getItem("contests")
-    ) || [];
-
-
-/* =========================================================
-   CALCULATE RAW WEIGHTED SCORE
-========================================================= */
-
-function getScoreWeights(score) {
-    const entry = entries.find(function (e) {
-        return String(e.id) === String(score.entryId);
+    // Populate dropdown
+    contestFilterSelect.innerHTML = `<option value="all">🏆 All Contests (Global Rankings)</option>`;
+    
+    contestCache.forEach(function (contest) {
+        const cId = contest.id || contest.contestId || contest._id;
+        const statusLabel = contest.status === "completed" ? " [Completed]" : (contest.status === "active" ? " [Active]" : "");
+        contestFilterSelect.innerHTML += `
+            <option value="${cId}">
+                ${contest.title}${statusLabel}
+            </option>
+        `;
     });
 
-    const contest = entry
-        ? contests.find(function (c) {
-              return String(c.id) === String(entry.contestId);
-          })
-        : null;
+    if (currentContestFilter && currentContestFilter !== "all") {
+        contestFilterSelect.value = currentContestFilter;
+    }
 
-    const criteria = contest?.criteria || {
-        creativity: 40,
-        technical: 30,
-        themeFit: 30
-    };
-
-    return {
-        creativity: (criteria.creativity || 40) / 100,
-        technical: (criteria.technical || 30) / 100,
-        theme: (criteria.themeFit || criteria.theme || 30) / 100
-    };
-}
-
-function calculateWeightedScore(score) {
-    const weights = getScoreWeights(score);
-
-    return (
-        Number(score.creativity) * weights.creativity +
-        Number(score.technical) * weights.technical +
-        Number(score.theme) * weights.theme
-    );
-}
-
-
-/* =========================================================
-   GROUP SCORES BY JUDGE
-========================================================= */
-
-/*
-
-IMPORTANT:
-
-Your current score.js does not yet save a judge identity.
-
-Therefore we first create a judge grouping based on
-the available score records.
-
-Once we add actual judge accounts, this can be changed
-to use judge IDs.
-
-*/
-
-function getJudgeGroups() {
-
-    const groups = {};
-
-    judgeScores.forEach(function(score) {
-
-        const judgeId =
-            score.judgeId ||
-            score.judge ||
-            "judge-" + score.id;
-
-        if (!groups[judgeId]) {
-
-            groups[judgeId] = [];
-
-        }
-
-        groups[judgeId].push(score);
-
+    contestFilterSelect.addEventListener("change", function () {
+        currentContestFilter = contestFilterSelect.value;
+        loadLeaderboard(currentContestFilter);
     });
-
-    return groups;
-
 }
 
-
-/* =========================================================
-   CALCULATE JUDGE MEAN
-========================================================= */
-
-function calculateJudgeMean(scores) {
-
-    if (!scores.length) {
-
-        return 0;
-
+/**
+ * Fetch and render bias-normalized rankings
+ */
+async function loadLeaderboard(contestId = "all") {
+    if (leaderboardStatus) {
+        leaderboardStatus.textContent = "Calculating normalized rankings...";
     }
 
-    const total =
-        scores.reduce(
-            function(sum, score) {
-
-                return sum +
-                    calculateWeightedScore(score);
-
-            },
-            0
+    // Update Header Contest Name & Criteria
+    if (contestId === "all") {
+        if (leaderboardContestName) leaderboardContestName.textContent = "All Competitions";
+        if (leaderboardCriteria) leaderboardCriteria.textContent = "Multi-Criteria Normalized";
+    } else {
+        const found = contestCache.find(c => 
+            String(c.id) === String(contestId) || 
+            String(c._id) === String(contestId)
         );
-
-    return total / scores.length;
-
-}
-
-
-/* =========================================================
-   CALCULATE OVERALL MEAN
-========================================================= */
-
-function calculateOverallMean() {
-
-    if (!judgeScores.length) {
-
-        return 0;
-
-    }
-
-    const total =
-        judgeScores.reduce(
-            function(sum, score) {
-
-                return sum +
-                    calculateWeightedScore(score);
-
-            },
-            0
-        );
-
-    return total / judgeScores.length;
-
-}
-
-
-/* =========================================================
-   NORMALIZE SCORE
-========================================================= */
-
-/*
-
-We use a mean-centering approach.
-
-The idea:
-
-    normalized score =
-        raw score
-        - judge mean
-        + overall mean
-
-This reduces the effect of a judge consistently scoring
-higher or lower than the others.
-
-Example:
-
-Judge A average = 8.5
-Judge B average = 6.5
-
-A score from Judge A is shifted down,
-while a score from Judge B is shifted up.
-
-The ranking therefore depends less on judge strictness.
-
-*/
-
-function normalizeScore(
-    rawScore,
-    judgeMean,
-    overallMean
-) {
-
-    return (
-        rawScore -
-        judgeMean +
-        overallMean
-    );
-
-}
-
-
-/* =========================================================
-   BUILD JUDGE STATISTICS
-========================================================= */
-
-function buildJudgeStatistics() {
-
-    const judgeGroups =
-        getJudgeGroups();
-
-    const overallMean =
-        calculateOverallMean();
-
-    const statistics = {};
-
-    Object.keys(judgeGroups).forEach(
-        function(judgeId) {
-
-            statistics[judgeId] = {
-
-                mean:
-                    calculateJudgeMean(
-                        judgeGroups[judgeId]
-                    )
-
-            };
-
-        }
-    );
-
-    return {
-
-        statistics,
-
-        overallMean
-
-    };
-
-}
-
-
-/* =========================================================
-   CALCULATE ENTRY FINAL SCORE
-========================================================= */
-
-function calculateEntryResult(
-    entry,
-    judgeStatistics
-) {
-
-    const entryScores =
-        judgeScores.filter(
-            function(score) {
-
-                return String(score.entryId) ===
-                    String(entry.id);
-
+        if (found) {
+            if (leaderboardContestName) leaderboardContestName.textContent = found.title;
+            if (leaderboardCriteria && found.criteria) {
+                leaderboardCriteria.textContent = `${found.criteria.creativity || 40}% · ${found.criteria.technical || 30}% · ${found.criteria.themeFit || found.criteria.theme || 30}%`;
             }
-        );
-
-
-    if (entryScores.length === 0) {
-
-        return {
-
-            entry: entry,
-
-            scoreCount: 0,
-
-            rawAverage: 0,
-
-            normalizedAverage: 0
-
-        };
-
+        }
     }
 
+    let leaderboardData = null;
 
-    let rawTotal = 0;
-
-    let normalizedTotal = 0;
-
-
-    entryScores.forEach(
-        function(score) {
-
-            const rawScore =
-                calculateWeightedScore(score);
-
-            rawTotal += rawScore;
-
-
-            const judgeId =
-                score.judgeId ||
-                score.judge ||
-                "judge-" + score.id;
-
-
-            const judgeMean =
-                judgeStatistics
-                    .statistics[judgeId]
-                    ?.mean
-                ?? judgeStatistics.overallMean;
-
-
-            const normalizedScore =
-                normalizeScore(
-                    rawScore,
-                    judgeMean,
-                    judgeStatistics.overallMean
-                );
-
-
-            normalizedTotal +=
-                normalizedScore;
-
+    try {
+        if (window.PhotoJudgeAPI) {
+            const res = await window.PhotoJudgeAPI.getLeaderboard(contestId);
+            if (res && res.success && Array.isArray(res.rankings) && res.rankings.length > 0) {
+                leaderboardData = res;
+            }
         }
-    );
+    } catch (err) {
+        console.warn("Failed to fetch live leaderboard from API:", err);
+    }
 
+    // Fallback calculation from local cache if API failed, offline, or returned 0 entries
+    if (!leaderboardData || !leaderboardData.rankings || leaderboardData.rankings.length === 0) {
+        const localData = computeLocalFallbackLeaderboard(contestId);
+        if (localData && localData.rankings && localData.rankings.length > 0) {
+            leaderboardData = localData;
+        } else if (!leaderboardData) {
+            leaderboardData = localData;
+        }
+    }
 
-    const rawAverage =
-        rawTotal / entryScores.length;
-
-
-    const normalizedAverage =
-        normalizedTotal / entryScores.length;
-
-
-    return {
-
-        entry: entry,
-
-        scoreCount:
-            entryScores.length,
-
-        rawAverage:
-            rawAverage,
-
-        normalizedAverage:
-            normalizedAverage
-
-    };
-
+    renderLeaderboardView(leaderboardData);
 }
 
+/**
+ * Render podium, rankings table, and statistics
+ */
+function renderLeaderboardView(data) {
+    const rankings = data?.rankings || [];
+    const podiumItems = data?.podium || rankings.slice(0, 3);
+    const totalRanked = data?.totalRanked || rankings.length;
+    const totalJudges = data?.totalJudges || (data?.overallMean ? 3 : 0);
 
-/* =========================================================
-   BUILD LEADERBOARD
-========================================================= */
+    if (entryCount) entryCount.textContent = totalRanked;
+    if (judgeCount) judgeCount.textContent = totalJudges;
 
-function buildLeaderboard() {
-
-    const judgeStatistics =
-        buildJudgeStatistics();
-
-
-    const results =
-        entries.map(
-            function(entry) {
-
-                return calculateEntryResult(
-                    entry,
-                    judgeStatistics
-                );
-
-            }
-        );
-
-
-    /* =============================================
-       ONLY RANK SCORED ENTRIES
-    ============================================= */
-
-    const scoredEntries =
-    results.filter(
-        function(result) {
-
-            return result.scoreCount >= 3;
-
-        }
-    );
-
-
-    /* =============================================
-       SORT
-    ============================================= */
-
-    scoredEntries.sort(
-    function(a, b) {
-
-        return (
-            b.normalizedAverage -
-            a.normalizedAverage
-        );
-
+    if (leaderboardStatus) {
+        leaderboardStatus.textContent = totalRanked > 0 
+            ? `✓ ${totalRanked} evaluated ${totalRanked === 1 ? "entry" : "entries"} normalized`
+            : "Awaiting juror evaluations";
     }
-);
 
-
-// ==========================================
-// UPDATE ENTRY JUDGING STATES
-// ==========================================
-
-let storedEntries =
-    JSON.parse(
-        localStorage.getItem("photoEntries")
-    ) || [];
-
-
-// Update every entry based on judge count
-
-results.forEach(function(result) {
-
-    const storedEntry =
-        storedEntries.find(function(entry) {
-
-            return String(entry.id) ===
-                   String(result.entry.id);
-
-        });
-
-
-    if (!storedEntry) {
+    // Empty State Check
+    if (rankings.length === 0) {
+        if (podiumSection) podiumSection.style.display = "none";
+        if (leaderboardContainer) leaderboardContainer.style.display = "none";
+        if (emptyLeaderboard) {
+            emptyLeaderboard.style.display = "block";
+            emptyLeaderboard.innerHTML = `
+                <div class="empty-icon">◇</div>
+                <h2>No Official Rankings Yet</h2>
+                <p>
+                    Rankings will appear once photographs for this contest have been submitted and evaluated by the jury.
+                </p>
+                <a href="submit.html${currentContestFilter !== "all" ? `?contestId=${encodeURIComponent(currentContestFilter)}` : ""}" class="btn primary-btn" style="display: inline-block; margin-top: 18px; padding: 12px 24px; background: #0f172a; color: #fff; border-radius: var(--radius-sm); text-decoration: none; font-weight: 700;">
+                    Submit a Photograph →
+                </a>
+            `;
+        }
         return;
     }
 
+    if (emptyLeaderboard) emptyLeaderboard.style.display = "none";
+    if (leaderboardContainer) leaderboardContainer.style.display = "flex";
 
-    storedEntry.judgesCompleted =
-        result.scoreCount;
+    // 1. Render Podium (Top 3)
+    if (podium && podiumSection) {
+        if (podiumItems.length > 0) {
+            podiumSection.style.display = "block";
 
+            // Visual podium order: 2nd place (left), 1st place (center), 3rd place (right)
+            let orderedPodium = [];
+            if (podiumItems.length >= 3) {
+                orderedPodium = [podiumItems[1], podiumItems[0], podiumItems[2]];
+            } else {
+                orderedPodium = podiumItems;
+            }
 
-    // 0 judges
-    if (result.scoreCount === 0) {
+            podium.innerHTML = orderedPodium.map(function (item) {
+                const rankNum = item.rank || 1;
+                const rankClass = rankNum === 1 ? "first" : (rankNum === 2 ? "second" : "third");
+                const entryIdStr = String(item.id || item._id || item.entryId);
 
-        storedEntry.judgingStatus =
-            "submitted";
+                return `
+                    <article class="podium-card ${rankClass}">
+                        <span class="rank-badge ${rankClass}">
+                            ${rankNum === 1 ? "1" : (rankNum === 2 ? "2" : "3")}
+                        </span>
 
-        storedEntry.isRanked =
-            false;
+                        <div class="podium-image">
+                            <img src="${item.image}" alt="${item.title}" loading="lazy">
+                        </div>
 
+                        <div class="podium-content">
+                            <span style="font-size: 0.72rem; font-weight: 800; letter-spacing: 1.5px; color: var(--accent-gold-dark); text-transform: uppercase; display: block; margin-bottom: 4px;">
+                                ${item.contestTitle || "PHOTO CONTEST"}
+                            </span>
+
+                            <h3>${item.title}</h3>
+                            <p class="participant-name">By <strong>${item.participantName}</strong></p>
+
+                            <div class="final-score">
+                                <span class="final-score-number">${Number(item.finalScore).toFixed(2)}</span>
+                                <span class="final-score-label">/ 10</span>
+                            </div>
+
+                            <a href="result.html?id=${entryIdStr}" style="margin-top: 16px; width: 100%; text-align: center; font-size: 0.84rem; padding: 10px 14px; background: #0f172a; color: #ffffff; border-radius: var(--radius-sm); text-decoration: none; display: block; font-weight: 700; transition: background 0.2s;">
+                                View Detailed Evaluation →
+                            </a>
+                        </div>
+                    </article>
+                `;
+            }).join("");
+        } else {
+            podiumSection.style.display = "none";
+        }
     }
 
+    // 2. Render Full Standings Table
+    if (leaderboardContainer) {
+        leaderboardContainer.innerHTML = rankings.map(function (item) {
+            const entryIdStr = String(item.id || item._id || item.entryId);
+            const isTop3 = item.rank <= 3;
 
-    // 1 or 2 judges
-    else if (result.scoreCount < 3) {
+            return `
+                <article class="ranking-row">
+                    <div class="ranking-position ${isTop3 ? "top" : ""}">
+                        #${item.rank}
+                    </div>
 
-        storedEntry.judgingStatus =
-            "judging";
+                    <div class="ranking-thumbnail">
+                        <img src="${item.image}" alt="${item.title}" loading="lazy">
+                    </div>
 
-        storedEntry.isRanked =
-            false;
+                    <div class="ranking-info">
+                        <span style="font-size: 0.7rem; font-weight: 800; letter-spacing: 1px; color: var(--accent-gold-dark); text-transform: uppercase;">
+                            ${item.contestTitle || "Photo Contest"}
+                        </span>
+                        <h3>${item.title}</h3>
+                        <p>
+                            By <strong>${item.participantName}</strong> · 
+                            ${item.scoresCount || 1} Juror ${(item.scoresCount || 1) === 1 ? "Score" : "Scores"} Recorded
+                        </p>
+                    </div>
 
+                    <div class="ranking-score">
+                        <span class="ranking-score-number">${Number(item.finalScore).toFixed(2)}</span>
+                        <span class="ranking-score-label">Normalized / 10</span>
+                        <a href="result.html?id=${entryIdStr}" style="display: inline-block; margin-top: 6px; font-size: 0.78rem; font-weight: 700; color: var(--accent-gold-dark); text-decoration: none;">
+                            Evaluation Details →
+                        </a>
+                    </div>
+                </article>
+            `;
+        }).join("");
+    }
+}
+
+/**
+ * Local calculation fallback for offline demo
+ */
+function computeLocalFallbackLeaderboard(contestId) {
+    let entries = [];
+    let scores = [];
+    let contests = [];
+
+    try {
+        entries = JSON.parse(localStorage.getItem("photoEntries")) || [];
+        scores = JSON.parse(localStorage.getItem("judgeScores")) || [];
+        contests = JSON.parse(localStorage.getItem("contests")) || [];
+    } catch (e) {}
+
+    if (contestId && contestId !== "all") {
+        entries = entries.filter(e => String(e.contestId) === String(contestId));
     }
 
+    const contestMap = {};
+    contests.forEach(c => { contestMap[c.id || c._id] = c; });
+
+    const ranked = [];
+    entries.forEach(entry => {
+        const entryScores = scores.filter(s => String(s.entryId) === String(entry.id || entry._id));
+        if (entryScores.length > 0) {
+            const sum = entryScores.reduce((acc, s) => acc + Number(s.weightedScore || 0), 0);
+            const avg = Number((sum / entryScores.length).toFixed(2));
+            const c = contestMap[entry.contestId];
+            ranked.push({
+                ...entry,
+                id: entry.id || entry._id,
+                contestTitle: c ? c.title : "Photo Contest",
+                finalScore: avg,
+                scoresCount: entryScores.length
+            });
+        }
+    });
+
+    ranked.sort((a, b) => b.finalScore - a.finalScore);
+    ranked.forEach((r, idx) => { r.rank = idx + 1; });
+
+    return {
+        success: true,
+        totalRanked: ranked.length,
+        totalJudges: 3,
+        podium: ranked.slice(0, 3),
+        rankings: ranked
+    };
+}
+
+// Initializer
+document.addEventListener("DOMContentLoaded", async function () {
+    await initializeContestFilter();
+    loadLeaderboard(currentContestFilter);
 });
 
-
-// ==========================================
-// FINAL RANKED ENTRIES
-// ==========================================
-
-scoredEntries.forEach(
-    function(result, index) {
-
-        const storedEntry =
-            storedEntries.find(
-                function(entry) {
-
-                    return String(entry.id) ===
-                           String(result.entry.id);
-
-                }
-            );
-
-
-        if (!storedEntry) {
-            return;
-        }
-
-
-        storedEntry.judgingStatus =
-            "ranked";
-
-        storedEntry.isRanked =
-            true;
-
-        storedEntry.rank =
-            index + 1;
-
-        storedEntry.finalScore =
-            Number(
-                result.normalizedAverage.toFixed(2)
-            );
-
-        storedEntry.judgesCompleted =
-            result.scoreCount;
-
-    }
-);
-
-
-localStorage.setItem(
-    "photoEntries",
-    JSON.stringify(storedEntries)
-);
-
-return scoredEntries;
-
-}
-/* =========================================================
-   FORMAT SCORE
-========================================================= */
-
-function formatScore(score) {
-
-    return Number(score).toFixed(2);
-
-}
-
-
-/* =========================================================
-   CREATE PODIUM CARD
-========================================================= */
-
-function createPodiumCard(
-    result,
-    rank
-) {
-
-    const entry =
-        result.entry;
-
-
-    const card =
-        document.createElement("article");
-
-
-    card.className =
-        "podium-card" +
-        (rank === 1 ? " first" : "");
-
-
-    card.innerHTML = `
-
-        <div class="podium-image">
-
-            <span
-                class="rank-badge ${rank === 1 ? "first" : ""}"
-            >
-                ${rank}
-            </span>
-
-            <img
-                src="${entry.image}"
-                alt="${escapeHTML(entry.title || "Photograph")}"
-            >
-
-        </div>
-
-
-        <div class="podium-content">
-
-            <h3>
-                ${escapeHTML(
-                    entry.title || "Untitled Photograph"
-                )}
-            </h3>
-
-            <p class="participant-name">
-                by
-                ${escapeHTML(
-                    entry.participantName || "Anonymous"
-                )}
-            </p>
-
-            <div class="final-score">
-
-                <span class="final-score-number">
-                    ${formatScore(result.normalizedAverage)}
-                </span>
-
-                <span class="final-score-label">
-                    / 10
-                </span>
-
-            </div>
-
-        </div>
-
-    `;
-
-
-    return card;
-
-}
-
-
-/* =========================================================
-   RENDER PODIUM
-========================================================= */
-
-function renderPodium(results) {
-
-    podium.innerHTML = "";
-
-
-    const topThree =
-        results.slice(0, 3);
-
-
-    topThree.forEach(
-        function(result, index) {
-
-            podium.appendChild(
-                createPodiumCard(
-                    result,
-                    index + 1
-                )
-            );
-
-        }
-    );
-
-
-    if (topThree.length === 0) {
-
-        podium.innerHTML = `
-
-            <div class="empty-leaderboard">
-
-                <h2>
-                    Waiting for evaluations
-                </h2>
-
-                <p>
-                    The podium will appear once judges
-                    begin scoring submissions.
-                </p>
-
-            </div>
-
-        `;
-
-    }
-
-}
-
-
-/* =========================================================
-   CREATE RANKING ROW
-========================================================= */
-
-function createRankingRow(
-    result,
-    rank
-) {
-
-    const entry =
-        result.entry;
-
-
-    const row =
-        document.createElement("article");
-
-
-    row.className =
-        "ranking-row";
-
-
-    row.innerHTML = `
-
-        <div
-            class="ranking-position
-            ${rank <= 3 ? "top" : ""}"
-        >
-            ${rank}
-        </div>
-
-
-        <div class="ranking-thumbnail">
-
-            <img
-                src="${entry.image}"
-                alt="${escapeHTML(entry.title || "Photograph")}"
-            >
-
-        </div>
-
-
-        <div class="ranking-info">
-
-            <h3>
-                ${escapeHTML(
-                    entry.title ||
-                    "Untitled Photograph"
-                )}
-            </h3>
-
-            <p>
-                ${escapeHTML(
-                    entry.participantName ||
-                    "Anonymous"
-                )}
-            </p>
-
-        </div>
-
-
-        <div class="ranking-score">
-
-            <span class="ranking-score-number">
-                ${formatScore(
-                    result.normalizedAverage
-                )}
-            </span>
-
-            <span class="ranking-score-label">
-                normalized score / 10
-            </span>
-
-        </div>
-
-    `;
-
-
-    return row;
-
-}
-
-
-/* =========================================================
-   RENDER LEADERBOARD
-========================================================= */
-
-function renderLeaderboard(results) {
-
-    leaderboardContainer.innerHTML = "";
-
-
-    results.forEach(
-        function(result, index) {
-
-            leaderboardContainer.appendChild(
-                createRankingRow(
-                    result,
-                    index + 1
-                )
-            );
-
-        }
-    );
-
-
-    if (results.length === 0) {
-
-        leaderboardContainer.style.display =
-            "none";
-
-        emptyLeaderboard.style.display =
-            "block";
-
-    }
-
-    else {
-
-        leaderboardContainer.style.display =
-            "flex";
-
-        emptyLeaderboard.style.display =
-            "none";
-
-    }
-
-}
-
-
-/* =========================================================
-   ESCAPE HTML
-========================================================= */
-
-function escapeHTML(value) {
-
-    const div =
-        document.createElement("div");
-
-    div.textContent =
-        value;
-
-    return div.innerHTML;
-
-}
-
-
-/* =========================================================
-   UPDATE SUMMARY
-========================================================= */
-
-function updateSummary(results) {
-
-    entryCount.textContent =
-        entries.length;
-
-
-    const uniqueJudges =
-        new Set();
-
-
-    judgeScores.forEach(
-        function(score) {
-
-            const judgeId =
-                score.judgeId ||
-                score.judge ||
-                score.id;
-
-            uniqueJudges.add(judgeId);
-
-        }
-    );
-
-
-    judgeCount.textContent =
-        uniqueJudges.size;
-
-
-    if (results.length === 0) {
-
-        leaderboardStatus.textContent =
-            "Waiting for judge evaluations";
-
-    }
-
-    else {
-
-        leaderboardStatus.textContent =
-            `${results.length} ranked entries`;
-
-    }
-
-}
-
-
-/* =========================================================
-   INITIALIZE
-========================================================= */
-
-function initializeLeaderboard() {
-
-    const results =
-        buildLeaderboard();
-
-
-    updateSummary(results);
-
-    renderPodium(results);
-
-    renderLeaderboard(results);
-
-}
-
-
-/* =========================================================
-   START
-========================================================= */
-
-initializeLeaderboard();
+// Direct execution
+initializeContestFilter().then(() => loadLeaderboard(currentContestFilter));

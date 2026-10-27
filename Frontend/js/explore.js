@@ -115,7 +115,7 @@ function renderGallery() {
     gallery.innerHTML = photos.map(photo => `
         <div class="pin-card" onclick="openLightbox('${photo.id}')">
             <div class="pin-image-wrapper">
-                <img src="${photo.imageUrl}" alt="${photo.title}">
+                <img src="${photo.imageUrl}" alt="${photo.title}" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1452421822248-d4c2b47f0c81?auto=format&fit=crop&w=800&q=80';">
                 
                 <div class="pin-overlay">
                     <div class="pin-top-actions">
@@ -150,6 +150,11 @@ function renderGallery() {
 // 4. Like a Photo
 function likePhoto(event, id) {
     event.stopPropagation(); // Stop card click from opening modal
+
+    if (typeof ExploreAPI !== "undefined") {
+        ExploreAPI.like(id);
+    }
+
     const photos = getPhotos();
     const photo = photos.find(p => p.id === id);
     if (photo) {
@@ -239,6 +244,16 @@ function setupUploadForm() {
                 likes: 0,
                 description: desc || "Shared with the community."
             };
+
+            if (typeof ExploreAPI !== "undefined") {
+                ExploreAPI.create({
+                    title,
+                    author,
+                    category,
+                    imageUrl: finalImage,
+                    description: desc
+                });
+            }
 
             const photos = getPhotos();
             photos.unshift(newPhoto); // Add to beginning

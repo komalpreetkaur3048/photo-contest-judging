@@ -18,7 +18,10 @@ if (mainNav) {
 
     // Check whether current page is inside /pages/
     const isInsidePages =
-        window.location.pathname.includes("/pages/");
+        window.location.pathname.includes("/pages/") ||
+        window.location.pathname.includes("\\pages\\") ||
+        window.location.pathname.endsWith("/pages") ||
+        window.location.href.includes("/pages/");
 
     // Helper for page links
     const pagePath = function (file) {
@@ -333,9 +336,6 @@ async function hashString(str) {
     }
 }
 
-const JUDGE_SECRET_KEY = "JUDGE2026";
-
-
 // ==========================================
 // REGISTER FORM LOGIC
 // ==========================================
@@ -399,14 +399,15 @@ if (registerForm) {
 
         let judgeSpecialization = "";
         let judgeBio = "";
+        let enteredKey = "";
 
         if (selectedRole === "judge") {
             const accessKeyInput = document.querySelector("#judgeAccessKey");
-            const enteredKey = accessKeyInput ? accessKeyInput.value.trim() : "";
+            enteredKey = accessKeyInput ? accessKeyInput.value.trim() : "";
 
-            if (!enteredKey || enteredKey.toUpperCase() !== JUDGE_SECRET_KEY) {
+            if (!enteredKey) {
                 if (message) {
-                    message.textContent = "Invalid Judge Access Key. Only authorized judges can create an account.";
+                    message.textContent = "Please enter your Judge Access Key or Invite Code.";
                     message.style.color = "#dc2626";
                 }
                 return;
@@ -421,12 +422,40 @@ if (registerForm) {
                 "";
         }
 
+        // Call Backend API if available
+        let backendSuccess = false;
+        if (typeof AuthAPI !== "undefined") {
+            const apiRes = await AuthAPI.register({
+                name,
+                email,
+                password,
+                role: selectedRole,
+                judgeAccessKey: enteredKey,
+                specialization: judgeSpecialization,
+                bio: judgeBio
+            });
+
+            if (apiRes && apiRes.ok) {
+                backendSuccess = true;
+                if (apiRes.data.token) {
+                    localStorage.setItem("token", apiRes.data.token);
+                }
+            } else if (apiRes && apiRes.status > 0) {
+                // Backend responded with an error (e.g. Email exists, invalid key)
+                if (message) {
+                    message.textContent = apiRes.data.message || "Registration failed.";
+                    message.style.color = "#dc2626";
+                }
+                return;
+            }
+        }
+
         let users = JSON.parse(localStorage.getItem("users")) || [];
         const existingUser = users.find(function (user) {
             return user.email === email;
         });
 
-        if (existingUser) {
+        if (!backendSuccess && existingUser) {
             if (message) {
                 message.textContent = "An account with this email already exists.";
                 message.style.color = "#dc2626";
@@ -446,8 +475,10 @@ if (registerForm) {
             bio: selectedRole === "judge" ? judgeBio : undefined
         };
 
-        users.push(user);
-        localStorage.setItem("users", JSON.stringify(users));
+        if (!existingUser) {
+            users.push(user);
+            localStorage.setItem("users", JSON.stringify(users));
+        }
 
         if (message) {
             message.textContent = selectedRole === "judge"
@@ -480,6 +511,43 @@ if (loginForm) {
         const password = document.querySelector("#loginPassword")?.value;
         const message = document.querySelector("#loginMessage");
 
+        // Try Backend Login First
+        if (typeof AuthAPI !== "undefined") {
+            const apiRes = await AuthAPI.login(email, password);
+
+            if (apiRes && apiRes.ok && apiRes.data.user) {
+                localStorage.setItem("token", apiRes.data.token);
+                const loggedInUser = {
+                    ...apiRes.data.user,
+                    id: apiRes.data.user._id // ensures compatibility with frontend expecting user.id
+                };
+                localStorage.setItem("currentUser", JSON.stringify(loggedInUser));
+
+                if (message) {
+                    message.textContent = "✓ Login successful!";
+                    message.style.color = "#16a34a";
+                }
+
+                setTimeout(function () {
+                    if (loggedInUser.role === "participant") {
+                        window.location.href = "participant-dashboard.html";
+                    } else if (loggedInUser.role === "judge") {
+                        window.location.href = "judge.html";
+                    } else {
+                        window.location.href = "participant-dashboard.html";
+                    }
+                }, 700);
+                return;
+            } else if (apiRes && apiRes.status === 401) {
+                if (message) {
+                    message.textContent = apiRes.data.message || "Invalid email or password.";
+                    message.style.color = "#dc2626";
+                }
+                return;
+            }
+        }
+
+        // Fallback to local storage if backend is offline
         const users = JSON.parse(localStorage.getItem("users")) || [];
         const hashedPassword = await hashString(password);
 
