@@ -45,7 +45,7 @@ export const register = async (req, res, next) => {
         // Check judge access key
         if (userRole === "judge") {
             const enteredKey = (judgeAccessKey || "").trim().toUpperCase();
-            const masterKey = (process.env.JUDGE_ACCESS_KEY || "").trim().toUpperCase();
+            const masterKey = (process.env.JUDGE_ACCESS_KEY || "JUDGE2026").trim().toUpperCase();
 
             if (!enteredKey) {
                 return res.status(400).json({
