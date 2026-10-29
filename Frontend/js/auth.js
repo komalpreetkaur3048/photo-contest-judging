@@ -407,7 +407,7 @@ if (registerForm) {
 
             if (!enteredKey) {
                 if (message) {
-                    message.textContent = "Please enter your Judge Access Key or Invite Code.";
+                    message.textContent = "Please enter the Judge Access Key.";
                     message.style.color = "#dc2626";
                 }
                 return;
@@ -437,9 +437,6 @@ if (registerForm) {
 
             if (apiRes && apiRes.ok) {
                 backendSuccess = true;
-                if (apiRes.data.token) {
-                    localStorage.setItem("token", apiRes.data.token);
-                }
             } else if (apiRes && apiRes.status > 0) {
                 // Backend responded with an error (e.g. Email exists, invalid key)
                 if (message) {

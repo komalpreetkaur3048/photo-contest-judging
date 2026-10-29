@@ -91,8 +91,7 @@ const runAllTests = async () => {
         method: "POST",
         body: JSON.stringify(testParticipant)
     });
-    assert(regPart.status === 201 && regPart.data?.token && regPart.data?.user?.role === "participant", "POST /api/auth/register creates a new participant account with JWT");
-    participantToken = regPart.data?.token;
+    assert(regPart.status === 201 && regPart.data?.user?.role === "participant", "POST /api/auth/register creates a new participant account in DB");
     participantId = regPart.data?.user?._id;
 
     // Reject Judge with Invalid Access Key
@@ -107,15 +106,23 @@ const runAllTests = async () => {
         method: "POST",
         body: JSON.stringify(testJudge)
     });
-    assert(regGoodJudge.status === 201 && regGoodJudge.data?.token && regGoodJudge.data?.user?.role === "judge", "POST /api/auth/register creates an authorized judge account");
-    judgeToken = regGoodJudge.data?.token;
+    assert(regGoodJudge.status === 201 && regGoodJudge.data?.user?.role === "judge", "POST /api/auth/register creates an authorized judge account in DB");
 
-    // Login with valid credentials
+    // Login with valid credentials (JWT token generated here)
     const loginSuccess = await apiCall("/api/auth/login", {
         method: "POST",
         body: JSON.stringify({ email: testParticipant.email, password: testParticipant.password })
     });
-    assert(loginSuccess.status === 200 && loginSuccess.data?.token, "POST /api/auth/login succeeds with valid credentials");
+    assert(loginSuccess.status === 200 && loginSuccess.data?.token, "POST /api/auth/login succeeds with valid credentials and issues JWT");
+    participantToken = loginSuccess.data?.token;
+
+    // Judge Login (Issues Judge JWT token)
+    const judgeLogin = await apiCall("/api/auth/login", {
+        method: "POST",
+        body: JSON.stringify({ email: testJudge.email, password: testJudge.password })
+    });
+    assert(judgeLogin.status === 200 && judgeLogin.data?.token, "POST /api/auth/login generates JWT token for authorized judge");
+    judgeToken = judgeLogin.data?.token;
 
     // Login with invalid credentials
     const loginFail = await apiCall("/api/auth/login", {
@@ -232,9 +239,20 @@ const runAllTests = async () => {
     assert(editLockedEntry.status === 400 && editLockedEntry.data?.message?.includes("locked"), "PUT /api/entries/:id locks entry from edits once judging starts");
 
     // ----------------------------------------------------
-    // 6. EXPLORE GALLERY ROUTES
+    // 6. LEADERBOARD & RESULTS ROUTES
     // ----------------------------------------------------
-    console.log("\n--- 6. Community Explore Routes (/api/explore) ---");
+    console.log("\n--- 6. Leaderboard & Results Routes (/api/leaderboard) ---");
+
+    const globalLeaderboard = await apiCall("/api/leaderboard");
+    assert(globalLeaderboard.status === 200 && Array.isArray(globalLeaderboard.data?.rankings), "GET /api/leaderboard calculates global normalized rankings");
+
+    const entryResult = await apiCall(`/api/leaderboard/result/${createdEntryId}`);
+    assert(entryResult.status === 200 && entryResult.data?.entry?._id, "GET /api/leaderboard/result/:entryId fetches entry score breakdown");
+
+    // ----------------------------------------------------
+    // 7. EXPLORE GALLERY ROUTES
+    // ----------------------------------------------------
+    console.log("\n--- 7. Community Explore Routes (/api/explore) ---");
 
     // Get explore feed
     const exploreFeed = await apiCall("/api/explore");

@@ -1,24 +1,28 @@
+
 import Score from "../models/Score.js";
 import Entry from "../models/Entry.js";
 import Contest from "../models/Contest.js";
 
-// @desc    Submit an evaluation score for a photograph
-// @route   POST /api/scores
-// @access  Private (Judge only)
+// Submit a score
 export const submitScore = async (req, res, next) => {
     try {
-        const { entryId, creativity, technical } = req.body;
-        const theme = req.body.theme !== undefined ? req.body.theme : req.body.themeFit;
-
-        if (!entryId || creativity === undefined || technical === undefined || theme === undefined) {
+        const { entryId, creativity, technical,theme } = req.body;
+        
+        if (
+            !entryId ||
+            creativity === undefined ||
+            technical === undefined ||
+            theme === undefined
+        ) {
             return res.status(400).json({
                 success: false,
-                message: "Please provide entryId and scores for creativity, technical, and theme."
+                message: "Please provide entryId and all scores."
             });
         }
 
-        // 1. Fetch Entry
+        // Find photograph
         const entry = await Entry.findById(entryId);
+
         if (!entry) {
             return res.status(404).json({
                 success: false,
@@ -26,15 +30,15 @@ export const submitScore = async (req, res, next) => {
             });
         }
 
-        // 2. Prevent self-judging
+        // Prevent judge from scoring their own photograph
         if (entry.participantId.toString() === req.user._id.toString()) {
             return res.status(400).json({
                 success: false,
-                message: "Integrity Violation: You cannot judge your own photograph submission."
+                message: "You cannot judge your own photograph."
             });
         }
 
-        // 3. Prevent duplicate scoring
+        // Check if judge already scored this photograph
         const alreadyScored = await Score.findOne({
             entryId: entry._id,
             judgeId: req.user._id
@@ -47,34 +51,54 @@ export const submitScore = async (req, res, next) => {
             });
         }
 
-        // 4. Retrieve contest criteria for weighting (or default 40/30/30)
-        const contest = await Contest.findOne({ id: entry.contestId });
-        const weights = {
-            creativity: (contest?.criteria?.creativity || 40) / 100,
-            technical: (contest?.criteria?.technical || 30) / 100,
-            theme: (contest?.criteria?.themeFit || 30) / 100
-        };
+        // Get contest weights
+        const contest = await Contest.findOne({
+            id: entry.contestId
+        });
 
-        const cNum = Number(creativity);
-        const tNum = Number(technical);
-        const thNum = Number(theme);
+        let creativityWeight = 40;
+        let technicalWeight = 30;
+        let themeWeight = 30;
 
-        const calculatedScore = (cNum * weights.creativity) + (tNum * weights.technical) + (thNum * weights.theme);
+        if (contest && contest.criteria) {
+            creativityWeight = contest.criteria.creativity || 40;
+            technicalWeight = contest.criteria.technical || 30;
+            themeWeight = contest.criteria.themeFit || 30;
+        }
+
+        creativityWeight = creativityWeight / 100;
+        technicalWeight = technicalWeight / 100;
+        themeWeight = themeWeight / 100;
+
+        // Convert scores to numbers
+        const c = Number(creativity);
+        const t = Number(technical);
+        const h = Number(theme);
+
+        // Calculate weighted score
+        const calculatedScore =
+            c * creativityWeight +
+            t * technicalWeight +
+            h * themeWeight;
+
         const weightedScore = Number(calculatedScore.toFixed(2));
 
-        // 5. Create Score record
+        // Save score
         const newScore = await Score.create({
             entryId: entry._id,
             judgeId: req.user._id,
             judgeName: req.user.name,
-            creativity: cNum,
-            technical: tNum,
-            theme: thNum,
-            weightedScore
+            creativity: c,
+            technical: t,
+            theme: h,
+            weightedScore: weightedScore
         });
 
-        // 6. Update Entry progress
-        const totalScores = await Score.countDocuments({ entryId: entry._id });
+        // Update judging progress
+        const totalScores = await Score.countDocuments({
+            entryId: entry._id
+        });
+
         entry.judgesCompleted = totalScores;
 
         if (totalScores >= 3) {
@@ -86,7 +110,7 @@ export const submitScore = async (req, res, next) => {
 
         await entry.save();
 
-        res.status(201).json({
+        return res.status(201).json({
             success: true,
             message: "Evaluation score submitted successfully!",
             score: newScore,
@@ -100,34 +124,35 @@ export const submitScore = async (req, res, next) => {
     }
 };
 
-// @desc    Get all scores for a specific photograph
-// @route   GET /api/scores/entry/:entryId
-// @access  Public
+
+// Get scores for one photograph
 export const getScoresByEntry = async (req, res, next) => {
     try {
-        const scores = await Score.find({ entryId: req.params.entryId }).sort({ createdAt: -1 });
+        const scores = await Score.find({
+            entryId: req.params.entryId
+        }).sort({ createdAt: -1 });
 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             count: scores.length,
-            scores
+            scores: scores
         });
     } catch (error) {
         next(error);
     }
 };
 
-// @desc    Get all scores across all entries (for leaderboard engine)
-// @route   GET /api/scores
-// @access  Public
+
+// Get all scores
 export const getAllScores = async (req, res, next) => {
     try {
-        const scores = await Score.find({}).sort({ createdAt: -1 });
+        const scores = await Score.find({})
+            .sort({ createdAt: -1 });
 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             count: scores.length,
-            scores
+            scores: scores
         });
     } catch (error) {
         next(error);

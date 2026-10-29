@@ -3,7 +3,9 @@
    Use this file to connect your Frontend to the Express/MongoDB Backend.
    Replace API_BASE_URL with your deployed backend URL when deploying.
 ========================================================= */
-const API_BASE_URL = "https://photo-contest-backend-5zxl.onrender.com/api";
+const API_BASE_URL = (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"))
+    ? `${window.location.origin}/api`
+    : "https://photo-contest-backend-5zxl.onrender.com/api";
 
 // Helper function to send HTTP requests with JSON and JWT Authorization
 async function apiRequest(endpoint, options = {}) {

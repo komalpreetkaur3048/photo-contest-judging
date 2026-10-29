@@ -1,66 +1,85 @@
+import mongoose from "mongoose";
 import Contest from "../models/Contest.js";
 
-// @desc    Get all contests (optionally filtered by ?status=active)
-// @route   GET /api/contests
-// @access  Public
+// Get all contests
 export const getContests = async (req, res, next) => {
     try {
-        const { status } = req.query;
-        const allContests = await Contest.find().sort({ createdAt: -1 });
+        const status = req.query.status;
 
-        let contests = allContests.map(c => c.toJSON());
+        const allContests = await Contest.find()
+            .sort({ createdAt: -1 });
+
+        let contests = allContests.map(function (contest) {
+            return contest.toJSON();
+        });
 
         if (status && status.toLowerCase() !== "all") {
-            contests = contests.filter(c => c.status === status.toLowerCase());
-        }
-
-        res.status(200).json({
-            success: true,
-            count: contests.length,
-            contests
-        });
-    } catch (error) {
-        next(error);
-    }
-};
-
-// @desc    Get single contest by custom id (e.g., "nature-2026") or MongoDB _id
-// @route   GET /api/contests/:id
-// @access  Public
-export const getContestById = async (req, res, next) => {
-    try {
-        const { id } = req.params;
-
-        // Try finding by custom id slug first, then fallback to _id
-        let contest = await Contest.findOne({ id: id });
-        if (!contest && id.match(/^[0-9a-fA-F]{24}$/)) {
-            contest = await Contest.findById(id);
-        }
-
-        if (!contest) {
-            return res.status(404).json({
-                success: false,
-                message: "Contest not found."
+            contests = contests.filter(function (contest) {
+                return contest.status === status.toLowerCase();
             });
         }
 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
-            contest: contest.toJSON()
+            count: contests.length,
+            contests: contests
         });
     } catch (error) {
         next(error);
     }
 };
 
-// @desc    Create a new contest
-// @route   POST /api/contests
-// @access  Private (Admin / Organizer)
+
+// Get one contest by ID
+export const getContestById = async (req, res, next) => {
+    try {
+        const id = req.params.id;
+
+        // First, search using the custom contest ID
+        let contest = await Contest.findOne({ id: id });
+
+        // If not found, check whether it is a valid MongoDB ObjectId
+        if (!contest && mongoose.isValidObjectId(id)) {
+            contest = await Contest.findById(id);
+        }
+
+        // If the contest does not exist
+        if (!contest) {
+            return res.status(404).json({
+                success: false,
+                message: "Contest not found"
+            });
+        }
+
+        // Return the contest
+        return res.status(200).json({
+            success: true,
+            contest: contest.toJSON()
+        });
+
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+// Create a new contest
 export const createContest = async (req, res, next) => {
     try {
-        const { id, title, category, description, deadline, status, maxSubmissions, image, criteria } = req.body;
+        const {
+            id,
+            title,
+            category,
+            description,
+            deadline,
+            status,
+            maxSubmissions,
+            image,
+            criteria
+        } = req.body;
 
-        const existing = await Contest.findOne({ id });
+        const existing = await Contest.findOne({ id: id });
+
         if (existing) {
             return res.status(400).json({
                 success: false,
@@ -69,20 +88,24 @@ export const createContest = async (req, res, next) => {
         }
 
         const contest = await Contest.create({
-            id,
-            title,
-            category,
-            description,
-            deadline,
+            id: id,
+            title: title,
+            category: category,
+            description: description,
+            deadline: deadline,
             status: status || "active",
             maxSubmissions: maxSubmissions || 3,
-            image,
-            criteria: criteria || { creativity: 40, technical: 30, themeFit: 30 }
+            image: image,
+            criteria: criteria || {
+                creativity: 40,
+                technical: 30,
+                themeFit: 30
+            }
         });
 
-        res.status(201).json({
+        return res.status(201).json({
             success: true,
-            contest
+            contest: contest
         });
     } catch (error) {
         next(error);

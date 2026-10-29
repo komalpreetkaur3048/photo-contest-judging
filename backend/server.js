@@ -20,12 +20,6 @@ import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 // Load environment variables
 dotenv.config();
 
-// Connect to MongoDB Database
-await connectDB();
-
-// Automatically ensure all stored contest statuses match current dates
-await Contest.syncContestStatusesInDB();
-
 const app = express();
 
 // Middleware: Enable CORS so frontend can communicate with backend
@@ -65,6 +59,16 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5001;
 
-app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT} in ${process.env.NODE_ENV || "development"} mode`);
-});
+try {
+    await connectDB();
+    await Contest.syncContestStatusesInDB();
+
+    app.listen(PORT, () => {
+        console.log(
+            `Server running on http://localhost:${PORT} in ${process.env.NODE_ENV || "development"} mode`
+        );
+    });
+} catch (error) {
+    console.error("Server startup failed:", error.message);
+    process.exit(1);
+}

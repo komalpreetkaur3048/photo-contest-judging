@@ -1,37 +1,46 @@
+
 import Entry from "../models/Entry.js";
 import Score from "../models/Score.js";
 import Contest from "../models/Contest.js";
 
 const TOTAL_JUDGES_REQUIRED = 3;
 
-// Helper: Calculate raw weighted score
-const getWeightedScore = (score, contestMap) => {
+// Calculate weighted score
+function getWeightedScore(score, contestMap) {
     if (score.weightedScore !== undefined && score.weightedScore !== null) {
         return Number(score.weightedScore);
     }
 
-    const contest = contestMap[score.contestId] || {};
-    const criteria = contest.criteria || { creativity: 40, technical: 30, themeFit: 30 };
+    const contest = contestMap[score.contestId];
+    let creativityWeight = 40;
+    let technicalWeight = 30;
+    let themeWeight = 30;
 
-    const wC = (criteria.creativity || 40) / 100;
-    const wT = (criteria.technical || 30) / 100;
-    const wTh = (criteria.themeFit || criteria.theme || 30) / 100;
+    if (contest && contest.criteria) {
+        creativityWeight = contest.criteria.creativity || 40;
+        technicalWeight = contest.criteria.technical || 30;
+        themeWeight = contest.criteria.themeFit || contest.criteria.theme || 30;
+    }
 
-    return Number(
-        (Number(score.creativity || 0) * wC +
-         Number(score.technical || 0) * wT +
-         Number(score.theme || 0) * wTh).toFixed(2)
-    );
-};
+    const c = Number(score.creativity || 0);
+    const t = Number(score.technical || 0);
+    const h = Number(score.theme || 0);
 
-// @desc    Calculate bias-normalized leaderboard rankings
-// @route   GET /api/leaderboard
-// @access  Public
+    const total =
+        c * creativityWeight / 100 +
+        t * technicalWeight / 100 +
+        h * themeWeight / 100;
+
+    return Number(total.toFixed(2));
+}
+
+
+// Get leaderboard
 export const getLeaderboard = async (req, res, next) => {
     try {
-        const { contestId } = req.query;
-
+        const contestId = req.query.contestId;
         const entryFilter = {};
+
         if (contestId && contestId !== "all") {
             entryFilter.contestId = contestId;
         }
@@ -40,14 +49,17 @@ export const getLeaderboard = async (req, res, next) => {
         const allScores = await Score.find();
         const allContests = await Contest.find();
 
+        // Store contests by ID
         const contestMap = {};
-        allContests.forEach((c) => {
-            const json = c.toJSON();
-            contestMap[json.id] = json;
-            contestMap[c._id.toString()] = json;
-        });
 
-        if (allScores.length === 0 || entries.length === 0) {
+        for (let i = 0; i < allContests.length; i++) {
+            const contest = allContests[i].toJSON();
+
+            contestMap[contest.id] = contest;
+            contestMap[allContests[i]._id.toString()] = contest;
+        }
+
+        if (entries.length === 0 || allScores.length === 0) {
             return res.status(200).json({
                 success: true,
                 totalEntries: entries.length,
@@ -59,190 +71,282 @@ export const getLeaderboard = async (req, res, next) => {
             });
         }
 
-        // 1. Group scores by judge to compute mean per judge
+        // Group scores by judge
         const judgeGroups = {};
         let totalWeightedSum = 0;
 
-        allScores.forEach((score) => {
+        for (let i = 0; i < allScores.length; i++) {
+            const score = allScores[i];
             const judgeId = score.judgeId || "unknown";
+
             if (!judgeGroups[judgeId]) {
                 judgeGroups[judgeId] = [];
             }
 
-            const rawWeighted = getWeightedScore(score, contestMap);
-            score._rawWeighted = rawWeighted;
+            const rawScore = getWeightedScore(score, contestMap);
 
-            judgeGroups[judgeId].push(rawWeighted);
-            totalWeightedSum += rawWeighted;
-        });
+            score._rawWeighted = rawScore;
+            judgeGroups[judgeId].push(rawScore);
+            totalWeightedSum += rawScore;
+        }
 
-        // 2. Calculate Judge Means and Overall Population Mean
+        // Calculate each judge's average
         const judgeMeans = {};
-        Object.keys(judgeGroups).forEach((jId) => {
-            const arr = judgeGroups[jId];
-            const sum = arr.reduce((acc, v) => acc + v, 0);
-            judgeMeans[jId] = sum / arr.length;
-        });
+        const judgeIds = Object.keys(judgeGroups);
 
-        const overallMean = allScores.length ? (totalWeightedSum / allScores.length) : 0;
+        for (let i = 0; i < judgeIds.length; i++) {
+            const judgeId = judgeIds[i];
+            const scores = judgeGroups[judgeId];
 
-        // 3. Normalize: normalized = raw - judgeMean + overallMean
-        const scoreNormalizedMap = {};
-        allScores.forEach((score) => {
-            const judgeId = score.judgeId || "unknown";
-            const jMean = judgeMeans[judgeId] || overallMean;
-            const normalized = score._rawWeighted - jMean + overallMean;
-            scoreNormalizedMap[score._id.toString()] = normalized;
-        });
+            let sum = 0;
 
-        // 4. Calculate final score per entry
-        const rankedEntries = [];
-
-        entries.forEach((entry) => {
-            const entryIdStr = entry._id.toString();
-            const entryScores = allScores.filter((s) => String(s.entryId) === entryIdStr);
-
-            // Entries with at least 1 evaluation can be scored; entries with full evaluations get official status
-            if (entryScores.length > 0) {
-                let normSum = 0;
-                let rawSum = 0;
-
-                entryScores.forEach((s) => {
-                    const norm = scoreNormalizedMap[s._id.toString()] || s.weightedScore;
-                    normSum += norm;
-                    rawSum += (s.weightedScore || 0);
-                });
-
-                const finalNormalizedScore = Number((normSum / entryScores.length).toFixed(2));
-                const rawAverage = Number((rawSum / entryScores.length).toFixed(2));
-
-                const contest = contestMap[entry.contestId];
-
-                rankedEntries.push({
-                    _id: entry._id,
-                    id: entry._id,
-                    entryId: entry._id,
-                    title: entry.title,
-                    description: entry.description,
-                    image: entry.image,
-                    participantId: entry.participantId,
-                    participantName: entry.participantName,
-                    contestId: entry.contestId,
-                    contestTitle: contest ? contest.title : (entry.contestId || "Photo Contest"),
-                    judgingStatus: entryScores.length >= TOTAL_JUDGES_REQUIRED ? "ranked" : "judging",
-                    isRanked: entryScores.length >= TOTAL_JUDGES_REQUIRED,
-                    scoresCount: entryScores.length,
-                    rawScore: rawAverage,
-                    finalScore: finalNormalizedScore
-                });
+            for (let j = 0; j < scores.length; j++) {
+                sum += scores[j];
             }
-        });
 
-        // 5. Sort descending by normalized score
-        rankedEntries.sort((a, b) => b.finalScore - a.finalScore);
+            judgeMeans[judgeId] = sum / scores.length;
+        }
 
-        // Assign ordinal rankings (1, 2, 3...)
-        rankedEntries.forEach((item, index) => {
-            item.rank = index + 1;
-        });
+        // Calculate overall average
+        const overallMean = totalWeightedSum / allScores.length;
 
-        const podium = rankedEntries.slice(0, 3);
-        const uniqueJudges = Object.keys(judgeGroups).length;
+        // Normalize each score
+        const normalizedScores = {};
 
-        res.status(200).json({
+        for (let i = 0; i < allScores.length; i++) {
+            const score = allScores[i];
+            const judgeId = score.judgeId || "unknown";
+
+            let judgeMean = judgeMeans[judgeId];
+
+            if (judgeMean === undefined) {
+                judgeMean = overallMean;
+            }
+
+            const normalized =
+                score._rawWeighted - judgeMean + overallMean;
+
+            normalizedScores[score._id.toString()] = normalized;
+        }
+
+        // Calculate each photograph's final score
+        const rankings = [];
+
+        for (let i = 0; i < entries.length; i++) {
+            const entry = entries[i];
+
+            const entryScores = allScores.filter(
+                (score) => score.entryId.toString() === entry._id.toString()
+            );
+
+            if (entryScores.length === 0) {
+                continue;
+            }
+
+            let normalizedSum = 0;
+            let rawSum = 0;
+
+            for (let j = 0; j < entryScores.length; j++) {
+                const score = entryScores[j];
+                let normalized = normalizedScores[score._id.toString()];
+
+                if (normalized === undefined) {
+                    normalized = score.weightedScore || 0;
+                }
+
+                normalizedSum += normalized;
+                rawSum += score.weightedScore || 0;
+            }
+
+            const finalScore = Number(
+                (normalizedSum / entryScores.length).toFixed(2)
+            );
+
+            const rawAverage = Number(
+                (rawSum / entryScores.length).toFixed(2)
+            );
+
+            const contest = contestMap[entry.contestId];
+            const isRanked = entryScores.length >= TOTAL_JUDGES_REQUIRED;
+
+            rankings.push({
+                _id: entry._id,
+                id: entry._id,
+                entryId: entry._id,
+                title: entry.title,
+                description: entry.description,
+                image: entry.image,
+                participantId: entry.participantId,
+                participantName: entry.participantName,
+                contestId: entry.contestId,
+                contestTitle: contest
+                    ? contest.title
+                    : (entry.contestId || "Photo Contest"),
+                judgingStatus: isRanked ? "ranked" : "judging",
+                isRanked: isRanked,
+                scoresCount: entryScores.length,
+                rawScore: rawAverage,
+                finalScore: finalScore
+            });
+        }
+
+        // Highest score first
+        rankings.sort((a, b) => b.finalScore - a.finalScore);
+
+        // Assign ranks
+        for (let i = 0; i < rankings.length; i++) {
+            rankings[i].rank = i + 1;
+        }
+
+        const podium = rankings.slice(0, 3);
+        const totalJudges = Object.keys(judgeGroups).length;
+
+        return res.status(200).json({
             success: true,
             totalEntries: entries.length,
-            totalRanked: rankedEntries.length,
-            totalJudges: uniqueJudges,
+            totalRanked: rankings.length,
+            totalJudges: totalJudges,
             overallMean: Number(overallMean.toFixed(2)),
-            podium,
-            rankings: rankedEntries
+            podium: podium,
+            rankings: rankings
         });
     } catch (error) {
         next(error);
     }
 };
 
-// @desc    Get detailed evaluation breakdown and normalization result for an entry
-// @route   GET /api/leaderboard/result/:entryId
-// @access  Public
+
+// Get detailed result for one photograph
 export const getEntryResult = async (req, res, next) => {
     try {
-        const { entryId } = req.params;
+        const entryId = req.params.entryId;
 
         const entry = await Entry.findById(entryId);
+
         if (!entry) {
-            return res.status(404).json({ success: false, message: "Entry not found." });
+            return res.status(404).json({
+                success: false,
+                message: "Entry not found."
+            });
         }
 
-        const contest = await Contest.findOne({ id: entry.contestId });
+        const contest = await Contest.findOne({
+            id: entry.contestId
+        });
+
         const allScores = await Score.find();
-        const entryScores = allScores.filter((s) => String(s.entryId) === entry._id.toString());
 
+        const entryScores = allScores.filter(
+            (score) => score.entryId.toString() === entry._id.toString()
+        );
+
+        // Store the contest details
         const contestMap = {};
+
         if (contest) {
-            const json = contest.toJSON();
-            contestMap[json.id] = json;
-            contestMap[contest._id.toString()] = json;
+            const contestData = contest.toJSON();
+            contestMap[contestData.id] = contestData;
+            contestMap[contest._id.toString()] = contestData;
         }
 
-        // Judge groups for means
+        // Group all scores by judge
         const judgeGroups = {};
         let totalWeightedSum = 0;
 
-        allScores.forEach((score) => {
+        for (let i = 0; i < allScores.length; i++) {
+            const score = allScores[i];
             const judgeId = score.judgeId || "unknown";
-            if (!judgeGroups[judgeId]) judgeGroups[judgeId] = [];
 
-            const rawWeighted = getWeightedScore(score, contestMap);
-            judgeGroups[judgeId].push(rawWeighted);
-            totalWeightedSum += rawWeighted;
-        });
+            if (!judgeGroups[judgeId]) {
+                judgeGroups[judgeId] = [];
+            }
 
-        const overallMean = allScores.length ? (totalWeightedSum / allScores.length) : 0;
+            const rawScore = getWeightedScore(score, contestMap);
 
+            judgeGroups[judgeId].push(rawScore);
+            totalWeightedSum += rawScore;
+        }
+
+        let overallMean = 0;
+
+        if (allScores.length > 0) {
+            overallMean = totalWeightedSum / allScores.length;
+        }
+
+        // Calculate each judge's average
         const judgeMeans = {};
-        Object.keys(judgeGroups).forEach((jId) => {
-            const arr = judgeGroups[jId];
-            judgeMeans[jId] = arr.reduce((acc, v) => acc + v, 0) / arr.length;
-        });
+        const judgeIds = Object.keys(judgeGroups);
 
-        let normSum = 0;
+        for (let i = 0; i < judgeIds.length; i++) {
+            const judgeId = judgeIds[i];
+            const scores = judgeGroups[judgeId];
+
+            let sum = 0;
+
+            for (let j = 0; j < scores.length; j++) {
+                sum += scores[j];
+            }
+
+            judgeMeans[judgeId] = sum / scores.length;
+        }
+
+        // Calculate each judge's score for this photograph
+        let normalizedSum = 0;
         let rawSum = 0;
+        const scoreBreakdown = [];
 
-        const scoreBreakdown = entryScores.map((s) => {
-            const raw = getWeightedScore(s, contestMap);
-            const jMean = judgeMeans[s.judgeId] || overallMean;
-            const norm = raw - jMean + overallMean;
+        for (let i = 0; i < entryScores.length; i++) {
+            const score = entryScores[i];
+            const rawScore = getWeightedScore(score, contestMap);
+            const judgeId = score.judgeId || "unknown";
 
-            normSum += norm;
-            rawSum += raw;
+            let judgeMean = judgeMeans[judgeId];
 
-            return {
-                judgeId: s.judgeId,
-                judgeName: s.judgeName || "Official Juror",
-                creativity: s.creativity,
-                technical: s.technical,
-                theme: s.theme,
-                rawWeightedScore: raw,
-                judgeMean: Number(jMean.toFixed(2)),
-                normalizedScore: Number(norm.toFixed(2)),
-                judgedAt: s.createdAt
-            };
-        });
+            if (judgeMean === undefined) {
+                judgeMean = overallMean;
+            }
 
-        const finalScore = entryScores.length ? Number((normSum / entryScores.length).toFixed(2)) : 0;
-        const rawAverage = entryScores.length ? Number((rawSum / entryScores.length).toFixed(2)) : 0;
+            const normalizedScore =
+                rawScore - judgeMean + overallMean;
 
-        res.status(200).json({
+            normalizedSum += normalizedScore;
+            rawSum += rawScore;
+
+            scoreBreakdown.push({
+                judgeId: score.judgeId,
+                judgeName: score.judgeName || "Official Juror",
+                creativity: score.creativity,
+                technical: score.technical,
+                theme: score.theme,
+                rawWeightedScore: rawScore,
+                judgeMean: Number(judgeMean.toFixed(2)),
+                normalizedScore: Number(normalizedScore.toFixed(2)),
+                judgedAt: score.createdAt
+            });
+        }
+
+        let finalScore = 0;
+        let rawAverage = 0;
+
+        if (entryScores.length > 0) {
+            finalScore = Number(
+                (normalizedSum / entryScores.length).toFixed(2)
+            );
+
+            rawAverage = Number(
+                (rawSum / entryScores.length).toFixed(2)
+            );
+        }
+
+        return res.status(200).json({
             success: true,
-            entry,
+            entry: entry,
             contest: contest ? contest.toJSON() : null,
             scoresCount: entryScores.length,
             isFullyJudged: entryScores.length >= TOTAL_JUDGES_REQUIRED,
             overallMean: Number(overallMean.toFixed(2)),
-            rawAverage,
-            finalScore,
+            rawAverage: rawAverage,
+            finalScore: finalScore,
             scores: scoreBreakdown
         });
     } catch (error) {

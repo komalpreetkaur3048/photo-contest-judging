@@ -1,22 +1,31 @@
+
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
-import JudgeInvite from "../models/JudgeInvite.js";
 
-// Helper function to generate JWT token
+// Generate JWT token
 const generateToken = (id, role) => {
-    return jwt.sign({ id, role }, process.env.JWT_SECRET, {
-        expiresIn: "7d"
-    });
+    return jwt.sign(
+        { id, role },
+        process.env.JWT_SECRET,
+        { expiresIn: "7d" }
+    );
 };
 
-// @desc    Register a new user (Participant or Judge)
-// @route   POST /api/auth/register
-// @access  Public
+// Register a new participant or judge
 export const register = async (req, res, next) => {
     try {
-        const { name, email, password, role, judgeAccessKey, specialization, bio } = req.body;
+        const {
+            name,
+            email,
+            password,
+            role,
+            judgeAccessKey,
+            specialization,
+            bio
+        } = req.body;
 
+        // Check required fields
         if (!name || !email || !password) {
             return res.status(400).json({
                 success: false,
@@ -24,76 +33,80 @@ export const register = async (req, res, next) => {
             });
         }
 
-        const selectedRole = role === "judge" ? "judge" : "participant";
-        let matchedInvite = null;
+        // Prepare email and role
+        const userEmail = email.trim().toLowerCase();
 
-        // If registering as judge, verify judge access key or single-use invite code
-        if (selectedRole === "judge") {
-            const submittedKey = (judgeAccessKey || "").trim().toUpperCase();
+        let userRole = "participant";
 
-            if (!submittedKey) {
+        if (role === "judge") {
+            userRole = "judge";
+        }
+
+        // Check judge access key
+        if (userRole === "judge") {
+            const enteredKey = (judgeAccessKey || "").trim().toUpperCase();
+            const masterKey = (process.env.JUDGE_ACCESS_KEY || "").trim().toUpperCase();
+
+            if (!enteredKey) {
                 return res.status(400).json({
                     success: false,
-                    message: "Please provide a Judge Access Key or Invite Code."
+                    message: "Please provide the Judge Access Key."
                 });
             }
 
-            const masterKey = (process.env.JUDGE_ACCESS_KEY || "").toUpperCase();
-
-            // 1. Check if it matches master admin key from backend .env
-            if (masterKey && submittedKey === masterKey) {
-                // Master key accepted
-            } else {
-                // 2. Check if it matches a valid single-use invite code from MongoDB
-                matchedInvite = await JudgeInvite.findOne({ code: submittedKey, isUsed: false });
-
-                if (!matchedInvite) {
-                    return res.status(400).json({
-                        success: false,
-                        message: "Invalid or already used Judge Access Key."
-                    });
-                }
+            if (!masterKey || enteredKey !== masterKey) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Invalid Judge Access Key."
+                });
             }
         }
 
-        // Check if user already exists
-        const userExists = await User.findOne({ email: email.toLowerCase().trim() });
-        if (userExists) {
+        // Check whether email already exists
+        const existingUser = await User.findOne({
+            email: userEmail
+        });
+
+        if (existingUser) {
             return res.status(400).json({
                 success: false,
                 message: "An account with this email already exists."
             });
         }
 
-        // Hash the password with bcryptjs
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Create new user in MongoDB
-        const user = await User.create({
-            name: name.trim(),
-            email: email.toLowerCase().trim(),
-            password: hashedPassword,
-            role: selectedRole,
-            specialization: selectedRole === "judge" ? (specialization || "Official Contest Judge") : "",
-            bio: selectedRole === "judge" ? (bio || "") : ""
-        });
+        // Prepare judge profile fields
+        let userSpecialization = "";
+        let userBio = "";
 
-        // If a single-use invite code was used, mark it as used
-        if (matchedInvite) {
-            matchedInvite.isUsed = true;
-            matchedInvite.usedByEmail = user.email;
-            matchedInvite.usedAt = new Date();
-            await matchedInvite.save();
+        if (userRole === "judge") {
+            userSpecialization = specialization || "Official Contest Judge";
+            userBio = bio || "";
         }
 
-        // Generate token and return user details (without password)
-        const token = generateToken(user._id, user.role);
+        // Save user in MongoDB
+        const user = await User.create({
+            name: name.trim(),
+            email: userEmail,
+            password: hashedPassword,
+            role: userRole,
+            specialization: userSpecialization,
+            bio: userBio
+        });
 
-        res.status(201).json({
+        // Prepare success message
+        let message = "Participant registered successfully!";
+
+        if (userRole === "judge") {
+            message = "Judge registered successfully!";
+        }
+
+        // Send response to frontend
+        return res.status(201).json({
             success: true,
-            message: `${selectedRole === "judge" ? "Judge" : "Participant"} registered successfully!`,
-            token,
+            message: message,
             user: {
                 _id: user._id,
                 name: user.name,
@@ -108,63 +121,12 @@ export const register = async (req, res, next) => {
     }
 };
 
-// @desc    Create a new single-use judge invite code
-// @route   POST /api/auth/judge-invites
-// @access  Public (or Admin in production)
-export const createJudgeInvite = async (req, res, next) => {
-    try {
-        const customCode = req.body?.code?.trim();
-        const code = customCode
-            ? customCode.toUpperCase()
-            : "JUDGE-" + Math.random().toString(36).substring(2, 8).toUpperCase();
-
-        const existing = await JudgeInvite.findOne({ code });
-        if (existing) {
-            return res.status(400).json({
-                success: false,
-                message: `Invite code '${code}' already exists.`
-            });
-        }
-
-        const invite = await JudgeInvite.create({ code });
-
-        res.status(201).json({
-            success: true,
-            message: "Judge invite code generated successfully!",
-            invite: {
-                code: invite.code,
-                isUsed: invite.isUsed,
-                createdAt: invite.createdAt
-            }
-        });
-    } catch (error) {
-        next(error);
-    }
-};
-
-// @desc    Get all judge invite codes
-// @route   GET /api/auth/judge-invites
-// @access  Public (or Admin in production)
-export const getJudgeInvites = async (req, res, next) => {
-    try {
-        const invites = await JudgeInvite.find().sort({ createdAt: -1 });
-        res.status(200).json({
-            success: true,
-            count: invites.length,
-            invites
-        });
-    } catch (error) {
-        next(error);
-    }
-};
-
-// @desc    Login existing user
-// @route   POST /api/auth/login
-// @access  Public
+// Login an existing user
 export const login = async (req, res, next) => {
     try {
         const { email, password } = req.body;
 
+        // Check required fields
         if (!email || !password) {
             return res.status(400).json({
                 success: false,
@@ -172,9 +134,12 @@ export const login = async (req, res, next) => {
             });
         }
 
-        // Find user by lowercase email
-        const user = await User.findOne({ email: email.toLowerCase().trim() });
+        // Find user by email
+        const user = await User.findOne({
+            email: email.trim().toLowerCase()
+        });
 
+        // Check user and password
         if (!user) {
             return res.status(401).json({
                 success: false,
@@ -182,8 +147,8 @@ export const login = async (req, res, next) => {
             });
         }
 
-        // Compare entered password with stored hash
         const isMatch = await user.matchPassword(password);
+
         if (!isMatch) {
             return res.status(401).json({
                 success: false,
@@ -191,9 +156,11 @@ export const login = async (req, res, next) => {
             });
         }
 
+        // Generate token
         const token = generateToken(user._id, user.role);
 
-        res.status(200).json({
+        // Send response to frontend
+        return res.status(200).json({
             success: true,
             message: "Login successful!",
             token,
@@ -211,17 +178,29 @@ export const login = async (req, res, next) => {
     }
 };
 
-// @desc    Get currently logged-in user profile
-// @route   GET /api/auth/me
-// @access  Private (Requires token)
+// Get the currently logged-in user's profile
 export const getMe = async (req, res, next) => {
     try {
-        // req.user is populated by protect middleware
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             user: req.user
         });
     } catch (error) {
         next(error);
     }
+};
+
+// Backward-compatible stubs for judge invite routes
+export const createJudgeInvite = async (req, res) => {
+    return res.status(200).json({
+        success: true,
+        message: "Judge registration uses master key (JUDGE_ACCESS_KEY)."
+    });
+};
+
+export const getJudgeInvites = async (req, res) => {
+    return res.status(200).json({
+        success: true,
+        invites: []
+    });
 };

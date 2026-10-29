@@ -1,10 +1,9 @@
+
 import Entry from "../models/Entry.js";
 import Contest from "../models/Contest.js";
 import Score from "../models/Score.js";
 
-// @desc    Submit a new photograph entry
-// @route   POST /api/entries
-// @access  Private (Participant)
+// Submit a new photograph
 export const createEntry = async (req, res, next) => {
     try {
         const { contestId, title, description, image } = req.body;
@@ -16,11 +15,19 @@ export const createEntry = async (req, res, next) => {
             });
         }
 
-        // Verify contest exists
+        // Check contest
         const contest = await Contest.findOne({ id: contestId });
-        const maxAllowed = contest?.maxSubmissions || 3;
 
-        // Check submission cap for this participant in this contest
+        if (!contest) {
+            return res.status(404).json({
+                success: false,
+                message: "Contest not found."
+            });
+        }
+
+        // Maximum 3 submissions per participant per contest
+        const maxAllowed = 3;
+
         const existingCount = await Entry.countDocuments({
             participantId: req.user._id,
             contestId: contestId
@@ -45,7 +52,7 @@ export const createEntry = async (req, res, next) => {
             isRanked: false
         });
 
-        res.status(201).json({
+        return res.status(201).json({
             success: true,
             message: "Photograph submitted successfully!",
             entry: newEntry
@@ -55,12 +62,11 @@ export const createEntry = async (req, res, next) => {
     }
 };
 
-// @desc    Get all entries (supports ?contestId= & ?status=)
-// @route   GET /api/entries
-// @access  Public
+// Get all entries with optional filters
 export const getAllEntries = async (req, res, next) => {
     try {
         const { contestId, judgingStatus } = req.query;
+
         const filter = {};
 
         if (contestId) filter.contestId = contestId;
@@ -71,9 +77,18 @@ export const getAllEntries = async (req, res, next) => {
 
         const formattedEntries = entries.map(entry => {
             const entryObj = entry.toObject();
-            const entryScores = allScores.filter(s => String(s.entryId) === entry._id.toString());
-            
-            entryObj.judgesCompleted = Math.max(entry.judgesCompleted || 0, entryScores.length);
+
+            const entryScores = allScores.filter(
+                score => String(score.entryId) === entry._id.toString()
+            );
+
+            const scoreCount = entryScores.length;
+
+            entryObj.judgesCompleted = Math.max(
+                entry.judgesCompleted || 0,
+                scoreCount
+            );
+
             if (entryObj.judgesCompleted >= 3) {
                 entryObj.judgingStatus = "ranked";
                 entryObj.isRanked = true;
@@ -81,15 +96,22 @@ export const getAllEntries = async (req, res, next) => {
                 entryObj.judgingStatus = "judging";
             }
 
-            if (entryScores.length > 0) {
-                const sum = entryScores.reduce((acc, s) => acc + (s.weightedScore || 0), 0);
-                entryObj.finalScore = Number((sum / entryScores.length).toFixed(2));
+            if (scoreCount > 0) {
+                let totalScore = 0;
+
+                for (let i = 0; i < scoreCount; i++) {
+                    totalScore += entryScores[i].weightedScore || 0;
+                }
+
+                entryObj.finalScore = Number(
+                    (totalScore / scoreCount).toFixed(2)
+                );
             }
 
             return entryObj;
         });
 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             count: formattedEntries.length,
             entries: formattedEntries
@@ -99,19 +121,29 @@ export const getAllEntries = async (req, res, next) => {
     }
 };
 
-// @desc    Get entries submitted by logged-in participant
-// @route   GET /api/entries/my
-// @access  Private (Participant)
+// Get entries belonging to the logged-in participant
 export const getMyEntries = async (req, res, next) => {
     try {
-        const entries = await Entry.find({ participantId: req.user._id }).sort({ createdAt: -1 });
+        const entries = await Entry.find({
+            participantId: req.user._id
+        }).sort({ createdAt: -1 });
+
         const allScores = await Score.find();
 
         const formattedEntries = entries.map(entry => {
             const entryObj = entry.toObject();
-            const entryScores = allScores.filter(s => String(s.entryId) === entry._id.toString());
-            
-            entryObj.judgesCompleted = Math.max(entry.judgesCompleted || 0, entryScores.length);
+
+            const entryScores = allScores.filter(
+                score => String(score.entryId) === entry._id.toString()
+            );
+
+            const scoreCount = entryScores.length;
+
+            entryObj.judgesCompleted = Math.max(
+                entry.judgesCompleted || 0,
+                scoreCount
+            );
+
             if (entryObj.judgesCompleted >= 3) {
                 entryObj.judgingStatus = "ranked";
                 entryObj.isRanked = true;
@@ -119,15 +151,22 @@ export const getMyEntries = async (req, res, next) => {
                 entryObj.judgingStatus = "judging";
             }
 
-            if (entryScores.length > 0) {
-                const sum = entryScores.reduce((acc, s) => acc + (s.weightedScore || 0), 0);
-                entryObj.finalScore = Number((sum / entryScores.length).toFixed(2));
+            if (scoreCount > 0) {
+                let totalScore = 0;
+
+                for (let i = 0; i < scoreCount; i++) {
+                    totalScore += entryScores[i].weightedScore || 0;
+                }
+
+                entryObj.finalScore = Number(
+                    (totalScore / scoreCount).toFixed(2)
+                );
             }
 
             return entryObj;
         });
 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             count: formattedEntries.length,
             entries: formattedEntries
@@ -137,9 +176,7 @@ export const getMyEntries = async (req, res, next) => {
     }
 };
 
-// @desc    Get single entry by ID
-// @route   GET /api/entries/:id
-// @access  Public
+// Get one entry by ID
 export const getEntryById = async (req, res, next) => {
     try {
         const entry = await Entry.findById(req.params.id);
@@ -151,7 +188,7 @@ export const getEntryById = async (req, res, next) => {
             });
         }
 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             entry
         });
@@ -160,9 +197,7 @@ export const getEntryById = async (req, res, next) => {
     }
 };
 
-// @desc    Update an entry (title, description)
-// @route   PUT /api/entries/:id
-// @access  Private (Owner only)
+// Update an entry
 export const updateEntry = async (req, res, next) => {
     try {
         const entry = await Entry.findById(req.params.id);
@@ -174,7 +209,7 @@ export const updateEntry = async (req, res, next) => {
             });
         }
 
-        // Ownership check
+        // Check ownership
         if (entry.participantId.toString() !== req.user._id.toString()) {
             return res.status(403).json({
                 success: false,
@@ -182,16 +217,21 @@ export const updateEntry = async (req, res, next) => {
             });
         }
 
-        // Locking check: if judging has started
-        if (entry.judgesCompleted > 0 || entry.judgingStatus === "judging" || entry.judgingStatus === "ranked") {
+        // Check whether judging has started
+        if (
+            entry.judgesCompleted > 0 ||
+            entry.judgingStatus === "judging" ||
+            entry.judgingStatus === "ranked"
+        ) {
             return res.status(400).json({
                 success: false,
                 message: "This entry is locked because judging has already started."
             });
         }
 
-        // Contest deadline check: if contest deadline has passed
+        // Check contest deadline
         const contest = await Contest.findOne({ id: entry.contestId });
+
         if (contest && contest.toJSON().status === "completed") {
             return res.status(400).json({
                 success: false,
@@ -200,12 +240,13 @@ export const updateEntry = async (req, res, next) => {
         }
 
         const { title, description } = req.body;
+
         if (title) entry.title = title.trim();
         if (description) entry.description = description.trim();
 
         await entry.save();
 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             message: "Entry updated successfully!",
             entry
@@ -215,9 +256,7 @@ export const updateEntry = async (req, res, next) => {
     }
 };
 
-// @desc    Delete an entry
-// @route   DELETE /api/entries/:id
-// @access  Private (Owner only)
+// Delete an entry
 export const deleteEntry = async (req, res, next) => {
     try {
         const entry = await Entry.findById(req.params.id);
@@ -229,7 +268,7 @@ export const deleteEntry = async (req, res, next) => {
             });
         }
 
-        // Ownership check
+        // Check ownership
         if (entry.participantId.toString() !== req.user._id.toString()) {
             return res.status(403).json({
                 success: false,
@@ -237,16 +276,21 @@ export const deleteEntry = async (req, res, next) => {
             });
         }
 
-        // Locking check: if judging has started
-        if (entry.judgesCompleted > 0 || entry.judgingStatus === "judging" || entry.judgingStatus === "ranked") {
+        // Check whether judging has started
+        if (
+            entry.judgesCompleted > 0 ||
+            entry.judgingStatus === "judging" ||
+            entry.judgingStatus === "ranked"
+        ) {
             return res.status(400).json({
                 success: false,
                 message: "This entry is locked because judging has already started."
             });
         }
 
-        // Contest deadline check: if contest deadline has passed
+        // Check contest deadline
         const contest = await Contest.findOne({ id: entry.contestId });
+
         if (contest && contest.toJSON().status === "completed") {
             return res.status(400).json({
                 success: false,
@@ -255,11 +299,9 @@ export const deleteEntry = async (req, res, next) => {
         }
 
         await Entry.findByIdAndDelete(req.params.id);
-
-        // Also clean up any associated scores if any existed
         await Score.deleteMany({ entryId: req.params.id });
 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             message: "Photograph submission deleted successfully."
         });

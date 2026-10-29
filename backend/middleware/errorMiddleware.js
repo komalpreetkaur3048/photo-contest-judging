@@ -1,31 +1,39 @@
-// 404 Not Found Handler
+
+ // Handle routes that do not exist
 export const notFound = (req, res, next) => {
     const error = new Error(`Route Not Found - ${req.originalUrl}`);
+
     res.status(404);
     next(error);
 };
 
-// Centralized Error Handler
+// Handle application errors
 export const errorHandler = (err, req, res, next) => {
-    // If statusCode is still 200, default to 500
-    let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+    let statusCode = res.statusCode;
+
+    if (statusCode === 200) {
+        statusCode = 500;
+    }
+
     let message = err.message;
 
-    // Handle Mongoose invalid ObjectId (CastError)
+    // Handle invalid MongoDB ObjectId
     if (err.name === "CastError" && err.kind === "ObjectId") {
         statusCode = 400;
         message = "Resource not found (Invalid ID format).";
     }
 
-    // Handle Mongoose ValidationError
+    // Handle Mongoose validation errors
     if (err.name === "ValidationError") {
         statusCode = 400;
-        message = Object.values(err.errors)
-            .map((val) => val.message)
-            .join(", ");
+
+        const errors = Object.values(err.errors);
+        const messages = errors.map((error) => error.message);
+
+        message = messages.join(", ");
     }
 
-    res.status(statusCode).json({
+    return res.status(statusCode).json({
         success: false,
         message: message,
         stack: process.env.NODE_ENV === "production" ? null : err.stack

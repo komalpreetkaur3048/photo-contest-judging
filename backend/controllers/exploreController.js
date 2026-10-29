@@ -1,11 +1,11 @@
+
 import ExplorePhoto from "../models/ExplorePhoto.js";
 
-// @desc    Get all explore photos (supports category filter & search)
-// @route   GET /api/explore
-// @access  Public
+// Get all explore photos
 export const getExplorePhotos = async (req, res, next) => {
     try {
         const { category, search } = req.query;
+
         const filter = {};
 
         if (category && category !== "All") {
@@ -20,9 +20,10 @@ export const getExplorePhotos = async (req, res, next) => {
             ];
         }
 
-        const photos = await ExplorePhoto.find(filter).sort({ createdAt: -1 });
+        const photos = await ExplorePhoto.find(filter)
+            .sort({ createdAt: -1 });
 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             count: photos.length,
             photos
@@ -32,12 +33,10 @@ export const getExplorePhotos = async (req, res, next) => {
     }
 };
 
-// @desc    Add a new photo to the explore gallery
-// @route   POST /api/explore
-// @access  Public (or Authenticated)
+// Add a new photo
 export const createExplorePhoto = async (req, res, next) => {
     try {
-        const { title, author, category, imageUrl, description } = req.body;
+        const { title, author, category, imageUrl, description = "" } = req.body;
 
         if (!title || !author || !category || !imageUrl) {
             return res.status(400).json({
@@ -51,11 +50,11 @@ export const createExplorePhoto = async (req, res, next) => {
             author: author.trim(),
             category: category.trim(),
             imageUrl,
-            description: (description || "").trim(),
+            description: description.trim(),
             likes: 0
         });
 
-        res.status(201).json({
+        return res.status(201).json({
             success: true,
             message: "Photo added to gallery successfully!",
             photo
@@ -65,13 +64,13 @@ export const createExplorePhoto = async (req, res, next) => {
     }
 };
 
-// @desc    Increment likes on an explore photo
-// @route   PUT /api/explore/:id/like
-// @access  Public
+// Like a photo
 export const likeExplorePhoto = async (req, res, next) => {
     try {
+        const { id } = req.params;
+
         const photo = await ExplorePhoto.findByIdAndUpdate(
-            req.params.id,
+            id,
             { $inc: { likes: 1 } },
             { new: true }
         );
@@ -83,7 +82,7 @@ export const likeExplorePhoto = async (req, res, next) => {
             });
         }
 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             likes: photo.likes
         });
